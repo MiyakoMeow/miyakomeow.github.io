@@ -1,0 +1,12 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-read --allow-env --allow-net --allow-run vite --config vite.config.ts",
+    "build": "deno run --allow-read --allow-env --allow-net --allow-write --allow-run vite build --config vite.config.ts",
+    "preview": "deno run --allow-read --allow-env --allow-net --allow-run vite preview --config vite.config.ts"
+  },
+  "imports": {
+    "vue": "https://esm.sh/vue@3.5.13",
+    "vite": "jsr:@deno/vite-plugin-deno",
+    "@vitejs/plugin-vue": "jsr:@deno/vite-plugin-vue"
+  }
+}
