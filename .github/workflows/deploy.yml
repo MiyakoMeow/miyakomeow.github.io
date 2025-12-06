@@ -25,6 +25,9 @@ jobs:
         with:
           deno-version: v2.x
       
+      - name: Cache Dependencies
+        run: deno cache deno.json
+      
       - name: Build
         run: deno task build
         
@@ -39,6 +42,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
