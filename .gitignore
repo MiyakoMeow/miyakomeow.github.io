@@ -1,5 +1,15 @@
+```
+# Dependencies
+deno.lock
+
+# Build artifacts
+dist/
+build/
+target/
+
 # Logs and temp files
 *.log
+*.tmp
 
 # Environment
 .env
@@ -8,22 +18,18 @@
 
 # Editors
 .vscode/
+.idea/
 
-# Dependencies
-node_modules/
-venv/
-.venv/
+# Python
 __pycache__/
-.mypy_cache/
-.pytest_cache/
-dist/
-build/
-target/
-.gradle/
+*.pyc
+*.pyo
+*.pyd
+
+# Node.js
+node_modules/
 
 # Compiled files
-*.pyc
-*.class
 *.o
 *.obj
 *.exe
@@ -32,14 +38,10 @@ target/
 *.a
 *.out
 
-# System files
-.DS_Store
-Thumbs.db
+# Coverage
 coverage/
 htmlcov/
-*.tmp
-*.swp
-*.swo
+.coverage
 
 # Compressed files
 *.zip
@@ -64,3 +66,8 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+
+# System files
+.DS_Store
+Thumbs.db
+```
