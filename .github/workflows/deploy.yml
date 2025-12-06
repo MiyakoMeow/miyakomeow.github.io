@@ -20,22 +20,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
         with:
-          version: 9
-          
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-          
-      - name: Install dependencies
-        run: pnpm install
-        
+          deno-version: v2.x
+      
       - name: Build
-        run: pnpm build
+        run: deno task build
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
