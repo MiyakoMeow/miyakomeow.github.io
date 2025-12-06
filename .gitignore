@@ -1,3 +1,4 @@
+```
 # Logs and temp files
 *.log
 
@@ -8,18 +9,27 @@
 
 # Editors
 .vscode/
+.idea/
 
 # Dependencies
 node_modules/
 venv/
 .venv/
 __pycache__/
-.mypy_cache/
-.pytest_cache/
+*.egg-info/
 dist/
 build/
 target/
 .gradle/
+.mypy_cache/
+.pytest_cache/
+coverage/
+htmlcov/
+*.coverage
+
+# System files
+.DS_Store
+Thumbs.db
 
 # Compiled files
 *.pyc
@@ -31,15 +41,6 @@ target/
 *.so
 *.a
 *.out
-
-# System files
-.DS_Store
-Thumbs.db
-coverage/
-htmlcov/
-*.tmp
-*.swp
-*.swo
 
 # Compressed files
 *.zip
@@ -64,3 +65,4 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+```

@@ -1,5 +1,28 @@
-# Vue 3 + Vite
+# 白喵斯的小窝
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+这是 miyakomeow.github.io 的源代码仓库，使用 Vue 3 + Vite + Deno 构建。
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## 项目结构
+
+- `src/` - 源代码文件
+- `public/` - 静态资源
+- `dist/` - 构建输出目录（由 GitHub Actions 自动构建）
+
+## 本地开发
+
+```bash
+# 安装依赖
+deno task install
+
+# 启动开发服务器
+deno task dev
+
+# 构建生产版本
+deno task build
+```
+
+## 部署
+
+此项目通过 GitHub Actions 自动部署到 GitHub Pages。当代码推送到 main 分支时，会自动触发构建和部署流程。
+
+访问: https://miyakomeow.github.io
