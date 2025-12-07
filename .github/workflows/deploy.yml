@@ -29,7 +29,7 @@ jobs:
         run: deno cache deno.json
       
       - name: Build
-        run: deno task build
+        run: deno run --allow-read --allow-env --allow-net --allow-write --allow-run --allow-sys --allow-ffi vite build --config vite.config.ts
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
