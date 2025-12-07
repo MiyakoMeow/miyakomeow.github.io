@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   contents: read
@@ -19,18 +19,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          deno-version: v2.x
-      
-      - name: Cache Dependencies
-        run: deno cache deno.json
-      
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
       - name: Build
-        run: deno run --allow-read --allow-env --allow-net --allow-write --allow-run --allow-sys --allow-ffi vite build --config vite.config.ts
-        
+        run: bun run vite build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
