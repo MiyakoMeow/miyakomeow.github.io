@@ -13,24 +13,24 @@ jobs:
     steps:
     - uses: actions/checkout@v6
 
-    - name: Setup Deno
-      uses: denoland/setup-deno@v2
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
       with:
-        deno-version: v2.x
+        bun-version: latest
 
-    - name: Cache dependencies
+    - name: Install dependencies
       run: |
-        deno cache --lock=deno.lock deno.json
+        bun install
 
     - name: Run development server check
       run: |
-        deno run --allow-read --allow-env --allow-net --allow-write --allow-run --allow-sys --allow-ffi vite --config vite.config.ts --host &
+        bun run dev &
         sleep 10  # Wait for server to start
 
     - name: Build project
-      run: deno run --allow-read --allow-env --allow-net --allow-write --allow-run --allow-sys --allow-ffi vite build --config vite.config.ts
+      run: bun run build
 
     - name: Run preview
       run: |
-        deno run --allow-read --allow-env --allow-net --allow-write --allow-run --allow-sys --allow-ffi vite preview --config vite.config.ts --host &
+        bun run preview &
         sleep 5  # Wait for preview server to start

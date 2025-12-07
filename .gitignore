@@ -1,39 +1,30 @@
 ```
-# Compiled and build artifacts
-*.pyc
-__pycache__/
-*.o
-*.obj
-dist/
-build/
-*.class
-*.exe
-*.dll
-*.so
-*.a
-*.out
-
 # Dependencies
 node_modules/
-venv/
-.venv/
+.bun/
+bun.lock
+
+# Build outputs
+dist/
+build/
+target/
+
+# Logs
+*.log
+
+# Environment
 .env
 .env.local
 *.env.*
 
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-*.swo
-
-# Editors
+# Editor/IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*.tmp
 
-# System files
+# OS
 .DS_Store
 Thumbs.db
 
@@ -42,19 +33,24 @@ coverage/
 htmlcov/
 .coverage
 
-# Gradle
-.gradle/
-target/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+.eggs/
 
-# Python specific
-.mypy_cache/
-.pytest_cache/
-
-# Compressed files
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.tar
 *.zip
 *.gz
-*.tar
-*.tgz
 *.bz2
 *.xz
 *.7z
@@ -73,4 +69,66 @@ target/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+
+# C/C++
+*.o
+*.a
+*.obj
+*.out
+*.dll
+*.so
+
+# Go
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Rust
+Cargo.lock
+
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ruby
+*.gem
+*.rbc
+*.sassc
+.sass-cache/
+capybara-*.html
+.rspec
+vendor/bundle/
+vendor/cache/
+vendor/gems/
+vendor/ruby/
+
+# Julia
+*.ji
+*.mem
+*.snoop
+.julia/
+.julia_packages/
+
+# Zig
+zig-cache/
+zig-out/
+
+# Gradle
+.gradle/
+build/
+
+# MyPy
+.mypy_cache/
+
+# PyTest
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temporary files
+*.tmp
+*~
 ```

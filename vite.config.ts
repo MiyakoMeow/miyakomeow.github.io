@@ -7,10 +7,5 @@ export default defineConfig({
   base: './',
   define: {
     'process.env': {}
-  },
-  resolve: {
-    alias: {
-      vue: 'https://esm.sh/vue@3.5.13'
-    }
   }
 })
