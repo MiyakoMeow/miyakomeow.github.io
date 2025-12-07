@@ -13,13 +13,13 @@ defineProps({
       <div class="avatar">
         <img src="https://github.com/MiyakoMeow.png" alt="Miyako Meow" />
       </div>
-      <h1>Miyako Meow</h1>
-      <p class="subtitle">Frontend Developer & Star Gazer</p>
+      <h1>MiyakoMeow</h1>
+      <p class="subtitle">一个天天摸鱼的大学生。</p>
     </div>
     
     <div class="bio">
       <p>
-        Welcome to my corner of the universe. I build beautiful web experiences and explore the cosmos of code.
+        欢迎来到我的个人主页！
       </p>
     </div>
 
@@ -67,7 +67,7 @@ h1 {
   margin: 0.5rem 0;
   font-size: 2.5rem;
   background: linear-gradient(to right, #fff, #a5b4fc);
-  -webkit-background-clip: text;
+  -background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
