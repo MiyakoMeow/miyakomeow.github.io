@@ -5,16 +5,23 @@ import { resolve } from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  root: resolve(__dirname, "entry"),
+  publicDir: resolve(__dirname, "public"),
   base: "./",
   define: {
     "process.env": {},
   },
+  server: {
+    fs: { allow: [".."] },
+  },
   build: {
+    outDir: resolve(__dirname, "dist"),
+    emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, "index.html"),
-        "bms/self-table-sp": resolve(__dirname, "bms/self-table-sp/index.html"),
-        "bms/self-table-dp": resolve(__dirname, "bms/self-table-dp/index.html"),
+        main: resolve(__dirname, "entry/index.html"),
+        "bms/self-table-sp": resolve(__dirname, "entry/bms/self-table-sp/index.html"),
+        "bms/self-table-dp": resolve(__dirname, "entry/bms/self-table-dp/index.html"),
       },
     },
   },
