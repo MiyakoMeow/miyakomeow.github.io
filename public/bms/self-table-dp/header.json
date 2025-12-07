@@ -1,0 +1,10 @@
+{
+    "name": "MiyakoMeow谱面合集（DP）",
+    "symbol": "Meow~~",
+    "data_url": "./data.json",
+    "level_order": [
+        "-3",
+        "-2",
+        "-1"
+    ]
+}
