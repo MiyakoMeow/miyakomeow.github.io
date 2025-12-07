@@ -66,7 +66,7 @@ defineProps({
 h1 {
   margin: 0.5rem 0;
   font-size: 2.5rem;
-  background: linear-gradient(to right, #fff, #a5b4fc);
+  color: rgb(81, 67, 172);
   -background-clip: text;
   -webkit-text-fill-color: transparent;
 }
