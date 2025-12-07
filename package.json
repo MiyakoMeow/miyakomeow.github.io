@@ -7,14 +7,25 @@
     "dev": "bun run vite",
     "build": "bun run vite build",
     "preview": "bun run vite preview",
-    "serve": "bun run preview"
+    "serve": "bun run preview",
+    "lint": "eslint . --ext .js,.vue",
+    "lint:fix": "eslint . --ext .js,.vue --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
   },
   "dependencies": {
     "vue": "^3.5.25"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.2",
-    "vite": "^7.2.6"
+    "vite": "^7.2.6",
+    "@eslint/js": "^9.13.0",
+    "eslint": "^9.13.0",
+    "eslint-plugin-vue": "^9.21.1",
+    "vue-eslint-parser": "^9.3.2",
+    "globals": "^15.11.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.4.2"
   },
   "engines": {
     "bun": ">=1.0.0"

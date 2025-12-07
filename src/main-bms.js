@@ -4,4 +4,3 @@ import BMS from "./pages/BMS.vue";
 
 const app = createApp(BMS);
 app.mount("#app");
-

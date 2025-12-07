@@ -3,7 +3,7 @@ import StarryBackground from "../components/StarryBackground.vue";
 
 const links = [
   { href: "./self-table-sp/", title: "MiyakoMeow谱面合集（SP）", desc: "SP 谱面合集" },
-  { href: "./self-table-dp/", title: "MiyakoMeow谱面合集（DP）", desc: "DP 谱面合集" }
+  { href: "./self-table-dp/", title: "MiyakoMeow谱面合集（DP）", desc: "DP 谱面合集" },
 ];
 </script>
 
@@ -22,7 +22,7 @@ const links = [
       </div>
     </main>
   </div>
-  </template>
+</template>
 
 <style>
 .container {
@@ -63,7 +63,9 @@ const links = [
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   text-decoration: none;
-  transition: transform 0.15s ease, background 0.3s ease;
+  transition:
+    transform 0.15s ease,
+    background 0.3s ease;
 }
 
 .link-card:hover {
@@ -93,4 +95,3 @@ const links = [
   }
 }
 </style>
-

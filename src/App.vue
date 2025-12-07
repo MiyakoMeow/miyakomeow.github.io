@@ -1,11 +1,11 @@
 <script setup>
-import StarryBackground from './components/StarryBackground.vue'
-import ProfileCard from './components/ProfileCard.vue'
+import StarryBackground from "./components/StarryBackground.vue";
+import ProfileCard from "./components/ProfileCard.vue";
 </script>
 
 <template>
   <StarryBackground />
-  
+
   <main class="container">
     <ProfileCard className="profile-card" />
   </main>

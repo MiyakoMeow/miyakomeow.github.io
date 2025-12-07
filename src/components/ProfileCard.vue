@@ -2,9 +2,9 @@
 defineProps({
   className: {
     type: String,
-    default: ''
-  }
-})
+    default: "",
+  },
+});
 </script>
 
 <template>
@@ -18,21 +18,13 @@ defineProps({
     </div>
 
     <div class="bio">
-      <p>
-        欢迎来到我的个人主页！
-      </p>
+      <p>欢迎来到我的个人主页！</p>
     </div>
 
     <div class="links">
-      <a href="https://github.com/MiyakoMeow" target="_blank" class="link-btn">
-        GitHub
-      </a>
-      <a href="https://space.bilibili.com/215242890" class="link-btn">
-        Bilibili
-      </a>
-      <a href="https://x.com/MiyakoWoW" class="link-btn">
-        X
-      </a>
+      <a href="https://github.com/MiyakoMeow" target="_blank" class="link-btn"> GitHub </a>
+      <a href="https://space.bilibili.com/215242890" class="link-btn"> Bilibili </a>
+      <a href="https://x.com/MiyakoWoW" class="link-btn"> X </a>
     </div>
   </div>
 </template>
