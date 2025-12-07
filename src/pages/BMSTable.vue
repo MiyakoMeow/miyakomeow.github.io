@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed, reactive } from "vue";
-import StarryBackground from "../components/StarryBackground.vue";
+import BlogLayout from "../layout/BlogLayout.vue";
 
 // 从URL路径获取表格类型
 function getTableTypeFromPath() {
@@ -172,10 +172,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <StarryBackground />
-    <main class="container">
-      <div class="bms-table-container">
+  <BlogLayout>
+    <div class="bms-table-container">
         <h1>{{ title }}</h1>
         <div class="bms-table-content">
           <!-- 加载状态 -->
@@ -341,17 +339,12 @@ onMounted(() => {
             </div>
           </div>
         </div>
-      </div>
-    </main>
-  </div>
+    </div>
+  </BlogLayout>
 </template>
 
 <style>
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-}
+ 
 
 .bms-table-container {
   background: rgba(255, 255, 255, 0.1);
@@ -685,10 +678,7 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 1rem;
-  }
-
+ 
   .bms-table-container {
     padding: 1.5rem;
   }

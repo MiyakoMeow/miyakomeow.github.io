@@ -1,5 +1,5 @@
 <script setup>
-import StarryBackground from "../components/StarryBackground.vue";
+import BlogLayout from "../layout/BlogLayout.vue";
 
 const links = [
   { href: "./self-table-sp/", title: "MiyakoMeow谱面合集（SP）", desc: "SP 谱面合集" },
@@ -8,29 +8,20 @@ const links = [
 </script>
 
 <template>
-  <div>
-    <StarryBackground />
-    <main class="container">
-      <div class="bms-index-container">
-        <h1>BMS</h1>
-        <div class="links-grid">
-          <a v-for="link in links" :key="link.href" class="link-card" :href="link.href">
-            <div class="link-title">{{ link.title }}</div>
-            <div class="link-desc">{{ link.desc }}</div>
-          </a>
-        </div>
+  <BlogLayout>
+    <div class="bms-index-container">
+      <h1>BMS</h1>
+      <div class="links-grid">
+        <a v-for="link in links" :key="link.href" class="link-card" :href="link.href">
+          <div class="link-title">{{ link.title }}</div>
+          <div class="link-desc">{{ link.desc }}</div>
+        </a>
       </div>
-    </main>
-  </div>
+    </div>
+  </BlogLayout>
 </template>
 
 <style>
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
 .bms-index-container {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -86,10 +77,6 @@ const links = [
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 1.5rem;
-  }
-
   .links-grid {
     grid-template-columns: 1fr;
   }
