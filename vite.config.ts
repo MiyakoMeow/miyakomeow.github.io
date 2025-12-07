@@ -1,16 +1,11 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  base: './',
+  base: "./",
   define: {
-    'process.env': {}
+    "process.env": {},
   },
-  resolve: {
-    alias: {
-      vue: 'https://esm.sh/vue@3.5.13'
-    }
-  }
-})
+});
