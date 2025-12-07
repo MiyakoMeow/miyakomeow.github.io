@@ -24,7 +24,7 @@ jobs:
 
     - name: Run development server check
       run: |
-        deno run --allow-read --allow-env --allow-net --allow-run --allow-sys --allow-ffi vite --config vite.config.ts --host &
+        deno run --allow-read --allow-env --allow-net --allow-write --allow-run --allow-sys --allow-ffi vite --config vite.config.ts --host &
         sleep 10  # Wait for server to start
 
     - name: Build project
