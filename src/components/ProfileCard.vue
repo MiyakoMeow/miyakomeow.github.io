@@ -16,7 +16,7 @@ defineProps({
       <h1>MiyakoMeow</h1>
       <p class="subtitle">一个天天摸鱼的大学生。</p>
     </div>
-    
+
     <div class="bio">
       <p>
         欢迎来到我的个人主页！
@@ -24,14 +24,14 @@ defineProps({
     </div>
 
     <div class="links">
-      <a href="https://github.com/miyakomeow" target="_blank" class="link-btn">
+      <a href="https://github.com/MiyakoMeow" target="_blank" class="link-btn">
         GitHub
       </a>
-      <a href="#" class="link-btn">
-        Twitter
+      <a href="https://space.bilibili.com/215242890" class="link-btn">
+        Bilibili
       </a>
-      <a href="#" class="link-btn">
-        Blog
+      <a href="https://x.com/MiyakoWoW" class="link-btn">
+        X
       </a>
     </div>
   </div>
@@ -66,8 +66,10 @@ defineProps({
 h1 {
   margin: 0.5rem 0;
   font-size: 2.5rem;
-  color: rgb(81, 67, 172);
-  -background-clip: text;
+  background: linear-gradient(90deg, #a78bfa, #f472b6, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   -webkit-text-fill-color: transparent;
 }
 
