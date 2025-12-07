@@ -20,6 +20,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, "entry/index.html"),
+        "bms/index": resolve(__dirname, "entry/bms/index.html"),
         "bms/self-table-sp": resolve(__dirname, "entry/bms/self-table-sp/index.html"),
         "bms/self-table-dp": resolve(__dirname, "entry/bms/self-table-dp/index.html"),
       },
