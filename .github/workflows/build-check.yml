@@ -24,13 +24,13 @@ jobs:
 
     - name: Run development server check
       run: |
-        deno task dev --host &
+        deno run --allow-read --allow-env --allow-net --allow-run --allow-sys --allow-ffi vite --config vite.config.ts --host &
         sleep 10  # Wait for server to start
 
     - name: Build project
-      run: deno task build
+      run: deno run --allow-read --allow-env --allow-net --allow-write --allow-run --allow-sys --allow-ffi vite build --config vite.config.ts
 
     - name: Run preview
       run: |
-        deno task preview --host &
+        deno run --allow-read --allow-env --allow-net --allow-write --allow-run --allow-sys --allow-ffi vite preview --config vite.config.ts --host &
         sleep 5  # Wait for preview server to start
