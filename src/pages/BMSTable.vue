@@ -211,15 +211,20 @@ function formatLevel(level) {
 
 // 获取难度颜色
 function getDifficultyColor(level) {
-  if (level === "???") return "#ff6b6b";
+  const num = parseInt(level, 10);
+  if (isNaN(num)) return "#ddbb00"; // 黄色 - 其它
 
-  const num = parseFloat(level);
-  if (isNaN(num)) return "#64b5f6";
+  // 按照新规则设置颜色
+  if (num <= -5) return "#4caf50"; // 绿色 - -5及以下
+  if (num <= -4) return "#4caf50"; // 绿色 - -4
+  if (num <= -3) return "#5050fa"; // 浅蓝色 - -3
+  if (num <= -2) return "#ff9800"; // 橙色 - -2
+  if (num <= -1) return "#ff9800"; // 橙色 - -1
+  if (num <= 0) return "#f44336"; // 红色 - 0
+  if (num <= 12) return "#ce50d8"; // 浅紫色 - 1-12
+  if (num <= 24) return "#9c27b0"; // 深紫色 - 13-24
 
-  if (num <= 0) return "#4caf50"; // 绿色 - 简单
-  if (num <= 5) return "#ff9800"; // 橙色 - 中等
-  if (num <= 10) return "#f44336"; // 红色 - 困难
-  return "#9c27b0"; // 紫色 - 超难
+  return "#ddbb00"; // 黄色 - 其它（25及以上）
 }
 
 // 获取谱面显示信息
