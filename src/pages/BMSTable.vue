@@ -964,12 +964,24 @@ onMounted(() => {
   word-break: break-word;
 }
 
-.charts-table col.col-level { width: 50px; }
-.charts-table col.col-download { width: 140px; }
-.charts-table col.col-bmslinks { width: 140px; }
-.charts-table col.col-title { width: 260px; }
-.charts-table col.col-artist { width: 200px; }
-.charts-table col.col-comment { width: 260px; }
+.charts-table col.col-level {
+  width: 50px;
+}
+.charts-table col.col-download {
+  width: 140px;
+}
+.charts-table col.col-bmslinks {
+  width: 140px;
+}
+.charts-table col.col-title {
+  width: 260px;
+}
+.charts-table col.col-artist {
+  width: 200px;
+}
+.charts-table col.col-comment {
+  width: 260px;
+}
 
 .charts-table tbody tr:hover {
   background: rgba(255, 255, 255, 0.05);
