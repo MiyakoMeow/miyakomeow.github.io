@@ -1,10 +1,9 @@
-<script setup>
-defineProps({
-  className: {
-    type: String,
-    default: "",
-  },
-});
+<script setup lang="ts">
+interface Props {
+  className?: string;
+}
+
+defineProps<Props>();
 </script>
 
 <template>

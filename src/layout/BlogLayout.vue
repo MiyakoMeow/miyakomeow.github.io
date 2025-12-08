@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import StarryBackground from "../components/StarryBackground.vue";
 import ProfileCard from "../components/ProfileCard.vue";
 </script>

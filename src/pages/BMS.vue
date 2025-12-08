@@ -1,7 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import BlogLayout from "../layout/BlogLayout.vue";
 
-const links = [
+interface LinkItem {
+  href: string;
+  title: string;
+  desc: string;
+}
+
+const links: LinkItem[] = [
   { href: "./self-table-sp/", title: "MiyakoMeow谱面合集（SP）", desc: "SP 谱面合集" },
   { href: "./self-table-dp/", title: "MiyakoMeow谱面合集（DP）", desc: "DP 谱面合集" },
 ];
