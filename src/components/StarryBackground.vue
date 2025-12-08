@@ -1,22 +1,35 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 
-const canvasRef = ref(null);
-let animationId = null;
+const canvasRef = ref<HTMLCanvasElement | null>(null);
+let animationId: number | null = null;
 
 onMounted(() => {
   const canvas = canvasRef.value;
+  if (!canvas) return;
+
   const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
   let width = window.innerWidth;
   let height = window.innerHeight;
 
   canvas.width = width;
   canvas.height = height;
 
-  const stars = [];
+  const stars: Star[] = [];
   const STAR_COUNT = 200;
 
   class Star {
+    x: number;
+    y: number;
+    size: number;
+    speedX: number;
+    speedY: number;
+    opacity: number;
+    fadeSpeed: number;
+    fadeDirection: number;
+
     constructor() {
       this.x = Math.random() * width;
       this.y = Math.random() * height;
@@ -28,7 +41,7 @@ onMounted(() => {
       this.fadeDirection = 1;
     }
 
-    update() {
+    update(): void {
       this.x += this.speedX;
       this.y += this.speedY;
 
@@ -47,11 +60,11 @@ onMounted(() => {
       }
     }
 
-    draw() {
-      ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
+    draw(): void {
+      ctx!.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+      ctx!.beginPath();
+      ctx!.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx!.fill();
     }
   }
 
@@ -59,16 +72,16 @@ onMounted(() => {
     stars.push(new Star());
   }
 
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
+  function animate(): void {
+    ctx!.clearRect(0, 0, width, height);
 
     // Draw background gradient
-    const gradient = ctx.createLinearGradient(0, 0, 0, height);
+    const gradient = ctx!.createLinearGradient(0, 0, 0, height);
     gradient.addColorStop(0, "#0f0c29");
     gradient.addColorStop(0.5, "#302b63");
     gradient.addColorStop(1, "#24243e");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
+    ctx!.fillStyle = gradient;
+    ctx!.fillRect(0, 0, width, height);
 
     stars.forEach((star) => {
       star.update();
@@ -80,7 +93,7 @@ onMounted(() => {
 
   animate();
 
-  const handleResize = () => {
+  const handleResize = (): void => {
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = width;
@@ -91,7 +104,9 @@ onMounted(() => {
 
   onUnmounted(() => {
     window.removeEventListener("resize", handleResize);
-    cancelAnimationFrame(animationId);
+    if (animationId !== null) {
+      cancelAnimationFrame(animationId);
+    }
   });
 });
 </script>

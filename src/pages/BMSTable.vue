@@ -1,9 +1,66 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed, reactive } from "vue";
 import StarryBackground from "../components/StarryBackground.vue";
 
+interface ChartData {
+  title?: string;
+  artist?: string;
+  level?: string;
+  sha256?: string;
+  md5?: string;
+  comment?: string;
+  url?: string;
+  url_diff?: string;
+  [key: string]: unknown;
+}
+
+interface HeaderData {
+  name?: string;
+  symbol?: string;
+  data_url?: string;
+  [key: string]: unknown;
+}
+
+interface LoadingState {
+  isLoading: boolean;
+  progress: number;
+  currentStep: string;
+  totalSteps: number;
+}
+
+interface DifficultyGroup {
+  level: string;
+  formattedLevel: string;
+  color: string;
+  charts: ChartData[];
+}
+
+interface TableStats {
+  totalCharts: number;
+  difficulties: string[];
+  averageLevel: string | number;
+}
+
+interface ChartDisplayInfo {
+  title: string;
+  artist: string;
+  level: string;
+  sha256: string | undefined;
+  md5: string | undefined;
+  comment: string;
+  url: string;
+  url_diff: string;
+}
+
+interface BmsLinks {
+  bmsScoreViewer: string;
+  lr2ir: string;
+  mocha: string;
+  minir: string;
+}
+
 // 从URL路径获取难度表类型
-function getTableTypeFromPath() {
+function getTableTypeFromPath(): "sp" | "dp" {
   const path = window.location.pathname;
   if (path.includes("self-table-dp")) {
     return "dp";
@@ -11,7 +68,7 @@ function getTableTypeFromPath() {
   return "sp"; // 默认为sp
 }
 
-const tableType = ref(getTableTypeFromPath());
+const tableType = ref<"sp" | "dp">(getTableTypeFromPath());
 const title = computed(() => {
   if (headerData.value && headerData.value.name) {
     return headerData.value.name;
@@ -20,25 +77,25 @@ const title = computed(() => {
 });
 
 // 加载状态管理
-const loadingState = reactive({
+const loadingState = reactive<LoadingState>({
   isLoading: true,
   progress: 0,
   currentStep: "正在初始化...",
   totalSteps: 4,
 });
 
-const tableData = ref(null);
-const headerData = ref(null);
-const error = ref(null);
+const tableData = ref<ChartData[] | null>(null);
+const headerData = ref<HeaderData | null>(null);
+const error = ref<string | null>(null);
 
 // 模拟进度更新
-function updateProgress(step, progress) {
+function updateProgress(step: string, progress: number): void {
   loadingState.currentStep = step;
   loadingState.progress = progress;
 }
 
 // 懒加载JSON数据
-async function lazyLoadTableData() {
+async function lazyLoadTableData(): Promise<void> {
   try {
     updateProgress("正在加载表头信息...", 25);
 
@@ -52,7 +109,7 @@ async function lazyLoadTableData() {
     updateProgress("表头信息加载完成", 50);
 
     // 从header.json中获取data_url
-    const dataUrl = headerData.value.data_url;
+    const dataUrl = headerData.value?.data_url;
     if (!dataUrl) {
       throw new Error("表头信息中未找到data_url");
     }
@@ -73,14 +130,14 @@ async function lazyLoadTableData() {
       loadingState.isLoading = false;
     }, 500);
   } catch (err) {
-    error.value = err.message;
+    error.value = err instanceof Error ? err.message : "未知错误";
     loadingState.isLoading = false;
     console.error("加载BMS难度表数据失败:", err);
   }
 }
 
 // 滚动到指定难度组
-function scrollToDifficultyGroup(level) {
+function scrollToDifficultyGroup(level: string): void {
   const element = document.getElementById(`difficulty-group-${level}`);
   if (element) {
     element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -88,7 +145,7 @@ function scrollToDifficultyGroup(level) {
 }
 
 // 计算难度表统计数据
-const tableStats = computed(() => {
+const tableStats = computed<TableStats>(() => {
   if (!tableData.value || !Array.isArray(tableData.value)) {
     return {
       totalCharts: 0,
@@ -98,7 +155,7 @@ const tableStats = computed(() => {
   }
 
   const charts = tableData.value;
-  const difficulties = new Set();
+  const difficulties = new Set<string>();
   let totalLevel = 0;
   let validLevelCount = 0;
 
@@ -122,12 +179,12 @@ const tableStats = computed(() => {
 });
 
 // 按难度分组谱面数据
-const groupedCharts = computed(() => {
+const groupedCharts = computed<Record<string, DifficultyGroup>>(() => {
   if (!tableData.value || !Array.isArray(tableData.value)) {
     return {};
   }
 
-  const groups = {};
+  const groups: Record<string, DifficultyGroup> = {};
   const charts = tableData.value;
 
   charts.forEach((chart) => {
@@ -152,13 +209,13 @@ const groupedCharts = computed(() => {
   const sortedKeys = levels.sort(sortDifficultyLevels);
 
   // 使用Map保持插入顺序，然后转换为数组
-  const sortedGroupsMap = new Map();
+  const sortedGroupsMap = new Map<string, DifficultyGroup>();
   sortedKeys.forEach((key) => {
     sortedGroupsMap.set(key, groups[key]);
   });
 
   // 将Map转换为对象（Vue模板需要普通对象）
-  const sortedGroups = {};
+  const sortedGroups: Record<string, DifficultyGroup> = {};
   sortedGroupsMap.forEach((value, key) => {
     sortedGroups[key] = value;
   });
@@ -167,7 +224,7 @@ const groupedCharts = computed(() => {
 });
 
 // 获取排序后的难度组列表
-const sortedDifficultyGroups = computed(() => {
+const sortedDifficultyGroups = computed<DifficultyGroup[]>(() => {
   // 确保按排序后的键顺序获取值
   const groups = groupedCharts.value;
   const sortedKeys = Object.keys(groups).sort(sortDifficultyLevels);
@@ -175,7 +232,7 @@ const sortedDifficultyGroups = computed(() => {
 });
 
 // 难度等级排序函数
-function sortDifficultyLevels(a, b) {
+function sortDifficultyLevels(a: string, b: string): number {
   // 使用正则表达式检查是否为整数（包括负数）
   const intRegex = /^-?\d+$/;
   const aIsInt = intRegex.test(a.trim());
@@ -203,14 +260,14 @@ function sortDifficultyLevels(a, b) {
 }
 
 // 格式化等级显示
-function formatLevel(level) {
+function formatLevel(level: string): string {
   if (!level) return "N/A";
   const num = parseInt(level, 10);
   return isNaN(num) ? level : num.toString();
 }
 
 // 获取难度颜色
-function getDifficultyColor(level) {
+function getDifficultyColor(level: string): string {
   const num = parseInt(level, 10);
   if (isNaN(num)) return "#ddbb00"; // 黄色 - 其它
 
@@ -228,7 +285,7 @@ function getDifficultyColor(level) {
 }
 
 // 获取谱面显示信息
-function getChartDisplayInfo(chart) {
+function getChartDisplayInfo(chart: ChartData): ChartDisplayInfo {
   return {
     title: chart.title || "未知标题",
     // 如果没有artist字段，显示"未知艺术家"
@@ -244,14 +301,14 @@ function getChartDisplayInfo(chart) {
 }
 
 // 打开URL链接
-function openUrl(url) {
+function openUrl(url: string): void {
   if (url) {
     window.open(url, "_blank");
   }
 }
 
 // 生成BMS网站链接
-function getBmsLinks(chart) {
+function getBmsLinks(chart: ChartData): BmsLinks {
   const info = getChartDisplayInfo(chart);
   return {
     bmsScoreViewer: `https://bms-score-viewer.pages.dev/view?md5=${info.md5}`,
@@ -328,7 +385,7 @@ onMounted(() => {
               </p>
               <p v-if="headerData && headerData.level_order">
                 <strong>难度顺序:</strong>
-                {{ headerData.level_order.join(", ") }}
+                {{ (headerData.level_order as string[])?.join(", ") || "N/A" }}
               </p>
             </div>
           </div>
@@ -426,7 +483,7 @@ onMounted(() => {
 
         <!-- 按难度分组的谱面表格 -->
         <div class="charts-table-section" v-if="sortedDifficultyGroups.length > 0">
-          <h3>谱面列表 ({{ tableData.length }} 个)</h3>
+          <h3>谱面列表 ({{ tableData?.length || 0 }} 个)</h3>
 
           <!-- 难度组导航 -->
           <div class="difficulty-groups-nav" v-if="sortedDifficultyGroups.length > 1">
@@ -486,10 +543,10 @@ onMounted(() => {
                       <span
                         class="level-badge"
                         :style="{
-                          backgroundColor: getDifficultyColor(chart.level),
+                          backgroundColor: getDifficultyColor(chart.level || 'N/A'),
                         }"
                       >
-                        {{ formatLevel(chart.level) }}
+                        {{ formatLevel(chart.level || "N/A") }}
                       </span>
                     </td>
                     <td class="chart-title">
