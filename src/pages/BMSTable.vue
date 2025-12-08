@@ -237,6 +237,7 @@ function getChartDisplayInfo(chart) {
     // 其他可能存在的字段
     sha256: chart.sha256,
     md5: chart.md5,
+    comment: chart.comment || "",
   };
 }
 
@@ -454,6 +455,7 @@ onMounted(() => {
                     <th>等级</th>
                     <th>标题</th>
                     <th>艺术家</th>
+                    <th class="comment-header">备注</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -473,6 +475,9 @@ onMounted(() => {
                     </td>
                     <td>
                       {{ getChartDisplayInfo(chart).artist }}
+                    </td>
+                    <td class="comment-cell">
+                      {{ getChartDisplayInfo(chart).comment }}
                     </td>
                   </tr>
                 </tbody>
@@ -796,7 +801,7 @@ onMounted(() => {
 .charts-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px;
+  min-width: 900px;
 }
 
 .charts-table th {
@@ -812,6 +817,7 @@ onMounted(() => {
   padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.9);
+  word-break: break-word;
 }
 
 .charts-table tbody tr:hover {
@@ -819,7 +825,12 @@ onMounted(() => {
 }
 
 .chart-title {
-  min-width: 250px;
+  min-width: 200px;
+}
+
+.comment-cell {
+  min-width: 150px;
+  max-width: 300px;
 }
 
 .level-badge {
@@ -987,9 +998,15 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .bms-table-container {
-    padding: 1.5rem;
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  .charts-table td:nth-child(4) {
+    max-width: 120px;
+    font-size: 0.8em;
   }
 
   .bms-table-container h1 {
@@ -1013,6 +1030,19 @@ onMounted(() => {
   .charts-table td {
     padding: 0.75rem;
   }
+
+  .charts-table {
+    min-width: 600px;
+  }
+
+  .chart-title {
+    min-width: 150px;
+  }
+
+  .comment-cell {
+    min-width: 100px;
+    max-width: 200px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1021,6 +1051,7 @@ onMounted(() => {
     margin: 1rem;
     max-width: calc(100% - 2rem);
     border-radius: 15px;
+    overflow-x: auto;
   }
 
   .rank-reference-section {
@@ -1080,6 +1111,25 @@ onMounted(() => {
   }
   .difficulty-group-count {
     font-size: 1rem;
+  }
+
+  .charts-table {
+    min-width: 400px;
+  }
+
+  .chart-title {
+    min-width: 120px;
+  }
+
+  .comment-cell {
+    min-width: 80px;
+    max-width: 150px;
+    font-size: 0.85rem;
+  }
+
+  .charts-table th,
+  .charts-table td {
+    padding: 0.5rem;
   }
 }
 </style>
