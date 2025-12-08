@@ -530,11 +530,11 @@ onMounted(() => {
                 <thead>
                   <tr>
                     <th>等级</th>
+                    <th>下载</th>
+                    <th>BMS网站</th>
                     <th>标题</th>
                     <th>艺术家</th>
                     <th class="comment-header">备注</th>
-                    <th>下载</th>
-                    <th>BMS网站</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -548,15 +548,6 @@ onMounted(() => {
                       >
                         {{ formatLevel(chart.level || "N/A") }}
                       </span>
-                    </td>
-                    <td class="chart-title">
-                      <strong>{{ getChartDisplayInfo(chart).title }}</strong>
-                    </td>
-                    <td>
-                      {{ getChartDisplayInfo(chart).artist }}
-                    </td>
-                    <td class="comment-cell">
-                      {{ getChartDisplayInfo(chart).comment }}
                     </td>
                     <td class="download-cell">
                       <div class="download-buttons">
@@ -609,6 +600,15 @@ onMounted(() => {
                           <img src="/assets/logo/minir_logo.gif" alt="Minir" class="bms-icon" />
                         </button>
                       </div>
+                    </td>
+                    <td class="chart-title">
+                      <strong>{{ getChartDisplayInfo(chart).title }}</strong>
+                    </td>
+                    <td>
+                      {{ getChartDisplayInfo(chart).artist }}
+                    </td>
+                    <td class="comment-cell">
+                      {{ getChartDisplayInfo(chart).comment }}
                     </td>
                   </tr>
                 </tbody>
@@ -1270,7 +1270,7 @@ onMounted(() => {
     margin: 1rem auto;
   }
 
-  .charts-table td:nth-child(4) {
+  .charts-table td:nth-child(6) {
     max-width: 120px;
     font-size: 0.8em;
   }
