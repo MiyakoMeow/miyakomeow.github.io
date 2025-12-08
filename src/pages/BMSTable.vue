@@ -966,12 +966,12 @@ onMounted(() => {
 
 .level-badge {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 12px;
   color: white;
   font-weight: 600;
   font-size: 0.85rem;
-  min-width: 60px;
+  min-width: 30px;
   text-align: center;
 }
 
