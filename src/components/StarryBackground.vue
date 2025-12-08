@@ -116,13 +116,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@reference "tailwindcss";
+
 .starry-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
+  @apply fixed top-0 left-0 w-full h-full z-[-1] pointer-events-none;
 }
 </style>
