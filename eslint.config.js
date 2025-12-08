@@ -13,7 +13,7 @@ export default [
   {
     files: ["**/*.js", "**/*.ts"],
     languageOptions: {
-      ecmaVersion: 2023,
+      ecmaVersion: 2024,
       sourceType: "module",
       globals: globals.browser,
     },
@@ -33,7 +33,7 @@ export default [
   {
     files: ["**/*.vue"],
     languageOptions: {
-      ecmaVersion: 2023,
+      ecmaVersion: 2024,
       sourceType: "module",
       globals: globals.browser,
     },
