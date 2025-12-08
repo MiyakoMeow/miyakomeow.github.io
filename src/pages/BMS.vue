@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BlogLayout from "../layout/BlogLayout.vue";
+import "../styles/main.pcss";
 
 interface LinkItem {
   href: string;
