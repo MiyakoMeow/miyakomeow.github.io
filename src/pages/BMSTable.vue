@@ -977,18 +977,19 @@ onMounted(() => {
 
 /* 下载按钮样式 */
 .download-cell {
-  min-width: 120px;
-  max-width: 200px;
+  min-width: 130px;
+  max-width: 180px;
 }
 
 .download-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex-direction: row;
+  gap: 0.3rem;
+  flex-wrap: wrap;
 }
 
 .download-button {
-  padding: 0.4rem 0.8rem;
+  padding: 0.35rem 0.5rem;
   border: none;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -998,8 +999,9 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  min-width: 80px;
+  gap: 0.2rem;
+  min-width: 60px;
+  flex: 1;
 }
 
 .download-button:hover {
@@ -1309,14 +1311,15 @@ onMounted(() => {
   }
 
   .download-cell {
-    min-width: 100px;
+    min-width: 110px;
     max-width: 150px;
   }
 
   .download-button {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-    min-width: 70px;
+    padding: 0.25rem 0.4rem;
+    font-size: 0.75rem;
+    min-width: 55px;
+    flex: 1;
   }
 
   .bms-links-cell {
@@ -1414,14 +1417,15 @@ onMounted(() => {
   }
 
   .download-cell {
-    min-width: 80px;
+    min-width: 90px;
     max-width: 120px;
   }
 
   .download-button {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    min-width: 60px;
+    padding: 0.2rem 0.3rem;
+    font-size: 0.7rem;
+    min-width: 50px;
+    flex: 1;
   }
 
   .download-buttons {
