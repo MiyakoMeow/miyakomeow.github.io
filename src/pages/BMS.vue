@@ -9,8 +9,8 @@ const links = [
 
 <template>
   <BlogLayout>
-    <div class="bms-index-container">
-      <h1>BMS</h1>
+    <div class="glass-container bms-index-container">
+      <h1 class="content-title">BMS</h1>
       <div class="links-grid">
         <a v-for="link in links" :key="link.href" class="link-card" :href="link.href">
           <div class="link-title">{{ link.title }}</div>
@@ -22,28 +22,13 @@ const links = [
 </template>
 
 <style>
-.bms-index-container {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 2rem;
-  margin-top: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.bms-index-container h1 {
-  color: white;
-  text-align: center;
-  margin-bottom: 2rem;
-  font-size: 2.5rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
+/* 页面特定样式 */
 
 .links-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(240px, 1fr));
   gap: 1rem;
+  margin-top: 1rem;
 }
 
 .link-card {

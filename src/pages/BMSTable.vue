@@ -173,197 +173,177 @@ onMounted(() => {
 
 <template>
   <BlogLayout>
-    <div class="bms-table-container">
-        <h1>{{ title }}</h1>
-        <div class="bms-table-content">
-          <!-- 加载状态 -->
-          <div v-if="loadingState.isLoading" class="loading-section">
-            <div class="progress-container">
-              <div class="progress-header">
-                <h3>正在加载BMS表格数据</h3>
-                <div class="progress-percentage">{{ loadingState.progress }}%</div>
-              </div>
-
-              <div class="progress-bar">
-                <div
-                  class="progress-fill"
-                  :style="{
-                    width: loadingState.progress + '%',
-                  }"
-                ></div>
-              </div>
-
-              <div class="progress-steps">
-                <div class="step-info">
-                  <span class="step-label">当前步骤:</span>
-                  <span class="step-text">{{ loadingState.currentStep }}</span>
-                </div>
-                <div class="step-info">
-                  <span class="step-label">总步骤数:</span>
-                  <span class="step-text">{{ loadingState.totalSteps }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 错误状态 -->
-          <div v-else-if="error" class="error-section">
-            <div class="error-icon">⚠️</div>
-            <h3>加载失败</h3>
-            <p class="error-message">{{ error }}</p>
-            <p>请检查网络连接或稍后重试。</p>
-            <button class="retry-button" @click="lazyLoadTableData">重新加载</button>
-          </div>
-
-          <!-- 数据展示 -->
-          <div v-else class="data-section">
-            <!-- 表格信息 -->
-            <div class="table-header">
-              <div class="header-info">
-                <h2>表格信息</h2>
-                <div class="header-details">
-                  <p v-if="headerData">
-                    <strong>表格名称:</strong>
-                    {{ headerData.name || "未命名" }}
-                  </p>
-                  <p v-if="headerData">
-                    <strong>表格符号:</strong>
-                    {{ headerData.symbol || "无" }}
-                  </p>
-                </div>
-              </div>
-
-              <div class="stats-summary">
-                <h3>统计摘要</h3>
-                <div class="stats-grid">
-                  <div class="stat-card">
-                    <div class="stat-value">
-                      {{ tableStats.totalCharts }}
-                    </div>
-                    <div class="stat-label">总谱面数</div>
-                  </div>
-                  <div class="stat-card">
-                    <div class="stat-value">
-                      {{ tableStats.difficulties.length }}
-                    </div>
-                    <div class="stat-label">难度等级数</div>
-                  </div>
-                  <div class="stat-card">
-                    <div class="stat-value">
-                      {{ tableStats.averageLevel }}
-                    </div>
-                    <div class="stat-label">平均难度</div>
-                  </div>
-                </div>
-              </div>
+    <div class="glass-container bms-table-container">
+      <h1 class="content-title">{{ title }}</h1>
+      <div class="bms-table-content">
+        <!-- 加载状态 -->
+        <div v-if="loadingState.isLoading" class="loading-section">
+          <div class="progress-container">
+            <div class="progress-header">
+              <h3>正在加载BMS表格数据</h3>
+              <div class="progress-percentage">{{ loadingState.progress }}%</div>
             </div>
 
-            <!-- 难度分布 -->
-            <div class="difficulty-section" v-if="tableStats.difficulties.length > 0">
-              <h3>难度分布</h3>
-              <div class="difficulty-tags">
-                <span
-                  v-for="level in tableStats.difficulties"
-                  :key="level"
-                  class="difficulty-tag"
-                  :style="{
-                    backgroundColor: getDifficultyColor(level),
-                  }"
-                >
-                  {{ formatLevel(level) }}
-                </span>
-              </div>
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                :style="{
+                  width: loadingState.progress + '%',
+                }"
+              ></div>
             </div>
 
-            <!-- 谱面表格 -->
-            <div class="charts-table-section" v-if="tableData && tableData.length > 0">
-              <h3>谱面列表 ({{ tableData.length }} 首)</h3>
-              <div class="table-wrapper">
-                <table class="charts-table">
-                  <thead>
-                    <tr>
-                      <th>标题</th>
-                      <th>艺术家</th>
-                      <th>难度</th>
-                      <th>等级</th>
-                      <th>BPM</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(chart, index) in tableData" :key="index">
-                      <td class="chart-title">
-                        <strong>{{ getChartDisplayInfo(chart).title }}</strong>
-                        <div v-if="getChartDisplayInfo(chart).subtitle" class="chart-subtitle">
-                          {{ getChartDisplayInfo(chart).subtitle }}
-                        </div>
-                      </td>
-                      <td>
-                        {{ getChartDisplayInfo(chart).artist }}
-                      </td>
-                      <td>
-                        <span
-                          class="difficulty-badge"
-                          :style="{
-                            backgroundColor: getDifficultyColor(chart.level),
-                          }"
-                        >
-                          {{ getChartDisplayInfo(chart).difficulty }}
-                        </span>
-                      </td>
-                      <td>
-                        <span
-                          class="level-badge"
-                          :style="{
-                            backgroundColor: getDifficultyColor(chart.level),
-                          }"
-                        >
-                          {{ formatLevel(chart.level) }}
-                        </span>
-                      </td>
-                      <td>
-                        <span class="bpm-value">
-                          {{ getChartDisplayInfo(chart).bpm }}
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+            <div class="progress-steps">
+              <div class="step-info">
+                <span class="step-label">当前步骤:</span>
+                <span class="step-text">{{ loadingState.currentStep }}</span>
               </div>
-            </div>
-
-            <!-- 空状态 -->
-            <div v-else class="empty-state">
-              <div class="empty-icon">📊</div>
-              <h3>暂无谱面数据</h3>
-              <p>表格中没有找到谱面数据。</p>
+              <div class="step-info">
+                <span class="step-label">总步骤数:</span>
+                <span class="step-text">{{ loadingState.totalSteps }}</span>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- 错误状态 -->
+        <div v-else-if="error" class="error-section">
+          <div class="error-icon">⚠️</div>
+          <h3>加载失败</h3>
+          <p class="error-message">{{ error }}</p>
+          <p>请检查网络连接或稍后重试。</p>
+          <button class="retry-button" @click="lazyLoadTableData">重新加载</button>
+        </div>
+
+        <!-- 数据展示 -->
+        <div v-else class="data-section">
+          <!-- 表格信息 -->
+          <div class="table-header">
+            <div class="header-info">
+              <h2>表格信息</h2>
+              <div class="header-details">
+                <p v-if="headerData">
+                  <strong>表格名称:</strong>
+                  {{ headerData.name || "未命名" }}
+                </p>
+                <p v-if="headerData">
+                  <strong>表格符号:</strong>
+                  {{ headerData.symbol || "无" }}
+                </p>
+              </div>
+            </div>
+
+            <div class="stats-summary">
+              <h3>统计摘要</h3>
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-value">
+                    {{ tableStats.totalCharts }}
+                  </div>
+                  <div class="stat-label">总谱面数</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value">
+                    {{ tableStats.difficulties.length }}
+                  </div>
+                  <div class="stat-label">难度等级数</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value">
+                    {{ tableStats.averageLevel }}
+                  </div>
+                  <div class="stat-label">平均难度</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 难度分布 -->
+          <div class="difficulty-section" v-if="tableStats.difficulties.length > 0">
+            <h3>难度分布</h3>
+            <div class="difficulty-tags">
+              <span
+                v-for="level in tableStats.difficulties"
+                :key="level"
+                class="difficulty-tag"
+                :style="{
+                  backgroundColor: getDifficultyColor(level),
+                }"
+              >
+                {{ formatLevel(level) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- 谱面表格 -->
+          <div class="charts-table-section" v-if="tableData && tableData.length > 0">
+            <h3>谱面列表 ({{ tableData.length }} 首)</h3>
+            <div class="table-wrapper">
+              <table class="charts-table">
+                <thead>
+                  <tr>
+                    <th>标题</th>
+                    <th>艺术家</th>
+                    <th>难度</th>
+                    <th>等级</th>
+                    <th>BPM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(chart, index) in tableData" :key="index">
+                    <td class="chart-title">
+                      <strong>{{ getChartDisplayInfo(chart).title }}</strong>
+                      <div v-if="getChartDisplayInfo(chart).subtitle" class="chart-subtitle">
+                        {{ getChartDisplayInfo(chart).subtitle }}
+                      </div>
+                    </td>
+                    <td>
+                      {{ getChartDisplayInfo(chart).artist }}
+                    </td>
+                    <td>
+                      <span
+                        class="difficulty-badge"
+                        :style="{
+                          backgroundColor: getDifficultyColor(chart.level),
+                        }"
+                      >
+                        {{ getChartDisplayInfo(chart).difficulty }}
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        class="level-badge"
+                        :style="{
+                          backgroundColor: getDifficultyColor(chart.level),
+                        }"
+                      >
+                        {{ formatLevel(chart.level) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="bpm-value">
+                        {{ getChartDisplayInfo(chart).bpm }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 空状态 -->
+          <div v-else class="empty-state">
+            <div class="empty-icon">📊</div>
+            <h3>暂无谱面数据</h3>
+            <p>表格中没有找到谱面数据。</p>
+          </div>
+        </div>
+      </div>
     </div>
   </BlogLayout>
 </template>
 
 <style>
- 
-
-.bms-table-container {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 2rem;
-  margin-top: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.bms-table-container h1 {
-  color: white;
-  text-align: center;
-  margin-bottom: 2rem;
-  font-size: 2.5rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
 .bms-table-content {
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.1rem;
@@ -678,7 +658,6 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
- 
   .bms-table-container {
     padding: 1.5rem;
   }

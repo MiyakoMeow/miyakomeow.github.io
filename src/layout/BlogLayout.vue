@@ -13,7 +13,6 @@ import ProfileCard from "../components/ProfileCard.vue";
       <slot />
     </section>
   </main>
-  
 </template>
 
 <style scoped>
@@ -25,17 +24,22 @@ import ProfileCard from "../components/ProfileCard.vue";
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .sidebar {
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 .profile-card {
   max-width: 360px;
   width: 100%;
   animation: fadeIn 0.8s ease-out;
+  margin: 0 auto;
+  display: block;
 }
 
 @keyframes fadeIn {
@@ -52,6 +56,15 @@ import ProfileCard from "../components/ProfileCard.vue";
 @media (max-width: 1024px) {
   .blog-container {
     grid-template-columns: 1fr;
+    max-width: 95%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-container {
+    max-width: 100%;
+    padding: 1rem;
   }
 }
 </style>

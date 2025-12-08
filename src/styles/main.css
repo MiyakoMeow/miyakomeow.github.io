@@ -15,8 +15,6 @@
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -52,4 +50,87 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* 通用玻璃态效果容器 */
+.glass-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  width: 100%;
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* 通用玻璃态卡片（用于ProfileCard等组件） */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+/* 内容卡片标题样式 */
+.content-title {
+  color: white;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* 淡入动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .glass-container {
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .glass-card {
+    padding: 1.5rem;
+    border-radius: 14px;
+  }
+
+  .content-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-container {
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 16px;
+  }
+
+  .glass-card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .content-title {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
 }
