@@ -115,7 +115,7 @@ onMounted(() => {
   <canvas ref="canvasRef" class="starry-background"></canvas>
 </template>
 
-<style scoped>
+<style lang="postcss" scoped>
 @reference "tailwindcss";
 
 .starry-background {
