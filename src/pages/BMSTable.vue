@@ -530,11 +530,11 @@ onMounted(() => {
                 <thead>
                   <tr>
                     <th>等级</th>
+                    <th>下载</th>
+                    <th>BMS网站</th>
                     <th>标题</th>
                     <th>艺术家</th>
                     <th class="comment-header">备注</th>
-                    <th>下载</th>
-                    <th>BMS网站</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -548,15 +548,6 @@ onMounted(() => {
                       >
                         {{ formatLevel(chart.level || "N/A") }}
                       </span>
-                    </td>
-                    <td class="chart-title">
-                      <strong>{{ getChartDisplayInfo(chart).title }}</strong>
-                    </td>
-                    <td>
-                      {{ getChartDisplayInfo(chart).artist }}
-                    </td>
-                    <td class="comment-cell">
-                      {{ getChartDisplayInfo(chart).comment }}
                     </td>
                     <td class="download-cell">
                       <div class="download-buttons">
@@ -609,6 +600,15 @@ onMounted(() => {
                           <img src="/assets/logo/minir_logo.gif" alt="Minir" class="bms-icon" />
                         </button>
                       </div>
+                    </td>
+                    <td class="chart-title">
+                      <strong>{{ getChartDisplayInfo(chart).title }}</strong>
+                    </td>
+                    <td>
+                      {{ getChartDisplayInfo(chart).artist }}
+                    </td>
+                    <td class="comment-cell">
+                      {{ getChartDisplayInfo(chart).comment }}
                     </td>
                   </tr>
                 </tbody>
@@ -966,29 +966,30 @@ onMounted(() => {
 
 .level-badge {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 12px;
   color: white;
   font-weight: 600;
   font-size: 0.85rem;
-  min-width: 60px;
+  min-width: 30px;
   text-align: center;
 }
 
 /* 下载按钮样式 */
 .download-cell {
-  min-width: 120px;
-  max-width: 200px;
+  min-width: 130px;
+  max-width: 180px;
 }
 
 .download-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex-direction: row;
+  gap: 0.3rem;
+  flex-wrap: wrap;
 }
 
 .download-button {
-  padding: 0.4rem 0.8rem;
+  padding: 0.35rem 0.5rem;
   border: none;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -998,8 +999,9 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  min-width: 80px;
+  gap: 0.2rem;
+  min-width: 60px;
+  flex: 1;
 }
 
 .download-button:hover {
@@ -1268,7 +1270,7 @@ onMounted(() => {
     margin: 1rem auto;
   }
 
-  .charts-table td:nth-child(4) {
+  .charts-table td:nth-child(6) {
     max-width: 120px;
     font-size: 0.8em;
   }
@@ -1309,14 +1311,15 @@ onMounted(() => {
   }
 
   .download-cell {
-    min-width: 100px;
+    min-width: 110px;
     max-width: 150px;
   }
 
   .download-button {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-    min-width: 70px;
+    padding: 0.25rem 0.4rem;
+    font-size: 0.75rem;
+    min-width: 55px;
+    flex: 1;
   }
 
   .bms-links-cell {
@@ -1414,14 +1417,15 @@ onMounted(() => {
   }
 
   .download-cell {
-    min-width: 80px;
+    min-width: 90px;
     max-width: 120px;
   }
 
   .download-button {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    min-width: 60px;
+    padding: 0.2rem 0.3rem;
+    font-size: 0.7rem;
+    min-width: 50px;
+    flex: 1;
   }
 
   .download-buttons {
