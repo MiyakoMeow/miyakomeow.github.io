@@ -20,6 +20,9 @@ venv/
 .env.local
 *.env.*
 
+# Nodejs
+package-lock.json
+
 # Logs and temp files
 *.log
 *.tmp
