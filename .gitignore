@@ -20,8 +20,11 @@ venv/
 .env.local
 *.env.*
 
-# Nodejs
+# Nodejs & other tools
 package-lock.json
+pnpm-lock.yaml
+yarn.lock
+deno.lock
 
 # Logs and temp files
 *.log
