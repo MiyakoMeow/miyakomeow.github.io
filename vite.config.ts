@@ -25,6 +25,7 @@ export default defineConfig({
         "bms/index": resolve(__dirname, "entry/bms/index.html"),
         "bms/self-table-sp": resolve(__dirname, "entry/bms/self-table-sp/index.html"),
         "bms/self-table-dp": resolve(__dirname, "entry/bms/self-table-dp/index.html"),
+        "bms/table-mirror": resolve(__dirname, "entry/bms/table-mirror/index.html"),
       },
     },
   },

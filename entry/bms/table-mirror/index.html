@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      // 立即重定向 - 最简版本
+      (function () {
+        const proxyUrl = "https://proxy.pipers.cn/";
+
+        const path = decodeURIComponent(window.location.pathname);
+        const mirrorIndex = path.indexOf("/table-mirror/");
+
+        if (mirrorIndex === -1) {
+          window.location.replace("https://github.com/MiyakoMeow/bms-table-mirror");
+          return;
+        }
+
+        const relativePath = path.substring(mirrorIndex + "/table-mirror/".length);
+
+        if (!relativePath || relativePath == "index.html") {
+          window.location.replace("https://github.com/MiyakoMeow/bms-table-mirror");
+          return;
+        }
+
+        const encodedPath = relativePath.split("/").map(encodeURIComponent).join("/");
+        const targetUrl = `${proxyUrl}https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/${encodedPath}`;
+
+        window.location.replace(targetUrl);
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+  </head>
+  <body></body>
+</html>
