@@ -27,7 +27,7 @@ jobs:
           sleep 10  # Wait for server to start
 
       - name: Build project
-        run: bun run vite build
+        run: bun run build
 
       - name: Run preview
         run: |
