@@ -6,23 +6,18 @@
       (function () {
         const proxyUrl = "https://proxy.pipers.cn/";
 
-        const path = decodeURIComponent(window.location.pathname);
-        const mirrorIndex = path.indexOf("/table-mirror/");
+        // 获取查询参数中的table值
+        const urlParams = new URLSearchParams(window.location.search);
+        const tableName = urlParams.get("table");
 
-        if (mirrorIndex === -1) {
+        if (!tableName) {
           window.location.replace("https://github.com/MiyakoMeow/bms-table-mirror");
           return;
         }
 
-        const relativePath = path.substring(mirrorIndex + "/table-mirror/".length);
-
-        if (!relativePath || relativePath == "index.html") {
-          window.location.replace("https://github.com/MiyakoMeow/bms-table-mirror");
-          return;
-        }
-
-        const encodedPath = relativePath.split("/").map(encodeURIComponent).join("/");
-        const targetUrl = `${proxyUrl}https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/${encodedPath}`;
+        // 编码表名并构建目标URL
+        const encodedTableName = encodeURIComponent(tableName);
+        const targetUrl = `${proxyUrl}https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/${encodedTableName}/header.json`;
 
         window.location.replace(targetUrl);
       })();
