@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, reactive } from "vue";
 import StarryBackground from "../components/StarryBackground.vue";
+import "../styles/main.css";
 
 interface ChartData {
   title?: string;
