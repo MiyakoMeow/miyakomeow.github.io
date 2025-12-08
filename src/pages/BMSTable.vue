@@ -300,13 +300,6 @@ function getChartDisplayInfo(chart: ChartData): ChartDisplayInfo {
   };
 }
 
-// 打开URL链接
-function openUrl(url: string): void {
-  if (url) {
-    window.open(url, "_blank");
-  }
-}
-
 // 生成BMS网站链接
 function getBmsLinks(chart: ChartData): BmsLinks {
   const info = getChartDisplayInfo(chart);
@@ -551,54 +544,66 @@ onMounted(() => {
                     </td>
                     <td class="download-cell">
                       <div class="download-buttons">
-                        <button
+                        <a
                           v-if="getChartDisplayInfo(chart).url"
                           class="download-button download-bundle"
-                          @click="openUrl(getChartDisplayInfo(chart).url)"
+                          :href="getChartDisplayInfo(chart).url"
                           :title="getChartDisplayInfo(chart).url"
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           📦 同捆
-                        </button>
-                        <button
+                        </a>
+                        <a
                           v-if="getChartDisplayInfo(chart).url_diff"
                           class="download-button download-diff"
-                          @click="openUrl(getChartDisplayInfo(chart).url_diff)"
+                          :href="getChartDisplayInfo(chart).url_diff"
                           :title="getChartDisplayInfo(chart).url_diff"
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           🔄 差分
-                        </button>
+                        </a>
                       </div>
                     </td>
                     <td class="bms-links-cell">
                       <div class="bms-links">
-                        <button
+                        <a
                           class="bms-link-button bms-score-viewer"
-                          @click="openUrl(getBmsLinks(chart).bmsScoreViewer)"
+                          :href="getBmsLinks(chart).bmsScoreViewer"
                           :title="getBmsLinks(chart).bmsScoreViewer"
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           📊
-                        </button>
-                        <button
+                        </a>
+                        <a
                           class="bms-link-button lr2ir"
-                          @click="openUrl(getBmsLinks(chart).lr2ir)"
+                          :href="getBmsLinks(chart).lr2ir"
                           :title="getBmsLinks(chart).lr2ir"
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           LR2
-                        </button>
-                        <button
+                        </a>
+                        <a
                           class="bms-link-button mocha"
-                          @click="openUrl(getBmsLinks(chart).mocha)"
+                          :href="getBmsLinks(chart).mocha"
                           :title="getBmsLinks(chart).mocha"
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <img src="/assets/logo/mocha_logo.gif" alt="Mocha" class="bms-icon" />
-                        </button>
-                        <button
+                        </a>
+                        <a
                           class="bms-link-button minir"
-                          @click="openUrl(getBmsLinks(chart).minir)"
+                          :href="getBmsLinks(chart).minir"
                           :title="getBmsLinks(chart).minir"
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <img src="/assets/logo/minir_logo.gif" alt="Minir" class="bms-icon" />
-                        </button>
+                        </a>
                       </div>
                     </td>
                     <td class="chart-title">
@@ -1002,6 +1007,8 @@ onMounted(() => {
   gap: 0.2rem;
   min-width: 60px;
   flex: 1;
+  text-decoration: none;
+  color: inherit;
 }
 
 .download-button:hover {
@@ -1057,6 +1064,8 @@ onMounted(() => {
   justify-content: center;
   padding: 0;
   overflow: hidden;
+  text-decoration: none;
+  color: inherit;
 }
 
 .bms-icon {
