@@ -2,6 +2,7 @@ import pluginVue from "eslint-plugin-vue";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import vueTsEslintConfig from "@vue/eslint-config-typescript";
+import eslintConfigPrettier from "eslint-config-prettier";
 
 export default [
   {
@@ -41,4 +42,13 @@ export default [
       "vue/multi-word-component-names": "off",
     },
   },
+  {
+    files: ["vite.config.ts"],
+    languageOptions: {
+      ecmaVersion: 2024,
+      sourceType: "module",
+      globals: globals.node,
+    },
+  },
+  eslintConfigPrettier,
 ];
