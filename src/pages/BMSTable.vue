@@ -246,7 +246,7 @@ onMounted(() => {
 <template>
   <StarryBackground />
   <div class="bms-table-container">
-    <h1>{{ title }}</h1>
+    <h1 class="page-title">{{ title }}</h1>
     <div class="bms-table-content">
       <!-- 加载状态 -->
       <div v-if="loadingState.isLoading" class="loading-section">
@@ -414,9 +414,31 @@ onMounted(() => {
 
 <style>
 .bms-table-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1500px;
+  margin: 2rem auto;
   padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.page-title {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .bms-table-content {
@@ -761,6 +783,12 @@ onMounted(() => {
 @media (max-width: 1024px) {
   .bms-table-container {
     padding: 1.5rem;
+    margin: 1.5rem;
+    max-width: calc(100% - 3rem);
+  }
+  .page-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
   }
   .table-header {
     flex-direction: column;
@@ -811,7 +839,14 @@ onMounted(() => {
 
 @media (max-width: 480px) {
   .bms-table-container {
-    padding: 0.75rem;
+    padding: 1rem;
+    margin: 1rem;
+    max-width: calc(100% - 2rem);
+    border-radius: 15px;
+  }
+  .page-title {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
   }
   .stats-grid {
     grid-template-columns: 1fr;
