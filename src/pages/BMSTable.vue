@@ -238,7 +238,16 @@ function getChartDisplayInfo(chart) {
     sha256: chart.sha256,
     md5: chart.md5,
     comment: chart.comment || "",
+    url: chart.url || "",
+    url_diff: chart.url_diff || "",
   };
+}
+
+// 打开URL链接
+function openUrl(url) {
+  if (url) {
+    window.open(url, "_blank");
+  }
 }
 
 onMounted(() => {
@@ -456,6 +465,7 @@ onMounted(() => {
                     <th>标题</th>
                     <th>艺术家</th>
                     <th class="comment-header">备注</th>
+                    <th>获取</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -478,6 +488,26 @@ onMounted(() => {
                     </td>
                     <td class="comment-cell">
                       {{ getChartDisplayInfo(chart).comment }}
+                    </td>
+                    <td class="download-cell">
+                      <div class="download-buttons">
+                        <button
+                          v-if="getChartDisplayInfo(chart).url"
+                          class="download-button download-bundle"
+                          @click="openUrl(getChartDisplayInfo(chart).url)"
+                          :title="getChartDisplayInfo(chart).url"
+                        >
+                          📦 同捆
+                        </button>
+                        <button
+                          v-if="getChartDisplayInfo(chart).url_diff"
+                          class="download-button download-diff"
+                          @click="openUrl(getChartDisplayInfo(chart).url_diff)"
+                          :title="getChartDisplayInfo(chart).url_diff"
+                        >
+                          🔄 差分
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -844,6 +874,60 @@ onMounted(() => {
   text-align: center;
 }
 
+/* 下载按钮样式 */
+.download-cell {
+  min-width: 120px;
+  max-width: 200px;
+}
+
+.download-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.download-button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-width: 80px;
+}
+
+.download-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.download-button:active {
+  transform: translateY(0);
+}
+
+.download-bundle {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: white;
+}
+
+.download-bundle:hover {
+  background: linear-gradient(135deg, #66bb6a, #388e3c);
+}
+
+.download-diff {
+  background: linear-gradient(135deg, #2196f3, #1565c0);
+  color: white;
+}
+
+.download-diff:hover {
+  background: linear-gradient(135deg, #42a5f5, #1976d2);
+}
+
 /* 空状态样式 */
 .empty-state {
   text-align: center;
@@ -1032,7 +1116,7 @@ onMounted(() => {
   }
 
   .charts-table {
-    min-width: 600px;
+    min-width: 700px;
   }
 
   .chart-title {
@@ -1042,6 +1126,17 @@ onMounted(() => {
   .comment-cell {
     min-width: 100px;
     max-width: 200px;
+  }
+
+  .download-cell {
+    min-width: 100px;
+    max-width: 150px;
+  }
+
+  .download-button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    min-width: 70px;
   }
 }
 
@@ -1114,7 +1209,7 @@ onMounted(() => {
   }
 
   .charts-table {
-    min-width: 400px;
+    min-width: 500px;
   }
 
   .chart-title {
@@ -1125,6 +1220,21 @@ onMounted(() => {
     min-width: 80px;
     max-width: 150px;
     font-size: 0.85rem;
+  }
+
+  .download-cell {
+    min-width: 80px;
+    max-width: 120px;
+  }
+
+  .download-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    min-width: 60px;
+  }
+
+  .download-buttons {
+    gap: 0.3rem;
   }
 
   .charts-table th,
