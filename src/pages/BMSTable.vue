@@ -11,13 +11,13 @@ function getTableTypeFromPath() {
   return "sp"; // 默认为sp
 }
 
-// 根据表格类型获取标题
-function getTitleFromTableType(tableType) {
-  return tableType === "dp" ? "MiyakoMeow谱面合集（DP）" : "MiyakoMeow谱面合集（SP）";
-}
-
 const tableType = ref(getTableTypeFromPath());
-const title = computed(() => getTitleFromTableType(tableType.value));
+const title = computed(() => {
+  if (headerData.value && headerData.value.name) {
+    return headerData.value.name;
+  }
+  return "警告：header.json中，name未定义！";
+});
 
 // 加载状态管理
 const loadingState = reactive({
@@ -246,7 +246,12 @@ onMounted(() => {
 <template>
   <StarryBackground />
   <div class="bms-table-container">
-    <h1 class="page-title">{{ title }}</h1>
+    <div class="page-header">
+      <h1 class="page-title">{{ title }}</h1>
+      <div v-if="headerData && headerData.symbol" class="page-subtitle">
+        表格符号: {{ headerData.symbol }}
+      </div>
+    </div>
     <div class="bms-table-content">
       <!-- 加载状态 -->
       <div v-if="loadingState.isLoading" class="loading-section">
@@ -293,7 +298,11 @@ onMounted(() => {
               </p>
               <p v-if="headerData">
                 <strong>表格符号:</strong>
-                {{ headerData.symbol || "无" }}
+                {{ headerData.symbol || "未定义" }}
+              </p>
+              <p v-if="headerData && headerData.level_order">
+                <strong>难度顺序:</strong>
+                {{ headerData.level_order.join(", ") }}
               </p>
             </div>
           </div>
@@ -426,19 +435,27 @@ onMounted(() => {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
+.page-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
 .page-title {
   color: white;
   font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 2rem;
-  text-align: center;
+  margin-bottom: 0.5rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.page-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  font-style: italic;
 }
 
 .bms-table-content {
@@ -786,9 +803,15 @@ onMounted(() => {
     margin: 1.5rem;
     max-width: calc(100% - 3rem);
   }
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
   .page-title {
     font-size: 2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .page-subtitle {
+    font-size: 1.1rem;
   }
   .table-header {
     flex-direction: column;
@@ -844,9 +867,15 @@ onMounted(() => {
     max-width: calc(100% - 2rem);
     border-radius: 15px;
   }
+  .page-header {
+    margin-bottom: 1rem;
+  }
   .page-title {
     font-size: 1.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .page-subtitle {
+    font-size: 1rem;
   }
   .stats-grid {
     grid-template-columns: 1fr;
