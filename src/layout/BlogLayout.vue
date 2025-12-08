@@ -15,7 +15,7 @@ import ProfileCard from "../components/ProfileCard.vue";
   </main>
 </template>
 
-<style scoped>
+<style lang="postcss" scoped>
 @reference "tailwindcss";
 
 .blog-container {

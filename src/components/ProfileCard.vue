@@ -28,7 +28,7 @@ defineProps<Props>();
   </div>
 </template>
 
-<style scoped>
+<style lang="postcss" scoped>
 @reference "tailwindcss";
 
 .glass-card {

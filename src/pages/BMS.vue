@@ -28,7 +28,7 @@ const links: LinkItem[] = [
   </BlogLayout>
 </template>
 
-<style>
+<style lang="postcss" scoped>
 @reference "tailwindcss";
 
 .links-grid {

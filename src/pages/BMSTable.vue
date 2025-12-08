@@ -642,7 +642,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style lang="postcss" scoped>
 @reference "tailwindcss";
 .bms-table-container {
   @apply max-w-[1500px] my-8 mx-auto p-8 bg-white/5 backdrop-blur-[10px] rounded-[20px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)];

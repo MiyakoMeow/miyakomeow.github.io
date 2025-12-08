@@ -16,7 +16,7 @@ import "./styles/main.pcss";
   </BlogLayout>
 </template>
 
-<style scoped>
+<style lang="postcss" scoped>
 @reference "tailwindcss";
 
 .link-list {
