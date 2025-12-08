@@ -4,10 +4,9 @@
   "description": "Personal website built with Vue 3 and Vite",
   "type": "module",
   "scripts": {
-    "dev": "bun run vite",
-    "build": "vue-tsc --noEmit && bun run vite build",
-    "preview": "bun run vite preview",
-    "serve": "bun run preview",
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
     "type-check:watch": "vue-tsc --noEmit --watch",
     "lint": "eslint . --ext .js,.ts,.vue",
