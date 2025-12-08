@@ -946,7 +946,6 @@ onMounted(() => {
   width: 100%;
   border-collapse: collapse;
   min-width: 900px;
-  table-layout: fixed;
 }
 
 .charts-table th {
