@@ -31,13 +31,7 @@ defineProps({
 
 <style scoped>
 .glass-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  /* 使用通用玻璃态卡片样式 */
   color: white;
 }
 

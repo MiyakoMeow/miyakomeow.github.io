@@ -13,7 +13,6 @@ import ProfileCard from "../components/ProfileCard.vue";
       <slot />
     </section>
   </main>
-
 </template>
 
 <style scoped>

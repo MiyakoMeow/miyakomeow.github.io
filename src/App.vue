@@ -4,7 +4,7 @@ import BlogLayout from "./layout/BlogLayout.vue";
 
 <template>
   <BlogLayout>
-    <section class="content-card">
+    <section class="glass-container">
       <h1 class="content-title">导航</h1>
       <div class="link-list">
         <a class="link-item" href="./bms/index.html">BMS</a>
@@ -16,25 +16,6 @@ import BlogLayout from "./layout/BlogLayout.vue";
 </template>
 
 <style scoped>
-.content-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 2rem;
-  margin-top: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  width: 100%;
-  animation: fadeIn 0.8s ease-out;
-}
-
-.content-title {
-  margin: 0 0 1rem;
-  font-size: 2rem;
-  text-align: center;
-}
-
 .link-list {
   display: flex;
   flex-direction: column;
@@ -57,16 +38,4 @@ import BlogLayout from "./layout/BlogLayout.vue";
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 </style>
