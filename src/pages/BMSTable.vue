@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted, computed, reactive } from "vue";
-import BlogLayout from "../layout/BlogLayout.vue";
+import StarryBackground from "../components/StarryBackground.vue";
 
-// 从URL路径获取表格类型
+// 从URL路径获取难度表类型
 function getTableTypeFromPath() {
   const path = window.location.pathname;
   if (path.includes("self-table-dp")) {
@@ -11,13 +11,13 @@ function getTableTypeFromPath() {
   return "sp"; // 默认为sp
 }
 
-// 根据表格类型获取标题
-function getTitleFromTableType(tableType) {
-  return tableType === "dp" ? "MiyakoMeow谱面合集（DP）" : "MiyakoMeow谱面合集（SP）";
-}
-
 const tableType = ref(getTableTypeFromPath());
-const title = computed(() => getTitleFromTableType(tableType.value));
+const title = computed(() => {
+  if (headerData.value && headerData.value.name) {
+    return headerData.value.name;
+  }
+  return "加载中...";
+});
 
 // 加载状态管理
 const loadingState = reactive({
@@ -75,11 +75,19 @@ async function lazyLoadTableData() {
   } catch (err) {
     error.value = err.message;
     loadingState.isLoading = false;
-    console.error("加载BMS表格数据失败:", err);
+    console.error("加载BMS难度表数据失败:", err);
   }
 }
 
-// 计算表格统计数据
+// 滚动到指定难度组
+function scrollToDifficultyGroup(level) {
+  const element = document.getElementById(`difficulty-group-${level}`);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+// 计算难度表统计数据
 const tableStats = computed(() => {
   if (!tableData.value || !Array.isArray(tableData.value)) {
     return {
@@ -108,59 +116,128 @@ const tableStats = computed(() => {
 
   return {
     totalCharts: charts.length,
-    difficulties: Array.from(difficulties).sort((a, b) => {
-      // 特殊处理 "???" 等级
-      if (a === "???") return 1;
-      if (b === "???") return -1;
-      return parseFloat(a) - parseFloat(b);
-    }),
+    difficulties: Array.from(difficulties).sort(sortDifficultyLevels),
     averageLevel: validLevelCount > 0 ? (totalLevel / validLevelCount).toFixed(2) : "N/A",
   };
 });
 
+// 按难度分组谱面数据
+const groupedCharts = computed(() => {
+  if (!tableData.value || !Array.isArray(tableData.value)) {
+    return {};
+  }
+
+  const groups = {};
+  const charts = tableData.value;
+
+  charts.forEach((chart) => {
+    const level = chart.level || "unknown";
+    if (!groups[level]) {
+      groups[level] = {
+        level: level,
+        formattedLevel: formatLevel(level),
+        color: getDifficultyColor(level),
+        charts: [],
+      };
+    }
+    groups[level].charts.push(chart);
+  });
+
+  // 按难度排序：数字部分按整数大小排序，非数字部分按字符编码排序
+  // 首先获取所有难度等级
+  const levels = Object.keys(groups);
+
+  // 对难度等级进行排序
+  // 按难度排序：数字部分按整数大小排序，非数字部分按字符编码排序
+  const sortedKeys = levels.sort(sortDifficultyLevels);
+
+  // 使用Map保持插入顺序，然后转换为数组
+  const sortedGroupsMap = new Map();
+  sortedKeys.forEach((key) => {
+    sortedGroupsMap.set(key, groups[key]);
+  });
+
+  // 将Map转换为对象（Vue模板需要普通对象）
+  const sortedGroups = {};
+  sortedGroupsMap.forEach((value, key) => {
+    sortedGroups[key] = value;
+  });
+
+  return sortedGroups;
+});
+
+// 获取排序后的难度组列表
+const sortedDifficultyGroups = computed(() => {
+  // 确保按排序后的键顺序获取值
+  const groups = groupedCharts.value;
+  const sortedKeys = Object.keys(groups).sort(sortDifficultyLevels);
+  return sortedKeys.map((key) => groups[key]);
+});
+
+// 难度等级排序函数
+function sortDifficultyLevels(a, b) {
+  // 使用正则表达式检查是否为整数（包括负数）
+  const intRegex = /^-?\d+$/;
+  const aIsInt = intRegex.test(a.trim());
+  const bIsInt = intRegex.test(b.trim());
+
+  if (aIsInt && bIsInt) {
+    // 都是整数，按数值大小排序
+    const numA = parseInt(a, 10);
+    const numB = parseInt(b, 10);
+    return numA - numB;
+  }
+
+  // 如果只有a是整数，a排在前面
+  if (aIsInt && !bIsInt) {
+    return -1;
+  }
+
+  // 如果只有b是整数，b排在后面
+  if (!aIsInt && bIsInt) {
+    return 1;
+  }
+
+  // 如果都不是整数，按字符编码排序
+  return a.localeCompare(b);
+}
+
 // 格式化等级显示
 function formatLevel(level) {
-  if (level === "???") return "???";
-  const num = parseFloat(level);
-  return isNaN(num) ? level : num.toFixed(1);
+  if (!level) return "N/A";
+  const num = parseInt(level, 10);
+  return isNaN(num) ? level : num.toString();
 }
 
 // 获取难度颜色
 function getDifficultyColor(level) {
-  if (level === "???") return "#ff6b6b";
+  const num = parseInt(level, 10);
+  if (isNaN(num)) return "#ddbb00"; // 黄色 - 其它
 
-  const num = parseFloat(level);
-  if (isNaN(num)) return "#64b5f6";
+  // 按照新规则设置颜色
+  if (num <= -5) return "#4caf50"; // 绿色 - -5及以下
+  if (num <= -4) return "#4caf50"; // 绿色 - -4
+  if (num <= -3) return "#5050fa"; // 浅蓝色 - -3
+  if (num <= -2) return "#ff9800"; // 橙色 - -2
+  if (num <= -1) return "#ff9800"; // 橙色 - -1
+  if (num <= 0) return "#f44336"; // 红色 - 0
+  if (num <= 12) return "#ce50d8"; // 浅紫色 - 1-12
+  if (num <= 24) return "#9c27b0"; // 深紫色 - 13-24
 
-  if (num <= 0) return "#4caf50"; // 绿色 - 简单
-  if (num <= 5) return "#ff9800"; // 橙色 - 中等
-  if (num <= 10) return "#f44336"; // 红色 - 困难
-  return "#9c27b0"; // 紫色 - 超难
+  return "#ddbb00"; // 黄色 - 其它（25及以上）
 }
 
 // 获取谱面显示信息
 function getChartDisplayInfo(chart) {
   return {
     title: chart.title || "未知标题",
-    // 如果没有artist字段，尝试从title中提取
-    artist: chart.artist || extractArtistFromTitle(chart.title) || "未知艺术家",
-    // 如果没有difficulty字段，使用level作为难度显示
-    difficulty: chart.difficulty || formatLevel(chart.level) || "未知",
+    // 如果没有artist字段，显示"未知艺术家"
+    artist: chart.artist || "未知艺术家",
     level: chart.level || "N/A",
-    // 如果没有bpm字段，显示N/A
-    bpm: chart.bpm || "N/A",
-    subtitle: chart.subtitle || null,
     // 其他可能存在的字段
     sha256: chart.sha256,
     md5: chart.md5,
   };
-}
-
-// 从标题中尝试提取艺术家信息（如果有 - 分隔）
-function extractArtistFromTitle(title) {
-  if (!title) return null;
-  const parts = title.split(" - ");
-  return parts.length > 1 ? parts[0].trim() : null;
 }
 
 onMounted(() => {
@@ -172,144 +249,215 @@ onMounted(() => {
 </script>
 
 <template>
-  <BlogLayout>
-    <div class="glass-container bms-table-container">
-      <h1 class="content-title">{{ title }}</h1>
-      <div class="bms-table-content">
-        <!-- 加载状态 -->
-        <div v-if="loadingState.isLoading" class="loading-section">
-          <div class="progress-container">
-            <div class="progress-header">
-              <h3>正在加载BMS表格数据</h3>
-              <div class="progress-percentage">{{ loadingState.progress }}%</div>
+  <StarryBackground />
+  <div class="bms-table-container">
+    <div class="page-header">
+      <h1 class="page-title">{{ title }}</h1>
+      <div v-if="headerData && headerData.symbol" class="page-subtitle">
+        难度表符号: {{ headerData.symbol }}
+      </div>
+    </div>
+    <div class="bms-table-content">
+      <!-- 加载状态 -->
+      <div v-if="loadingState.isLoading" class="loading-section">
+        <div class="progress-container">
+          <div class="progress-header">
+            <h3>正在加载BMS难度表数据...</h3>
+            <div class="progress-percentage">{{ Math.round(loadingState.progress) }}%</div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" :style="{ width: loadingState.progress + '%' }"></div>
+          </div>
+          <div class="progress-steps">
+            <div class="step-info">
+              <span class="step-label">当前步骤:</span>
+              <span class="step-text">{{ loadingState.currentStep }}</span>
             </div>
-
-            <div class="progress-bar">
-              <div
-                class="progress-fill"
-                :style="{
-                  width: loadingState.progress + '%',
-                }"
-              ></div>
+            <div class="step-info">
+              <span class="step-label">总步骤数:</span>
+              <span class="step-text">{{ loadingState.totalSteps }}</span>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div class="progress-steps">
-              <div class="step-info">
-                <span class="step-label">当前步骤:</span>
-                <span class="step-text">{{ loadingState.currentStep }}</span>
+      <!-- 错误状态 -->
+      <div v-else-if="error" class="error-section">
+        <div class="error-icon">⚠️</div>
+        <h3>加载失败</h3>
+        <p class="error-message">{{ error }}</p>
+        <p>请检查网络连接或稍后重试。</p>
+        <button class="retry-button" @click="lazyLoadTableData">重新加载</button>
+      </div>
+
+      <!-- 数据展示 -->
+      <div v-else class="data-section">
+        <!-- 表格信息 -->
+        <div class="table-header">
+          <div class="header-info">
+            <h2>难度表信息</h2>
+            <div class="header-details">
+              <p v-if="headerData">
+                <strong>难度表名称:</strong>
+                {{ headerData.name || "未命名" }}
+              </p>
+              <p v-if="headerData">
+                <strong>难度表符号:</strong>
+                {{ headerData.symbol || "未定义" }}
+              </p>
+              <p v-if="headerData && headerData.level_order">
+                <strong>难度顺序:</strong>
+                {{ headerData.level_order.join(", ") }}
+              </p>
+            </div>
+          </div>
+
+          <div class="stats-summary">
+            <h3>统计摘要</h3>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-value">
+                  {{ tableStats.totalCharts }}
+                </div>
+                <div class="stat-label">总谱面数</div>
               </div>
-              <div class="step-info">
-                <span class="step-label">总步骤数:</span>
-                <span class="step-text">{{ loadingState.totalSteps }}</span>
+              <div class="stat-card">
+                <div class="stat-value">
+                  {{ tableStats.difficulties.length }}
+                </div>
+                <div class="stat-label">难度等级数</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">
+                  {{ tableStats.averageLevel }}
+                </div>
+                <div class="stat-label">平均难度</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 错误状态 -->
-        <div v-else-if="error" class="error-section">
-          <div class="error-icon">⚠️</div>
-          <h3>加载失败</h3>
-          <p class="error-message">{{ error }}</p>
-          <p>请检查网络连接或稍后重试。</p>
-          <button class="retry-button" @click="lazyLoadTableData">重新加载</button>
-        </div>
-
-        <!-- 数据展示 -->
-        <div v-else class="data-section">
-          <!-- 表格信息 -->
-          <div class="table-header">
-            <div class="header-info">
-              <h2>表格信息</h2>
-              <div class="header-details">
-                <p v-if="headerData">
-                  <strong>表格名称:</strong>
-                  {{ headerData.name || "未命名" }}
-                </p>
-                <p v-if="headerData">
-                  <strong>表格符号:</strong>
-                  {{ headerData.symbol || "无" }}
-                </p>
-              </div>
+        <!-- 难度对照表 -->
+        <div class="rank-reference-section">
+          <h3>难度对照表</h3>
+          <div class="rank-reference-tables">
+            <!-- 左边：负数部分 -->
+            <div class="rank-reference-left">
+              <table>
+                <thead>
+                  <tr>
+                    <th>难度等级</th>
+                    <th>对应难度</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>-5</td>
+                    <td>☆1-☆2</td>
+                  </tr>
+                  <tr>
+                    <td>-4</td>
+                    <td>☆3-☆4</td>
+                  </tr>
+                  <tr>
+                    <td>-3</td>
+                    <td>☆5-☆6</td>
+                  </tr>
+                  <tr>
+                    <td>-2</td>
+                    <td>☆7-☆8</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
-            <div class="stats-summary">
-              <h3>统计摘要</h3>
-              <div class="stats-grid">
-                <div class="stat-card">
-                  <div class="stat-value">
-                    {{ tableStats.totalCharts }}
-                  </div>
-                  <div class="stat-label">总谱面数</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-value">
-                    {{ tableStats.difficulties.length }}
-                  </div>
-                  <div class="stat-label">难度等级数</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-value">
-                    {{ tableStats.averageLevel }}
-                  </div>
-                  <div class="stat-label">平均难度</div>
-                </div>
-              </div>
+            <!-- 右边：0及以上部分 -->
+            <div class="rank-reference-right">
+              <table>
+                <thead>
+                  <tr>
+                    <th>难度等级</th>
+                    <th>对应难度</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>-1</td>
+                    <td>☆9-☆10</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td>☆11-☆12（sl0）</td>
+                  </tr>
+                  <tr>
+                    <td>1-12</td>
+                    <td>sl1-12 + st0下</td>
+                  </tr>
+                  <tr>
+                    <td>13-24</td>
+                    <td>st0上 + st1-12</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
+        </div>
 
-          <!-- 难度分布 -->
-          <div class="difficulty-section" v-if="tableStats.difficulties.length > 0">
-            <h3>难度分布</h3>
-            <div class="difficulty-tags">
-              <span
-                v-for="level in tableStats.difficulties"
-                :key="level"
-                class="difficulty-tag"
+        <!-- 按难度分组的谱面表格 -->
+        <div class="charts-table-section" v-if="sortedDifficultyGroups.length > 0">
+          <h3>谱面列表 ({{ tableData.length }} 个)</h3>
+
+          <!-- 难度组导航 -->
+          <div class="difficulty-groups-nav" v-if="sortedDifficultyGroups.length > 1">
+            <div class="difficulty-groups-tabs">
+              <button
+                v-for="group in sortedDifficultyGroups"
+                :key="group.level"
+                class="difficulty-group-tab"
+                @click="scrollToDifficultyGroup(group.level)"
                 :style="{
-                  backgroundColor: getDifficultyColor(level),
+                  backgroundColor: group.color,
+                  borderColor: group.color,
                 }"
               >
-                {{ formatLevel(level) }}
-              </span>
+                {{ group.formattedLevel }}
+                <span class="chart-count">({{ group.charts.length }})</span>
+              </button>
             </div>
           </div>
 
-          <!-- 谱面表格 -->
-          <div class="charts-table-section" v-if="tableData && tableData.length > 0">
-            <h3>谱面列表 ({{ tableData.length }} 首)</h3>
+          <!-- 谱面列表 - 一次性显示所有难度组 -->
+          <div
+            v-for="group in sortedDifficultyGroups"
+            :key="group.level"
+            :id="`difficulty-group-${group.level}`"
+            class="difficulty-group-container"
+          >
+            <div class="difficulty-group-header">
+              <div class="difficulty-group-title">
+                <span
+                  class="difficulty-group-badge"
+                  :style="{
+                    backgroundColor: group.color,
+                  }"
+                >
+                  难度 {{ group.formattedLevel }}
+                </span>
+                <span class="difficulty-group-count"> {{ group.charts.length }} 个谱面 </span>
+              </div>
+            </div>
+
             <div class="table-wrapper">
               <table class="charts-table">
                 <thead>
                   <tr>
+                    <th>等级</th>
                     <th>标题</th>
                     <th>艺术家</th>
-                    <th>难度</th>
-                    <th>等级</th>
-                    <th>BPM</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(chart, index) in tableData" :key="index">
-                    <td class="chart-title">
-                      <strong>{{ getChartDisplayInfo(chart).title }}</strong>
-                      <div v-if="getChartDisplayInfo(chart).subtitle" class="chart-subtitle">
-                        {{ getChartDisplayInfo(chart).subtitle }}
-                      </div>
-                    </td>
-                    <td>
-                      {{ getChartDisplayInfo(chart).artist }}
-                    </td>
-                    <td>
-                      <span
-                        class="difficulty-badge"
-                        :style="{
-                          backgroundColor: getDifficultyColor(chart.level),
-                        }"
-                      >
-                        {{ getChartDisplayInfo(chart).difficulty }}
-                      </span>
-                    </td>
+                  <tr v-for="(chart, index) in group.charts" :key="index">
                     <td>
                       <span
                         class="level-badge"
@@ -320,34 +468,72 @@ onMounted(() => {
                         {{ formatLevel(chart.level) }}
                       </span>
                     </td>
+                    <td class="chart-title">
+                      <strong>{{ getChartDisplayInfo(chart).title }}</strong>
+                    </td>
                     <td>
-                      <span class="bpm-value">
-                        {{ getChartDisplayInfo(chart).bpm }}
-                      </span>
+                      {{ getChartDisplayInfo(chart).artist }}
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
+        </div>
 
-          <!-- 空状态 -->
-          <div v-else class="empty-state">
-            <div class="empty-icon">📊</div>
-            <h3>暂无谱面数据</h3>
-            <p>表格中没有找到谱面数据。</p>
-          </div>
+        <!-- 空状态 -->
+        <div v-else class="empty-state">
+          <div class="empty-icon">📊</div>
+          <h3>暂无谱面数据</h3>
+          <p>难度表中没有找到谱面数据。</p>
         </div>
       </div>
     </div>
-  </BlogLayout>
+  </div>
 </template>
 
 <style>
+.bms-table-container {
+  max-width: 1500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.page-title {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
 .bms-table-content {
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.1rem;
   line-height: 1.6;
+  width: 100%;
 }
 
 /* 加载状态样式 */
@@ -524,36 +710,73 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
-/* 难度分布样式 */
-.difficulty-section {
+/* 难度对照表样式 */
+.rank-reference-section {
+  margin-top: 2rem;
   margin-bottom: 2rem;
   padding: 1.5rem;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.difficulty-section h3 {
+.rank-reference-section h3 {
   color: white;
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  text-align: center;
 }
 
-.difficulty-tags {
+.rank-reference-tables {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 2rem;
+  justify-content: center;
 }
 
-.difficulty-tag {
+.rank-reference-left,
+.rank-reference-right {
+  flex: 1;
+  min-width: 0;
+}
+
+.rank-reference-left table,
+.rank-reference-right table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.rank-reference-left th,
+.rank-reference-right th {
+  background: rgba(100, 181, 246, 0.3);
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
+  padding: 0.75rem 1rem;
+  text-align: left;
   font-weight: 600;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-/* 谱面表格样式 */
+.rank-reference-left td,
+.rank-reference-right td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rank-reference-left tbody tr:hover,
+.rank-reference-right tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rank-reference-left tbody tr:last-child td,
+.rank-reference-right tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* 谱面列表样式 */
 .charts-table-section {
   margin-top: 2rem;
 }
@@ -599,13 +822,6 @@ onMounted(() => {
   min-width: 250px;
 }
 
-.chart-subtitle {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 0.25rem;
-}
-
-.difficulty-badge,
 .level-badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
@@ -615,14 +831,6 @@ onMounted(() => {
   font-size: 0.85rem;
   min-width: 60px;
   text-align: center;
-}
-
-.bpm-value {
-  font-family: monospace;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-weight: 600;
 }
 
 /* 空状态样式 */
@@ -645,15 +853,137 @@ onMounted(() => {
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* 难度分组导航样式 */
+.difficulty-groups-nav {
+  margin-bottom: 2rem;
+}
+
+.difficulty-groups-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.difficulty-group-tab {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  opacity: 0.7;
+}
+
+.difficulty-group-tab:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.difficulty-group-tab:active {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.chart-count {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.1rem 0.5rem;
+  border-radius: 10px;
+}
+
+/* 难度组容器样式 */
+.difficulty-group-container {
+  margin-bottom: 3rem;
+  scroll-margin-top: 20px; /* 滚动时的偏移 */
+}
+
+/* 难度组标题样式 */
+.difficulty-group-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.difficulty-group-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.difficulty-group-badge {
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.difficulty-group-count {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
 /* 响应式设计 */
-@media (max-width: 1024px) {
-  .table-header {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+@media (max-width: 768px) {
+  .bms-table-container {
+    padding: 1rem;
+    margin: 1rem;
+    max-width: calc(100% - 2rem);
   }
 
+  .rank-reference-section {
+    padding: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .rank-reference-tables {
+    gap: 1rem;
+  }
+
+  .rank-reference-left th,
+  .rank-reference-left td,
+  .rank-reference-right th,
+  .rank-reference-right td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+  .page-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .page-subtitle {
+    font-size: 1.1rem;
+  }
+  .table-header {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
   .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .difficulty-groups-tabs {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .difficulty-group-tab {
+    flex: 1 0 calc(33.333% - 0.5rem);
+    min-width: 80px;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
   }
 }
 
@@ -686,18 +1016,70 @@ onMounted(() => {
 }
 
 @media (max-width: 480px) {
+  .bms-table-container {
+    padding: 1rem;
+    margin: 1rem;
+    max-width: calc(100% - 2rem);
+    border-radius: 15px;
+  }
+
+  .rank-reference-section {
+    padding: 0.75rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .rank-reference-tables {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .rank-reference-left th,
+  .rank-reference-left td,
+  .rank-reference-right th,
+  .rank-reference-right td {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85rem;
+  }
+  .page-header {
+    margin-bottom: 1rem;
+  }
+  .page-title {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .page-subtitle {
+    font-size: 1rem;
+  }
   .stats-grid {
     grid-template-columns: 1fr;
   }
-
   .progress-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-
   .progress-percentage {
     align-self: flex-start;
+  }
+  .difficulty-groups-tabs {
+    flex-direction: column;
+  }
+  .difficulty-group-tab {
+    width: 100%;
+    text-align: center;
+  }
+  .difficulty-group-badge {
+    font-size: 1rem;
+    padding: 0.3rem 0.8rem;
+  }
+  .difficulty-group-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .difficulty-group-count {
+    font-size: 1rem;
   }
 }
 </style>
