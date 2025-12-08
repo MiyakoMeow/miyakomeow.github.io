@@ -2,7 +2,7 @@
 import { ref, onMounted, computed, reactive } from "vue";
 import StarryBackground from "../components/StarryBackground.vue";
 
-// 从URL路径获取表格类型
+// 从URL路径获取难度表类型
 function getTableTypeFromPath() {
   const path = window.location.pathname;
   if (path.includes("self-table-dp")) {
@@ -16,7 +16,7 @@ const title = computed(() => {
   if (headerData.value && headerData.value.name) {
     return headerData.value.name;
   }
-  return "警告：header.json中，name未定义！";
+  return "加载中...";
 });
 
 // 加载状态管理
@@ -75,7 +75,7 @@ async function lazyLoadTableData() {
   } catch (err) {
     error.value = err.message;
     loadingState.isLoading = false;
-    console.error("加载BMS表格数据失败:", err);
+    console.error("加载BMS难度表数据失败:", err);
   }
 }
 
@@ -87,7 +87,7 @@ function scrollToDifficultyGroup(level) {
   }
 }
 
-// 计算表格统计数据
+// 计算难度表统计数据
 const tableStats = computed(() => {
   if (!tableData.value || !Array.isArray(tableData.value)) {
     return {
@@ -249,7 +249,7 @@ onMounted(() => {
     <div class="page-header">
       <h1 class="page-title">{{ title }}</h1>
       <div v-if="headerData && headerData.symbol" class="page-subtitle">
-        表格符号: {{ headerData.symbol }}
+        难度表符号: {{ headerData.symbol }}
       </div>
     </div>
     <div class="bms-table-content">
@@ -257,7 +257,7 @@ onMounted(() => {
       <div v-if="loadingState.isLoading" class="loading-section">
         <div class="progress-container">
           <div class="progress-header">
-            <h3>正在加载BMS表格数据...</h3>
+            <h3>正在加载BMS难度表数据...</h3>
             <div class="progress-percentage">{{ Math.round(loadingState.progress) }}%</div>
           </div>
           <div class="progress-bar">
@@ -290,14 +290,14 @@ onMounted(() => {
         <!-- 表格信息 -->
         <div class="table-header">
           <div class="header-info">
-            <h2>表格信息</h2>
+            <h2>难度表信息</h2>
             <div class="header-details">
               <p v-if="headerData">
-                <strong>表格名称:</strong>
+                <strong>难度表名称:</strong>
                 {{ headerData.name || "未命名" }}
               </p>
               <p v-if="headerData">
-                <strong>表格符号:</strong>
+                <strong>难度表符号:</strong>
                 {{ headerData.symbol || "未定义" }}
               </p>
               <p v-if="headerData && headerData.level_order">
@@ -334,7 +334,7 @@ onMounted(() => {
 
         <!-- 按难度分组的谱面表格 -->
         <div class="charts-table-section" v-if="sortedDifficultyGroups.length > 0">
-          <h3>谱面列表 ({{ tableData.length }} 首)</h3>
+          <h3>谱面列表 ({{ tableData.length }} 个)</h3>
 
           <!-- 难度组导航 -->
           <div class="difficulty-groups-nav" v-if="sortedDifficultyGroups.length > 1">
@@ -355,7 +355,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- 谱面表格 - 一次性显示所有难度组 -->
+          <!-- 谱面列表 - 一次性显示所有难度组 -->
           <div
             v-for="group in sortedDifficultyGroups"
             :key="group.level"
@@ -372,7 +372,7 @@ onMounted(() => {
                 >
                   难度 {{ group.formattedLevel }}
                 </span>
-                <span class="difficulty-group-count"> {{ group.charts.length }} 首谱面 </span>
+                <span class="difficulty-group-count"> {{ group.charts.length }} 个谱面 </span>
               </div>
             </div>
 
@@ -414,7 +414,7 @@ onMounted(() => {
         <div v-else class="empty-state">
           <div class="empty-icon">📊</div>
           <h3>暂无谱面数据</h3>
-          <p>表格中没有找到谱面数据。</p>
+          <p>难度表中没有找到谱面数据。</p>
         </div>
       </div>
     </div>
@@ -639,7 +639,7 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
-/* 谱面表格样式 */
+/* 谱面列表样式 */
 .charts-table-section {
   margin-top: 2rem;
 }
