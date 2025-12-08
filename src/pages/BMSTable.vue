@@ -337,6 +337,72 @@ onMounted(() => {
           </div>
         </div>
 
+        <!-- 难度对照表 -->
+        <div class="rank-reference-section">
+          <h3>难度对照表</h3>
+          <div class="rank-reference-tables">
+            <!-- 左边：负数部分 -->
+            <div class="rank-reference-left">
+              <table>
+                <thead>
+                  <tr>
+                    <th>难度等级</th>
+                    <th>对应难度</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>-5</td>
+                    <td>☆1-☆2</td>
+                  </tr>
+                  <tr>
+                    <td>-4</td>
+                    <td>☆3-☆4</td>
+                  </tr>
+                  <tr>
+                    <td>-3</td>
+                    <td>☆5-☆6</td>
+                  </tr>
+                  <tr>
+                    <td>-2</td>
+                    <td>☆7-☆8</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- 右边：0及以上部分 -->
+            <div class="rank-reference-right">
+              <table>
+                <thead>
+                  <tr>
+                    <th>难度等级</th>
+                    <th>对应难度</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>-1</td>
+                    <td>☆9-☆10</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td>☆11-☆12（sl0）</td>
+                  </tr>
+                  <tr>
+                    <td>1-12</td>
+                    <td>sl1-12 + st0下</td>
+                  </tr>
+                  <tr>
+                    <td>13-24</td>
+                    <td>st0上 + st1-12</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- 按难度分组的谱面表格 -->
         <div class="charts-table-section" v-if="sortedDifficultyGroups.length > 0">
           <h3>谱面列表 ({{ tableData.length }} 个)</h3>
@@ -644,6 +710,72 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
+/* 难度对照表样式 */
+.rank-reference-section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rank-reference-section h3 {
+  color: white;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.rank-reference-tables {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.rank-reference-left,
+.rank-reference-right {
+  flex: 1;
+  min-width: 0;
+}
+
+.rank-reference-left table,
+.rank-reference-right table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.rank-reference-left th,
+.rank-reference-right th {
+  background: rgba(100, 181, 246, 0.3);
+  color: white;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.rank-reference-left td,
+.rank-reference-right td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rank-reference-left tbody tr:hover,
+.rank-reference-right tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rank-reference-left tbody tr:last-child td,
+.rank-reference-right tbody tr:last-child td {
+  border-bottom: none;
+}
+
 /* 谱面列表样式 */
 .charts-table-section {
   margin-top: 2rem;
@@ -802,11 +934,29 @@ onMounted(() => {
 }
 
 /* 响应式设计 */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .bms-table-container {
-    padding: 1.5rem;
-    margin: 1.5rem;
-    max-width: calc(100% - 3rem);
+    padding: 1rem;
+    margin: 1rem;
+    max-width: calc(100% - 2rem);
+  }
+
+  .rank-reference-section {
+    padding: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .rank-reference-tables {
+    gap: 1rem;
+  }
+
+  .rank-reference-left th,
+  .rank-reference-left td,
+  .rank-reference-right th,
+  .rank-reference-right td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
   }
   .page-header {
     margin-bottom: 1.5rem;
@@ -871,6 +1021,25 @@ onMounted(() => {
     margin: 1rem;
     max-width: calc(100% - 2rem);
     border-radius: 15px;
+  }
+
+  .rank-reference-section {
+    padding: 0.75rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .rank-reference-tables {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .rank-reference-left th,
+  .rank-reference-left td,
+  .rank-reference-right th,
+  .rank-reference-right td {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85rem;
   }
   .page-header {
     margin-bottom: 1rem;
