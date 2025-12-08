@@ -642,326 +642,209 @@ onMounted(() => {
 </template>
 
 <style>
+@reference "tailwindcss";
 .bms-table-container {
-  max-width: 1500px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  @apply max-w-[1500px] my-8 mx-auto p-8 bg-white/5 backdrop-blur-[10px] rounded-[20px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)];
 }
 
 .page-header {
-  margin-bottom: 2rem;
-  text-align: center;
+  @apply mb-8 text-center;
 }
 
 .page-title {
-  color: white;
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  @apply text-white text-[2.5rem] font-bold mb-2 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] bg-clip-text text-transparent;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .page-subtitle {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.2rem;
-  font-style: italic;
+  @apply text-white/70 text-[1.2rem] italic;
 }
 
 .bms-table-content {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.1rem;
-  line-height: 1.6;
-  width: 100%;
+  @apply text-white/90 text-[1.1rem] leading-[1.6] w-full;
 }
 
 /* 加载状态样式 */
 .loading-section {
-  padding: 2rem;
+  @apply p-8;
 }
 
 .progress-container {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
-  padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  @apply bg-black/20 rounded-[15px] p-8 border border-white/10;
 }
 
 .progress-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
+  @apply flex justify-between items-center mb-6;
 }
 
 .progress-header h3 {
-  color: white;
-  margin: 0;
-  font-size: 1.5rem;
+  @apply text-white m-0 text-[1.5rem];
 }
 
 .progress-percentage {
-  background: rgba(100, 181, 246, 0.2);
-  color: #64b5f6;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 1.2rem;
+  @apply bg-[#64b5f6]/20 text-[#64b5f6] px-4 py-2 rounded-[20px] font-bold text-[1.2rem];
 }
 
 .progress-bar {
-  height: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
+  @apply h-[12px] bg-white/10 rounded-[6px] overflow-hidden mb-6;
 }
 
 .progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #4caf50, #64b5f6);
-  border-radius: 6px;
+  @apply h-full bg-[linear-gradient(90deg,#4caf50,#64b5f6)] rounded-[6px];
   transition: width 0.3s ease;
 }
 
 .progress-steps {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  @apply grid grid-cols-2 gap-4;
 }
 
 .step-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  @apply flex flex-col gap-2;
 }
 
 .step-label {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
+  @apply text-white/60 text-[0.9rem];
 }
 
 .step-text {
-  color: white;
-  font-weight: 500;
+  @apply text-white font-medium;
 }
 
 /* 错误状态样式 */
 .error-section {
-  text-align: center;
-  padding: 3rem;
+  @apply text-center p-12;
 }
 
 .error-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
+  @apply text-[4rem] mb-4;
 }
 
 .error-section h3 {
-  color: #ff6b6b;
-  margin-bottom: 1rem;
+  @apply text-[#ff6b6b] mb-4;
 }
 
 .error-message {
-  background: rgba(255, 107, 107, 0.1);
-  padding: 1rem;
-  border-radius: 10px;
-  margin: 1.5rem 0;
-  border-left: 4px solid #ff6b6b;
+  @apply bg-[rgba(255,107,107,0.1)] p-4 rounded-[10px] my-6 border-l-[4px] border-[#ff6b6b];
 }
 
 .retry-button {
-  background: #64b5f6;
-  color: white;
-  border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 1rem;
+  @apply bg-[#64b5f6] text-white border-none px-8 py-3 rounded-[25px] text-[1rem] font-semibold cursor-pointer mt-4;
   transition: background 0.3s ease;
 }
 
 .retry-button:hover {
-  background: #42a5f5;
+  @apply hover:bg-[#42a5f5];
 }
 
 /* 数据展示样式 */
 .data-section {
-  padding: 1rem 0;
+  @apply py-4;
 }
 
 .table-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
+  @apply grid grid-cols-2 gap-8 mb-8 p-6 bg-black/20 rounded-[15px];
 }
 
 .header-info h2 {
-  color: white;
-  margin-top: 0;
-  margin-bottom: 1rem;
+  @apply text-white mt-0 mb-4;
 }
 
 .header-details p {
-  margin: 0.5rem 0;
-  color: rgba(255, 255, 255, 0.8);
+  @apply my-2 text-white/80;
 }
 
 .header-details strong {
-  color: #64b5f6;
+  @apply text-[#64b5f6];
 }
 
 .stats-summary h3 {
-  color: white;
-  margin-top: 0;
-  margin-bottom: 1rem;
+  @apply text-white mt-0 mb-4;
 }
 
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  @apply grid grid-cols-3 gap-4;
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  padding: 1rem;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  @apply bg-white/5 rounded-[10px] p-4 text-center border border-white/10;
 }
 
 .stat-value {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #64b5f6;
-  margin-bottom: 0.5rem;
+  @apply text-[2rem] font-bold text-[#64b5f6] mb-2;
 }
 
 .stat-label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
+  @apply text-white/70 text-[0.9rem];
 }
 
 /* 难度对照表样式 */
 .rank-reference-section {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  @apply mt-8 mb-8 p-6 bg-black/20 rounded-[15px] border border-white/10;
 }
 
 .rank-reference-section h3 {
-  color: white;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  font-size: 1.3rem;
-  text-align: center;
+  @apply text-white mt-0 mb-6 text-[1.3rem] text-center;
 }
 
 .rank-reference-tables {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
+  @apply flex gap-8 justify-center;
 }
 
 .rank-reference-left,
 .rank-reference-right {
-  flex: 1;
-  min-width: 0;
+  @apply flex-1 min-w-0;
 }
 
 .rank-reference-left table,
 .rank-reference-right table {
-  width: 100%;
-  border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  overflow: hidden;
+  @apply w-full border-collapse bg-white/5 rounded-[10px] overflow-hidden;
 }
 
 .rank-reference-left th,
 .rank-reference-right th {
-  background: rgba(100, 181, 246, 0.3);
-  color: white;
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  @apply bg-[rgba(100,181,246,0.3)] text-white px-4 py-3 text-left font-semibold border-b-2 border-white/10;
 }
 
 .rank-reference-left td,
 .rank-reference-right td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.9);
+  @apply px-4 py-3 border-b border-white/5 text-white/90;
 }
 
 .rank-reference-left tbody tr:hover,
 .rank-reference-right tbody tr:hover {
-  background: rgba(255, 255, 255, 0.05);
+  @apply bg-white/5;
 }
 
 .rank-reference-left tbody tr:last-child td,
 .rank-reference-right tbody tr:last-child td {
-  border-bottom: none;
+  @apply border-b-0;
 }
 
 /* 谱面列表样式 */
 .charts-table-section {
-  margin-top: 2rem;
+  @apply mt-8;
 }
 
 .charts-table-section h3 {
-  color: white;
-  margin-bottom: 1rem;
+  @apply text-white mb-4;
 }
 
 .table-wrapper {
-  overflow-x: auto;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  @apply overflow-x-auto rounded-[10px] bg-black/20 border border-white/10;
 }
 
 .charts-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 900px;
+  @apply w-full border-collapse min-w-[900px];
 }
 
 .charts-table th {
-  background: rgba(100, 181, 246, 0.2);
-  color: white;
-  padding: 1rem;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  @apply bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10;
 }
 
 .charts-table td {
-  padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.9);
-  word-break: break-word;
+  @apply p-4 border-b border-white/5 text-white/90 break-words;
 }
 
 .charts-table col.col-level {
@@ -984,63 +867,37 @@ onMounted(() => {
 }
 
 .charts-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.05);
+  @apply bg-white/5;
 }
 
 .chart-title {
-  min-width: 200px;
+  @apply min-w-[200px];
 }
 
 .comment-cell {
-  min-width: 150px;
-  max-width: 300px;
+  @apply min-w-[150px] max-w-[300px];
 }
 
 .level-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
-  color: white;
-  font-weight: 600;
-  font-size: 0.85rem;
-  min-width: 30px;
-  text-align: center;
+  @apply inline-block px-2 py-1 rounded-[12px] text-white font-semibold text-[0.85rem] min-w-[30px] text-center;
 }
 
 /* 下载按钮样式 */
 .download-cell {
-  min-width: 130px;
-  max-width: 180px;
+  @apply min-w-[130px] max-w-[180px];
 }
 
 .download-buttons {
-  display: flex;
-  flex-direction: row;
-  gap: 0.3rem;
-  flex-wrap: wrap;
+  @apply flex flex-row gap-[0.3rem] flex-wrap;
 }
 
 .download-button {
-  padding: 0.35rem 0.5rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-  min-width: 60px;
-  flex: 1;
-  text-decoration: none;
-  color: inherit;
+  @apply px-[0.5rem] py-[0.35rem] border-none rounded-[6px] text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center gap-[0.2rem] min-w-[60px] flex-1 no-underline text-inherit;
 }
 
 .download-button:hover {
+  @apply hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)];
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .download-button:active {
@@ -1048,62 +905,41 @@ onMounted(() => {
 }
 
 .download-bundle {
-  background: linear-gradient(135deg, #4caf50, #2e7d32);
-  color: white;
+  @apply bg-[linear-gradient(135deg,#4caf50,#2e7d32)] text-white;
 }
 
 .download-bundle:hover {
-  background: linear-gradient(135deg, #66bb6a, #388e3c);
+  @apply bg-[linear-gradient(135deg,#66bb6a,#388e3c)];
 }
 
 .download-diff {
-  background: linear-gradient(135deg, #2196f3, #1565c0);
-  color: white;
+  @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white;
 }
 
 .download-diff:hover {
-  background: linear-gradient(135deg, #42a5f5, #1976d2);
+  @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
 }
 
 /* BMS网站链接样式 */
 .bms-links-cell {
-  min-width: 140px;
-  max-width: 180px;
+  @apply min-w-[140px] max-w-[180px];
 }
 
 .bms-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  justify-content: center;
+  @apply flex flex-wrap gap-[0.4rem] justify-center;
 }
 
 .bms-link-button {
-  width: 36px;
-  height: 36px;
-  border: none;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  overflow: hidden;
-  text-decoration: none;
-  color: inherit;
+  @apply w-[36px] h-[36px] border-none rounded-full text-[1.2rem] cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center p-0 overflow-hidden no-underline text-inherit;
 }
 
 .bms-icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
+  @apply w-6 h-6 object-contain;
 }
 
 .bms-link-button:hover {
+  @apply hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)];
   transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .bms-link-button:active {
@@ -1111,381 +947,297 @@ onMounted(() => {
 }
 
 .bms-score-viewer {
-  background: linear-gradient(135deg, #ff9800, #f57c00);
-  color: white;
+  @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white;
 }
 
 .bms-score-viewer:hover {
-  background: linear-gradient(135deg, #ffb74d, #ff9800);
+  @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
 }
 
 .lr2ir {
-  background: linear-gradient(135deg, #9c27b0, #7b1fa2);
-  color: white;
+  @apply bg-[linear-gradient(135deg,#9c27b0,#7b1fa2)] text-white;
 }
 
 .lr2ir:hover {
-  background: linear-gradient(135deg, #ba68c8, #9c27b0);
+  @apply bg-[linear-gradient(135deg,#ba68c8,#9c27b0)];
 }
 
 .mocha {
-  background: linear-gradient(135deg, #795548, #5d4037);
-  color: white;
+  @apply bg-[linear-gradient(135deg,#795548,#5d4037)] text-white;
 }
 
 .mocha:hover {
-  background: linear-gradient(135deg, #a1887f, #795548);
+  @apply bg-[linear-gradient(135deg,#a1887f,#795548)];
 }
 
 .minir {
-  background: linear-gradient(135deg, #00bcd4, #0097a7);
-  color: white;
+  @apply bg-[linear-gradient(135deg,#00bcd4,#0097a7)] text-white;
 }
 
 .minir:hover {
-  background: linear-gradient(135deg, #4dd0e1, #00bcd4);
+  @apply bg-[linear-gradient(135deg,#4dd0e1,#00bcd4)];
 }
 
 /* 空状态样式 */
 .empty-state {
-  text-align: center;
-  padding: 3rem;
+  @apply text-center p-12;
 }
 
 .empty-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
+  @apply text-[4rem] mb-4;
 }
 
 .empty-state h3 {
-  color: white;
-  margin-bottom: 1rem;
+  @apply text-white mb-4;
 }
 
 .empty-state p {
-  color: rgba(255, 255, 255, 0.7);
+  @apply text-white/70;
 }
 
 /* 难度分组导航样式 */
 .difficulty-groups-nav {
-  margin-bottom: 2rem;
+  @apply mb-8;
 }
 
 .difficulty-groups-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  @apply flex flex-wrap gap-3 mb-6;
 }
 
 .difficulty-group-tab {
-  padding: 0.75rem 1.5rem;
-  border: 2px solid transparent;
-  border-radius: 25px;
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  opacity: 0.7;
+  @apply px-6 py-3 border-2 border-transparent rounded-[25px] font-bold text-[1.1rem] text-white cursor-pointer transition-all duration-300 ease-in-out flex items-center justify-center gap-2 opacity-70;
 }
 
 .difficulty-group-tab:hover {
-  opacity: 0.9;
+  @apply opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)];
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .difficulty-group-tab:active {
-  opacity: 0.9;
+  @apply opacity-90;
   transform: translateY(-1px);
 }
 
 .chart-count {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.1rem 0.5rem;
-  border-radius: 10px;
+  @apply text-[0.9rem] opacity-90 bg-black/20 py-[0.1rem] px-2 rounded-[10px];
 }
 
 /* 难度组容器样式 */
 .difficulty-group-container {
-  margin-bottom: 3rem;
-  scroll-margin-top: 20px; /* 滚动时的偏移 */
+  @apply mb-12 scroll-mt-[20px];
 }
 
 /* 难度组标题样式 */
 .difficulty-group-header {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  @apply mb-6 pb-4 border-b-2 border-white/10;
 }
 
 .difficulty-group-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  @apply flex items-center gap-4;
 }
 
 .difficulty-group-badge {
-  padding: 0.5rem 1.5rem;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  @apply px-6 py-2 rounded-[20px] font-bold text-[1.2rem] text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)];
 }
 
 .difficulty-group-count {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.8);
+  @apply text-[1.1rem] text-white/80;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
   .bms-table-container {
-    padding: 1rem;
-    margin: 1rem;
-    max-width: calc(100% - 2rem);
+    @apply p-4 m-4 max-w-[calc(100%_-_2rem)];
   }
 
   .rank-reference-section {
-    padding: 1rem;
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
+    @apply p-4 mt-6 mb-6;
   }
 
   .rank-reference-tables {
-    gap: 1rem;
+    @apply gap-4;
   }
 
   .rank-reference-left th,
   .rank-reference-left td,
   .rank-reference-right th,
   .rank-reference-right td {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.9rem;
+    @apply px-3 py-2 text-[0.9rem];
   }
   .page-header {
-    margin-bottom: 1.5rem;
+    @apply mb-6;
   }
   .page-title {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    @apply text-[2rem] mb-2;
   }
   .page-subtitle {
-    font-size: 1.1rem;
+    @apply text-[1.1rem];
   }
   .table-header {
-    flex-direction: column;
-    gap: 1.5rem;
+    @apply flex flex-col gap-6;
   }
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+    @apply grid-cols-2;
   }
   .difficulty-groups-tabs {
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    @apply flex-wrap gap-2;
   }
   .difficulty-group-tab {
-    flex: 1 0 calc(33.333% - 0.5rem);
-    min-width: 80px;
-    padding: 0.6rem 1rem;
-    font-size: 1rem;
+    @apply flex-[1_0_calc(33.333%_-_0.5rem)] min-w-[80px] px-4 py-[0.6rem] text-[1rem];
   }
 }
 
 @media (max-width: 480px) {
   .bms-table-container {
-    padding: 1rem;
-    margin: 1rem auto;
+    @apply p-4 my-4 mx-auto;
   }
 
   .charts-table td:nth-child(6) {
-    max-width: 120px;
-    font-size: 0.8em;
+    @apply max-w-[120px] text-[0.8em];
   }
 
   .bms-table-container h1 {
-    font-size: 2rem;
+    @apply text-[2rem];
   }
 
   .progress-steps {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
   }
 
   .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+    @apply grid-cols-3 gap-3;
   }
 
   .stat-value {
-    font-size: 1.5rem;
+    @apply text-[1.5rem];
   }
 
   .charts-table th,
   .charts-table td {
-    padding: 0.75rem;
+    @apply p-3;
   }
 
   .charts-table {
-    min-width: 800px;
+    @apply min-w-[800px];
   }
 
   .chart-title {
-    min-width: 150px;
+    @apply min-w-[150px];
   }
 
   .comment-cell {
-    min-width: 100px;
-    max-width: 200px;
+    @apply min-w-[100px] max-w-[200px];
   }
 
   .download-cell {
-    min-width: 110px;
-    max-width: 150px;
+    @apply min-w-[110px] max-w-[150px];
   }
 
   .download-button {
-    padding: 0.25rem 0.4rem;
-    font-size: 0.75rem;
-    min-width: 55px;
-    flex: 1;
+    @apply px-[0.4rem] py-[0.25rem] text-[0.75rem] min-w-[55px] flex-1;
   }
 
   .bms-links-cell {
-    min-width: 120px;
-    max-width: 140px;
+    @apply min-w-[120px] max-w-[140px];
   }
 
   .bms-link-button {
-    width: 32px;
-    height: 32px;
-    font-size: 1rem;
+    @apply w-[32px] h-[32px] text-[1rem];
   }
 }
 
 @media (max-width: 480px) {
   .bms-table-container {
-    padding: 1rem;
-    margin: 1rem;
-    max-width: calc(100% - 2rem);
-    border-radius: 15px;
-    overflow-x: auto;
+    @apply p-4 m-4 max-w-[calc(100%_-_2rem)] rounded-[15px] overflow-x-auto;
   }
 
   .rank-reference-section {
-    padding: 0.75rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    @apply p-3 mt-4 mb-4;
   }
 
   .rank-reference-tables {
-    flex-direction: column;
-    gap: 1rem;
+    @apply flex-col gap-4;
   }
 
   .rank-reference-left th,
   .rank-reference-left td,
   .rank-reference-right th,
   .rank-reference-right td {
-    padding: 0.4rem 0.5rem;
-    font-size: 0.85rem;
+    @apply px-2 py-[0.4rem] text-[0.85rem];
   }
   .page-header {
-    margin-bottom: 1rem;
+    @apply mb-4;
   }
   .page-title {
-    font-size: 1.75rem;
-    margin-bottom: 0.5rem;
+    @apply text-[1.75rem] mb-2;
   }
   .page-subtitle {
-    font-size: 1rem;
+    @apply text-[1rem];
   }
   .stats-grid {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
   }
   .progress-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    @apply flex-col items-start gap-2;
   }
   .progress-percentage {
-    align-self: flex-start;
+    @apply self-start;
   }
   .difficulty-groups-tabs {
-    flex-direction: column;
+    @apply flex-col;
   }
   .difficulty-group-tab {
-    width: 100%;
-    text-align: center;
+    @apply w-full text-center;
   }
   .difficulty-group-badge {
-    font-size: 1rem;
-    padding: 0.3rem 0.8rem;
+    @apply text-[1rem] px-[0.8rem] py-[0.3rem];
   }
   .difficulty-group-title {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    @apply flex-col items-start gap-2;
   }
   .difficulty-group-count {
-    font-size: 1rem;
+    @apply text-[1rem];
   }
 
   .charts-table {
-    min-width: 600px;
+    @apply min-w-[600px];
   }
 
   .chart-title {
-    min-width: 120px;
+    @apply min-w-[120px];
   }
 
   .comment-cell {
-    min-width: 80px;
-    max-width: 150px;
-    font-size: 0.85rem;
+    @apply min-w-[80px] max-w-[150px] text-[0.85rem];
   }
 
   .download-cell {
-    min-width: 90px;
-    max-width: 120px;
+    @apply min-w-[90px] max-w-[120px];
   }
 
   .download-button {
-    padding: 0.2rem 0.3rem;
-    font-size: 0.7rem;
-    min-width: 50px;
-    flex: 1;
+    @apply px-[0.3rem] py-[0.2rem] text-[0.7rem] min-w-[50px] flex-1;
   }
 
   .download-buttons {
-    gap: 0.3rem;
+    @apply gap-[0.3rem];
   }
 
   .bms-links-cell {
-    min-width: 100px;
-    max-width: 120px;
+    @apply min-w-[100px] max-w-[120px];
   }
 
   .bms-link-button {
-    width: 28px;
-    height: 28px;
-    font-size: 0.9rem;
+    @apply w-[28px] h-[28px] text-[0.9rem];
   }
 
   .bms-links {
-    gap: 0.3rem;
+    @apply gap-[0.3rem];
   }
 
   .charts-table th,
   .charts-table td {
-    padding: 0.5rem;
+    @apply p-2;
   }
 }
 </style>
