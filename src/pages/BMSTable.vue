@@ -30,7 +30,6 @@ const loadingState = reactive({
 const tableData = ref(null);
 const headerData = ref(null);
 const error = ref(null);
-const activeDifficultyGroup = ref(null);
 
 // 模拟进度更新
 function updateProgress(step, progress) {
@@ -80,20 +79,13 @@ async function lazyLoadTableData() {
   }
 }
 
-// 监听数据加载完成，设置默认激活的难度组
-watch(
-  tableData,
-  (newData) => {
-    if (newData && newData.length > 0) {
-      // 设置第一个难度组为默认激活
-      const firstGroup = sortedDifficultyGroups.value[0];
-      if (firstGroup) {
-        activeDifficultyGroup.value = firstGroup.level;
-      }
-    }
-  },
-  { immediate: true }
-);
+// 滚动到指定难度组
+function scrollToDifficultyGroup(level) {
+  const element = document.getElementById(`difficulty-group-${level}`);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
 
 // 计算表格统计数据
 const tableStats = computed(() => {
@@ -125,10 +117,30 @@ const tableStats = computed(() => {
   return {
     totalCharts: charts.length,
     difficulties: Array.from(difficulties).sort((a, b) => {
-      // 特殊处理 "???" 等级
-      if (a === "???") return 1;
-      if (b === "???") return -1;
-      return parseFloat(a) - parseFloat(b);
+      // 使用正则表达式检查是否为整数（包括负数）
+      const intRegex = /^-?\d+$/;
+      const aIsInt = intRegex.test(a.trim());
+      const bIsInt = intRegex.test(b.trim());
+
+      if (aIsInt && bIsInt) {
+        // 都是整数，按数值大小排序
+        const numA = parseInt(a, 10);
+        const numB = parseInt(b, 10);
+        return numA - numB;
+      }
+
+      // 如果只有a是整数，a排在前面
+      if (aIsInt && !bIsInt) {
+        return -1;
+      }
+
+      // 如果只有b是整数，b排在后面
+      if (!aIsInt && bIsInt) {
+        return 1;
+      }
+
+      // 如果都不是整数，按字符编码排序
+      return a.localeCompare(b);
     }),
     averageLevel: validLevelCount > 0 ? (totalLevel / validLevelCount).toFixed(2) : "N/A",
   };
@@ -156,36 +168,92 @@ const groupedCharts = computed(() => {
     groups[level].charts.push(chart);
   });
 
-  // 按难度排序（数字从小到大，"???" 放在最后）
-  const sortedGroups = {};
-  Object.keys(groups)
-    .sort((a, b) => {
-      if (a === "???") return 1;
-      if (b === "???") return -1;
-      const numA = parseFloat(a);
-      const numB = parseFloat(b);
-      if (isNaN(numA) && isNaN(numB)) return a.localeCompare(b);
-      if (isNaN(numA)) return 1;
-      if (isNaN(numB)) return -1;
+  // 按难度排序：数字部分按整数大小排序，非数字部分按字符编码排序
+  // 首先获取所有难度等级
+  const levels = Object.keys(groups);
+
+  // 对难度等级进行排序
+  const sortedKeys = levels.sort((a, b) => {
+    // 使用正则表达式检查是否为整数（包括负数）
+    const intRegex = /^-?\d+$/;
+    const aIsInt = intRegex.test(a.trim());
+    const bIsInt = intRegex.test(b.trim());
+
+    if (aIsInt && bIsInt) {
+      // 都是整数，按数值大小排序
+      const numA = parseInt(a, 10);
+      const numB = parseInt(b, 10);
       return numA - numB;
-    })
-    .forEach((key) => {
-      sortedGroups[key] = groups[key];
-    });
+    }
+
+    // 如果只有a是整数，a排在前面
+    if (aIsInt && !bIsInt) {
+      return -1;
+    }
+
+    // 如果只有b是整数，b排在后面
+    if (!aIsInt && bIsInt) {
+      return 1;
+    }
+
+    // 如果都不是整数，按字符编码排序
+    return a.localeCompare(b);
+  });
+
+  // 使用Map保持插入顺序，然后转换为数组
+  const sortedGroupsMap = new Map();
+  sortedKeys.forEach((key) => {
+    sortedGroupsMap.set(key, groups[key]);
+  });
+
+  // 将Map转换为对象（Vue模板需要普通对象）
+  const sortedGroups = {};
+  sortedGroupsMap.forEach((value, key) => {
+    sortedGroups[key] = value;
+  });
 
   return sortedGroups;
 });
 
 // 获取排序后的难度组列表
 const sortedDifficultyGroups = computed(() => {
-  return Object.values(groupedCharts.value);
+  // 确保按排序后的键顺序获取值
+  const groups = groupedCharts.value;
+  const sortedKeys = Object.keys(groups).sort((a, b) => {
+    // 使用正则表达式检查是否为整数（包括负数）
+    const intRegex = /^-?\d+$/;
+    const aIsInt = intRegex.test(a.trim());
+    const bIsInt = intRegex.test(b.trim());
+
+    if (aIsInt && bIsInt) {
+      // 都是整数，按数值大小排序
+      const numA = parseInt(a, 10);
+      const numB = parseInt(b, 10);
+      return numA - numB;
+    }
+
+    // 如果只有a是整数，a排在前面
+    if (aIsInt && !bIsInt) {
+      return -1;
+    }
+
+    // 如果只有b是整数，b排在后面
+    if (!aIsInt && bIsInt) {
+      return 1;
+    }
+
+    // 如果都不是整数，按字符编码排序
+    return a.localeCompare(b);
+  });
+
+  return sortedKeys.map((key) => groups[key]);
 });
 
 // 格式化等级显示
 function formatLevel(level) {
   if (!level) return "N/A";
-  const num = parseFloat(level);
-  return isNaN(num) ? level : num.toFixed(1);
+  const num = parseInt(level, 10);
+  return isNaN(num) ? level : num.toString();
 }
 
 // 获取难度颜色
@@ -309,26 +377,9 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- 难度分布 -->
-          <div class="difficulty-section" v-if="tableStats.difficulties.length > 0">
-            <h3>难度分布</h3>
-            <div class="difficulty-tags">
-              <span
-                v-for="level in tableStats.difficulties"
-                :key="level"
-                class="difficulty-tag"
-                :style="{
-                  backgroundColor: getDifficultyColor(level),
-                }"
-              >
-                {{ formatLevel(level) }}
-              </span>
-            </div>
-          </div>
-
           <!-- 按难度分组的谱面表格 -->
           <div class="charts-table-section" v-if="sortedDifficultyGroups.length > 0">
-            <h3>按难度分组的谱面列表 ({{ tableData.length }} 首)</h3>
+            <h3>谱面列表 ({{ tableData.length }} 首)</h3>
 
             <!-- 难度组导航 -->
             <div class="difficulty-groups-nav" v-if="sortedDifficultyGroups.length > 1">
@@ -337,8 +388,7 @@ onMounted(() => {
                   v-for="group in sortedDifficultyGroups"
                   :key="group.level"
                   class="difficulty-group-tab"
-                  :class="{ active: activeDifficultyGroup === group.level }"
-                  @click="activeDifficultyGroup = group.level"
+                  @click="scrollToDifficultyGroup(group.level)"
                   :style="{
                     backgroundColor: group.color,
                     borderColor: group.color,
@@ -350,12 +400,14 @@ onMounted(() => {
               </div>
             </div>
 
-            <!-- 谱面表格 -->
-            <div v-for="group in sortedDifficultyGroups" :key="group.level">
-              <div
-                class="difficulty-group-header"
-                v-if="activeDifficultyGroup === group.level || sortedDifficultyGroups.length === 1"
-              >
+            <!-- 谱面表格 - 一次性显示所有难度组 -->
+            <div
+              v-for="group in sortedDifficultyGroups"
+              :key="group.level"
+              :id="`difficulty-group-${group.level}`"
+              class="difficulty-group-container"
+            >
+              <div class="difficulty-group-header">
                 <div class="difficulty-group-title">
                   <span
                     class="difficulty-group-badge"
@@ -369,26 +421,17 @@ onMounted(() => {
                 </div>
               </div>
 
-              <div
-                class="table-wrapper"
-                v-if="activeDifficultyGroup === group.level || sortedDifficultyGroups.length === 1"
-              >
+              <div class="table-wrapper">
                 <table class="charts-table">
                   <thead>
                     <tr>
+                      <th>等级</th>
                       <th>标题</th>
                       <th>艺术家</th>
-                      <th>等级</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(chart, index) in group.charts" :key="index">
-                      <td class="chart-title">
-                        <strong>{{ getChartDisplayInfo(chart).title }}</strong>
-                      </td>
-                      <td>
-                        {{ getChartDisplayInfo(chart).artist }}
-                      </td>
                       <td>
                         <span
                           class="level-badge"
@@ -398,6 +441,12 @@ onMounted(() => {
                         >
                           {{ formatLevel(chart.level) }}
                         </span>
+                      </td>
+                      <td class="chart-title">
+                        <strong>{{ getChartDisplayInfo(chart).title }}</strong>
+                      </td>
+                      <td>
+                        {{ getChartDisplayInfo(chart).artist }}
                       </td>
                     </tr>
                   </tbody>
@@ -599,35 +648,6 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
-/* 难度分布样式 */
-.difficulty-section {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
-}
-
-.difficulty-section h3 {
-  color: white;
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
-.difficulty-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.difficulty-tag {
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
 /* 谱面表格样式 */
 .charts-table-section {
   margin-top: 2rem;
@@ -739,11 +759,9 @@ onMounted(() => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.difficulty-group-tab.active {
-  opacity: 1;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border-color: white !important;
+.difficulty-group-tab:active {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .chart-count {
@@ -752,6 +770,12 @@ onMounted(() => {
   background: rgba(0, 0, 0, 0.2);
   padding: 0.1rem 0.5rem;
   border-radius: 10px;
+}
+
+/* 难度组容器样式 */
+.difficulty-group-container {
+  margin-bottom: 3rem;
+  scroll-margin-top: 20px; /* 滚动时的偏移 */
 }
 
 /* 难度组标题样式 */
