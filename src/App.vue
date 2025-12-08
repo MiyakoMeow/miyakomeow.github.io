@@ -19,14 +19,13 @@ import BlogLayout from "./layout/BlogLayout.vue";
 .content-card {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
-  max-width: 700px;
   width: 100%;
-  margin: 0 auto;
   animation: fadeIn 0.8s ease-out;
 }
 
