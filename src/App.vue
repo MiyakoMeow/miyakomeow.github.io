@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BlogLayout from "./layout/BlogLayout.vue";
-import "./styles/main.css";
+import "./styles/main.pcss";
 </script>
 
 <template>

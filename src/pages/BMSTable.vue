@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, reactive } from "vue";
 import StarryBackground from "../components/StarryBackground.vue";
-import "../styles/main.css";
+import "../styles/main.pcss";
 
 interface ChartData {
   title?: string;
@@ -655,6 +655,7 @@ onMounted(() => {
 .page-title {
   @apply text-white text-[2.5rem] font-bold mb-2 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] bg-clip-text text-transparent;
   -webkit-background-clip: text;
+  -background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
