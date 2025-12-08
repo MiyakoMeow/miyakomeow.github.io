@@ -237,6 +237,27 @@ function getChartDisplayInfo(chart) {
     // 其他可能存在的字段
     sha256: chart.sha256,
     md5: chart.md5,
+    comment: chart.comment || "",
+    url: chart.url || "",
+    url_diff: chart.url_diff || "",
+  };
+}
+
+// 打开URL链接
+function openUrl(url) {
+  if (url) {
+    window.open(url, "_blank");
+  }
+}
+
+// 生成BMS网站链接
+function getBmsLinks(chart) {
+  const info = getChartDisplayInfo(chart);
+  return {
+    bmsScoreViewer: `https://bms-score-viewer.pages.dev/view?md5=${info.md5}`,
+    lr2ir: `http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=${info.md5}`,
+    mocha: `https://mocha-repository.info/song.php?sha256=${info.sha256}`,
+    minir: `https://www.gaftalk.com/minir/#/viewer/song/${info.sha256}/0`,
   };
 }
 
@@ -454,6 +475,9 @@ onMounted(() => {
                     <th>等级</th>
                     <th>标题</th>
                     <th>艺术家</th>
+                    <th class="comment-header">备注</th>
+                    <th>下载</th>
+                    <th>BMS网站</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -473,6 +497,61 @@ onMounted(() => {
                     </td>
                     <td>
                       {{ getChartDisplayInfo(chart).artist }}
+                    </td>
+                    <td class="comment-cell">
+                      {{ getChartDisplayInfo(chart).comment }}
+                    </td>
+                    <td class="download-cell">
+                      <div class="download-buttons">
+                        <button
+                          v-if="getChartDisplayInfo(chart).url"
+                          class="download-button download-bundle"
+                          @click="openUrl(getChartDisplayInfo(chart).url)"
+                          :title="getChartDisplayInfo(chart).url"
+                        >
+                          📦 同捆
+                        </button>
+                        <button
+                          v-if="getChartDisplayInfo(chart).url_diff"
+                          class="download-button download-diff"
+                          @click="openUrl(getChartDisplayInfo(chart).url_diff)"
+                          :title="getChartDisplayInfo(chart).url_diff"
+                        >
+                          🔄 差分
+                        </button>
+                      </div>
+                    </td>
+                    <td class="bms-links-cell">
+                      <div class="bms-links">
+                        <button
+                          class="bms-link-button bms-score-viewer"
+                          @click="openUrl(getBmsLinks(chart).bmsScoreViewer)"
+                          :title="getBmsLinks(chart).bmsScoreViewer"
+                        >
+                          📊
+                        </button>
+                        <button
+                          class="bms-link-button lr2ir"
+                          @click="openUrl(getBmsLinks(chart).lr2ir)"
+                          :title="getBmsLinks(chart).lr2ir"
+                        >
+                          LR2
+                        </button>
+                        <button
+                          class="bms-link-button mocha"
+                          @click="openUrl(getBmsLinks(chart).mocha)"
+                          :title="getBmsLinks(chart).mocha"
+                        >
+                          <img src="/assets/logo/mocha_logo.gif" alt="Mocha" class="bms-icon" />
+                        </button>
+                        <button
+                          class="bms-link-button minir"
+                          @click="openUrl(getBmsLinks(chart).minir)"
+                          :title="getBmsLinks(chart).minir"
+                        >
+                          <img src="/assets/logo/minir_logo.gif" alt="Minir" class="bms-icon" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -796,7 +875,7 @@ onMounted(() => {
 .charts-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px;
+  min-width: 900px;
 }
 
 .charts-table th {
@@ -812,6 +891,7 @@ onMounted(() => {
   padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.9);
+  word-break: break-word;
 }
 
 .charts-table tbody tr:hover {
@@ -819,7 +899,12 @@ onMounted(() => {
 }
 
 .chart-title {
-  min-width: 250px;
+  min-width: 200px;
+}
+
+.comment-cell {
+  min-width: 150px;
+  max-width: 300px;
 }
 
 .level-badge {
@@ -831,6 +916,139 @@ onMounted(() => {
   font-size: 0.85rem;
   min-width: 60px;
   text-align: center;
+}
+
+/* 下载按钮样式 */
+.download-cell {
+  min-width: 120px;
+  max-width: 200px;
+}
+
+.download-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.download-button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-width: 80px;
+}
+
+.download-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.download-button:active {
+  transform: translateY(0);
+}
+
+.download-bundle {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: white;
+}
+
+.download-bundle:hover {
+  background: linear-gradient(135deg, #66bb6a, #388e3c);
+}
+
+.download-diff {
+  background: linear-gradient(135deg, #2196f3, #1565c0);
+  color: white;
+}
+
+.download-diff:hover {
+  background: linear-gradient(135deg, #42a5f5, #1976d2);
+}
+
+/* BMS网站链接样式 */
+.bms-links-cell {
+  min-width: 140px;
+  max-width: 180px;
+}
+
+.bms-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.bms-link-button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+}
+
+.bms-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.bms-link-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.bms-link-button:active {
+  transform: scale(0.95);
+}
+
+.bms-score-viewer {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  color: white;
+}
+
+.bms-score-viewer:hover {
+  background: linear-gradient(135deg, #ffb74d, #ff9800);
+}
+
+.lr2ir {
+  background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+  color: white;
+}
+
+.lr2ir:hover {
+  background: linear-gradient(135deg, #ba68c8, #9c27b0);
+}
+
+.mocha {
+  background: linear-gradient(135deg, #795548, #5d4037);
+  color: white;
+}
+
+.mocha:hover {
+  background: linear-gradient(135deg, #a1887f, #795548);
+}
+
+.minir {
+  background: linear-gradient(135deg, #00bcd4, #0097a7);
+  color: white;
+}
+
+.minir:hover {
+  background: linear-gradient(135deg, #4dd0e1, #00bcd4);
 }
 
 /* 空状态样式 */
@@ -987,9 +1205,15 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .bms-table-container {
-    padding: 1.5rem;
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  .charts-table td:nth-child(4) {
+    max-width: 120px;
+    font-size: 0.8em;
   }
 
   .bms-table-container h1 {
@@ -1013,6 +1237,41 @@ onMounted(() => {
   .charts-table td {
     padding: 0.75rem;
   }
+
+  .charts-table {
+    min-width: 800px;
+  }
+
+  .chart-title {
+    min-width: 150px;
+  }
+
+  .comment-cell {
+    min-width: 100px;
+    max-width: 200px;
+  }
+
+  .download-cell {
+    min-width: 100px;
+    max-width: 150px;
+  }
+
+  .download-button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    min-width: 70px;
+  }
+
+  .bms-links-cell {
+    min-width: 120px;
+    max-width: 140px;
+  }
+
+  .bms-link-button {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1021,6 +1280,7 @@ onMounted(() => {
     margin: 1rem;
     max-width: calc(100% - 2rem);
     border-radius: 15px;
+    overflow-x: auto;
   }
 
   .rank-reference-section {
@@ -1080,6 +1340,55 @@ onMounted(() => {
   }
   .difficulty-group-count {
     font-size: 1rem;
+  }
+
+  .charts-table {
+    min-width: 600px;
+  }
+
+  .chart-title {
+    min-width: 120px;
+  }
+
+  .comment-cell {
+    min-width: 80px;
+    max-width: 150px;
+    font-size: 0.85rem;
+  }
+
+  .download-cell {
+    min-width: 80px;
+    max-width: 120px;
+  }
+
+  .download-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    min-width: 60px;
+  }
+
+  .download-buttons {
+    gap: 0.3rem;
+  }
+
+  .bms-links-cell {
+    min-width: 100px;
+    max-width: 120px;
+  }
+
+  .bms-link-button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  .bms-links {
+    gap: 0.3rem;
+  }
+
+  .charts-table th,
+  .charts-table td {
+    padding: 0.5rem;
   }
 }
 </style>

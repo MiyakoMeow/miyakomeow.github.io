@@ -4,7 +4,7 @@ import globals from "globals";
 
 export default [
   {
-    ignores: ["dist/**", "node_modules/**", "public/**", "bun.lockb"],
+    ignores: ["dist/**", "node_modules/**", "bun.lockb"],
   },
   ...pluginVue.configs["flat/essential"],
   {
