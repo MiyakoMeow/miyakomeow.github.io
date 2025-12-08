@@ -520,6 +520,14 @@ onMounted(() => {
 
             <div class="table-wrapper">
               <table class="charts-table">
+                <colgroup>
+                  <col class="col-level" />
+                  <col class="col-download" />
+                  <col class="col-bmslinks" />
+                  <col class="col-title" />
+                  <col class="col-artist" />
+                  <col class="col-comment" />
+                </colgroup>
                 <thead>
                   <tr>
                     <th>等级</th>
@@ -955,6 +963,13 @@ onMounted(() => {
   color: rgba(255, 255, 255, 0.9);
   word-break: break-word;
 }
+
+.charts-table col.col-level { width: 50px; }
+.charts-table col.col-download { width: 140px; }
+.charts-table col.col-bmslinks { width: 140px; }
+.charts-table col.col-title { width: 260px; }
+.charts-table col.col-artist { width: 200px; }
+.charts-table col.col-comment { width: 260px; }
 
 .charts-table tbody tr:hover {
   background: rgba(255, 255, 255, 0.05);
