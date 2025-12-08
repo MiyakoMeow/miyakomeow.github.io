@@ -29,68 +29,46 @@ defineProps<Props>();
 </template>
 
 <style scoped>
+@reference "tailwindcss";
+
 .glass-card {
-  /* 使用通用玻璃态卡片样式 */
-  color: white;
+  @apply text-white;
 }
 
 .avatar img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-  margin-bottom: 1rem;
+  @apply w-[120px] h-[120px] rounded-full border-[4px] border-white/30 mb-4 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-300;
   transition: transform 0.3s ease;
 }
 
 .avatar img:hover {
-  transform: scale(1.05) rotate(5deg);
+  @apply hover:scale-105 hover:rotate-[5deg];
 }
 
 h1 {
-  margin: 0.5rem 0;
-  font-size: 2.5rem;
-  background: linear-gradient(90deg, #a78bfa, #f472b6, #60a5fa);
+  @apply my-2 text-[2.5rem] bg-[linear-gradient(90deg,#a78bfa,#f472b6,#60a5fa)] bg-clip-text text-transparent;
   -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
   -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
-  color: #a5b4fc;
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+  @apply text-[#a5b4fc] text-[1.1rem] mb-8;
 }
 
 .bio {
-  margin-bottom: 2.5rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  @apply mb-10 leading-[1.6] text-white/90;
 }
 
 .links {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  @apply flex gap-4 justify-center flex-wrap;
 }
 
 .link-btn {
-  padding: 0.8rem 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50px;
-  color: white;
-  text-decoration: none;
+  @apply px-[1.5rem] py-[0.8rem] bg-white/10 border border-white/20 rounded-[50px] text-white no-underline font-medium;
   transition: all 0.3s ease;
-  font-weight: 500;
 }
 
 .link-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  @apply bg-white/20 hover:shadow-[0_5px_15px_rgba(0,0,0,0.2)];
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 </style>

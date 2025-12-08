@@ -16,30 +16,18 @@ import ProfileCard from "../components/ProfileCard.vue";
 </template>
 
 <style scoped>
+@reference "tailwindcss";
+
 .blog-container {
-  display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 2rem;
-  align-items: start;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-  width: 100%;
-  box-sizing: border-box;
+  @apply grid grid-cols-[380px_1fr] gap-8 items-start max-w-[1400px] m-0 mx-auto p-8 w-full box-border;
 }
 
 .sidebar {
-  display: flex;
-  justify-content: center;
-  width: 100%;
+  @apply flex justify-center w-full;
 }
 
 .profile-card {
-  max-width: 360px;
-  width: 100%;
-  animation: fadeIn 0.8s ease-out;
-  margin: 0 auto;
-  display: block;
+  @apply max-w-[360px] w-full animate-[fadeIn_0.8s_ease-out] m-0 mx-auto block;
 }
 
 @keyframes fadeIn {
@@ -55,16 +43,13 @@ import ProfileCard from "../components/ProfileCard.vue";
 
 @media (max-width: 1024px) {
   .blog-container {
-    grid-template-columns: 1fr;
-    max-width: 95%;
-    padding: 1.5rem;
+    @apply grid-cols-1 max-w-[95%] p-6;
   }
 }
 
 @media (max-width: 768px) {
   .blog-container {
-    max-width: 100%;
-    padding: 1rem;
+    @apply max-w-full p-4;
   }
 }
 </style>

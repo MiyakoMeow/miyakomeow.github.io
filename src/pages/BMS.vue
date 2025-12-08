@@ -28,48 +28,35 @@ const links: LinkItem[] = [
 </template>
 
 <style>
-/* 页面特定样式 */
+@reference "tailwindcss";
 
 .links-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
+  @apply grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4 mt-4;
 }
 
 .link-card {
-  display: block;
-  padding: 1.25rem;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  text-decoration: none;
+  @apply block p-[1.25rem] rounded-[14px] bg-black/20 border border-white/10 text-white no-underline;
   transition:
     transform 0.15s ease,
     background 0.3s ease;
 }
 
 .link-card:hover {
+  @apply bg-[rgba(255,255,255,0.06)];
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.06);
 }
 
 .link-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #64b5f6;
+  @apply text-[1.2rem] font-bold mb-[0.5rem] text-[#64b5f6];
 }
 
 .link-desc {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.8);
+  @apply text-[0.95rem] text-white/80;
 }
 
 @media (max-width: 768px) {
   .links-grid {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
   }
 }
 </style>

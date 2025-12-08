@@ -16,26 +16,19 @@ import BlogLayout from "./layout/BlogLayout.vue";
 </template>
 
 <style scoped>
+@reference "tailwindcss";
+
 .link-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
+  @apply flex flex-col gap-4 items-center;
 }
 
 .link-item {
-  display: inline-block;
-  padding: 0.8rem 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  color: white;
-  text-decoration: none;
+  @apply inline-block px-[1.5rem] py-[0.8rem] bg-white/10 border border-white/20 rounded-[12px] text-white no-underline;
   transition: all 0.2s ease;
 }
 
 .link-item:hover {
-  background: rgba(255, 255, 255, 0.2);
+  @apply bg-white/20;
   transform: translateY(-2px);
 }
 </style>
