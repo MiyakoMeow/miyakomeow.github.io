@@ -23,8 +23,6 @@ export interface ChartData {
 
 export interface DifficultyGroup {
   level: string;
-  formattedLevel: string;
-  color: string;
   charts: ChartData[];
 }
 
@@ -70,6 +68,15 @@ const displayGroups = computed<DifficultyGroup[]>(() => {
   others.sort((a, b) => String(a.level).localeCompare(String(b.level)));
   return [...defined, ...others];
 });
+
+function segmentColor(index: number, total: number): string {
+  const palette = ["#4caf50", "#2196f3", "#ff9800", "#f44336", "#ce50d8", "#9c27b0"];
+  if (total <= 0) return palette[1];
+  const bins = palette.length;
+  const size = Math.ceil(total / bins);
+  const ci = Math.min(bins - 1, Math.floor(index / size));
+  return palette[ci];
+}
 
 function getChartDisplayInfo(chart: ChartData): ChartDisplayInfo {
   return {
@@ -171,13 +178,13 @@ watch(
     <div class="difficulty-groups-nav" v-if="props.groups.length > 1">
       <div class="difficulty-groups-tabs">
         <button
-          v-for="group in displayGroups"
+          v-for="(group, idx) in displayGroups"
           :key="group.level"
           class="difficulty-group-tab"
           @click="scrollToDifficultyGroup(group.level)"
           :style="{
-            backgroundColor: group.color,
-            borderColor: group.color,
+            backgroundColor: segmentColor(idx, displayGroups.length),
+            borderColor: segmentColor(idx, displayGroups.length),
           }"
         >
           {{ group.level }}
@@ -187,7 +194,7 @@ watch(
     </div>
 
     <div
-      v-for="group in displayGroups"
+      v-for="(group, gIndex) in displayGroups"
       :key="group.level"
       :id="`difficulty-group-${group.level}`"
       class="difficulty-group-container"
@@ -197,7 +204,7 @@ watch(
           <span
             class="difficulty-group-badge"
             :style="{
-              backgroundColor: group.color,
+              backgroundColor: segmentColor(gIndex, displayGroups.length),
             }"
           >
             难度 {{ group.level }}
@@ -229,14 +236,14 @@ watch(
           <tbody>
             <tr v-for="(chart, index) in group.charts" :key="index">
               <td>
-                <span
-                  class="level-badge"
-                  :style="{
-                    backgroundColor: group.color,
-                  }"
-                >
-                  {{ group.level }}
-                </span>
+            <span
+              class="level-badge"
+              :style="{
+                backgroundColor: segmentColor(gIndex, displayGroups.length),
+              }"
+            >
+              {{ group.level }}
+            </span>
               </td>
               <td class="download-cell">
                 <div class="download-buttons">
