@@ -37,7 +37,7 @@ const loading = ref(true);
 const error = ref<string | null>(null);
 
 const copied = ref(false);
-const tablesJsonPath = "/bms/table-mirror/tables.json";
+const tablesJsonPath = new URL("/bms/table-mirror/tables.json", window.location.origin).toString();
 
 async function copyTablesJsonUrl(): Promise<void> {
   try {
