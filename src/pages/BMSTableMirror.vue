@@ -36,6 +36,34 @@ interface Tag1Group {
 const loading = ref(true);
 const error = ref<string | null>(null);
 
+const copied = ref(false);
+const tablesJsonPath = "/bms/table-mirror/tables.json";
+
+async function copyTablesJsonUrl(): Promise<void> {
+  try {
+    const url = tablesJsonPath;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(url);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      await navigator.clipboard.writeText(textarea.value);
+      document.body.removeChild(textarea);
+    }
+    copied.value = true;
+    setTimeout(() => {
+      copied.value = false;
+    }, 1500);
+  } catch {
+    copied.value = false;
+  }
+}
+
 const links: LinkItem[] = [
   { href: "/bms", title: "返回 BMS", desc: "返回 BMS 页面" },
   {
@@ -123,6 +151,20 @@ onMounted(() => {
     <section class="glass-container bms-index-container">
       <h1 class="content-title">BMS 难度表镜像</h1>
 
+      <div class="page-subtitle usage-subtitle">
+        对于BeMusicSeeker用户，可以使用tables.json链接（
+        <button class="copy-action" type="button" @click="copyTablesJsonUrl">点击复制</button>
+        ），导入难度表清单至BeMusicSeeker。
+        <a
+          class="copy-action"
+          href="https://darksabun.club/table/tablelist.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          >使用教程</a
+        >
+        <span v-if="copied" class="copy-feedback">已复制</span>
+      </div>
+
       <div class="links-grid">
         <a v-for="link in links" :key="link.href" class="link-card" :href="link.href">
           <div class="link-title">{{ link.title }}</div>
@@ -174,5 +216,31 @@ onMounted(() => {
 
 .error-section {
   @apply mt-6 text-red-300;
+}
+
+.page-subtitle {
+  @apply text-white/70 text-[1.1rem] italic;
+}
+
+.usage-subtitle {
+  @apply mt-2;
+}
+
+.origin-subtitle {
+  @apply mt-2;
+}
+
+.copy-action {
+  @apply text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium;
+}
+
+.copy-action {
+  &:hover {
+    @apply text-[#42a5f5];
+  }
+}
+
+.copy-feedback {
+  @apply ml-2 text-[#4caf50];
 }
 </style>
