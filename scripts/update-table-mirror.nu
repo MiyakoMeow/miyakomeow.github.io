@@ -24,19 +24,36 @@ let proxies = [
 # BestProxyResult: { best_proxy: string, best_url: string, timings: list<ProxyTiming> }
 
 # 进行反代测速并返回最佳结果（及所有成功的记录）
+def median-duration [ds: list<any>] {
+  let n = ($ds | length)
+  if $n == 0 { null } else {
+    let sorted = ($ds | sort)
+    let mid = ($n // 2)
+    $sorted | get $mid
+  }
+}
+
 def speedtest-proxies [raw_url: string, proxies: list<string>] {
   let timings = (
     $proxies | each { |p|
       let u = $"($p)($raw_url)"
-      let start = (date now)
-      let status = (try {
-        let _ = (^curl -sSLI --fail -o - -L $u | lines | length)
-        "ok"
-      } catch { "fail" })
-      if $status == "ok" {
-        let end = (date now)
-        { proxy: $p, url: $u, time: ($end - $start) }
-      } else { null }
+      let samples = (
+        1..3 | each { ||
+          let start = (date now)
+          let status = (try {
+            let _ = (^curl -sSLI --fail -o - -L $u | lines | length)
+            "ok"
+          } catch { "fail" })
+          if $status == "ok" {
+            let end = (date now)
+            ($end - $start)
+          } else { null }
+        } | compact
+      )
+      let m = (median-duration $samples)
+      if $m == null { null } else {
+        { proxy: $p, url: $u, time: $m, samples: $samples }
+      }
     } | compact
   )
   if ($timings | length) == 0 {
@@ -49,8 +66,11 @@ def speedtest-proxies [raw_url: string, proxies: list<string>] {
 
 let result = (speedtest-proxies $raw_url $proxies)
 
+print "speedtest result"
+print ($result | to toml)
+
 # 输出所有成功记录的耗时
-$result.timings | each { |r| print $r }
+$result.timings | each { |r| print ($r | to toml) }
 
 # 若没有任何成功记录则直接退出
 let count = ($result.timings | length)
