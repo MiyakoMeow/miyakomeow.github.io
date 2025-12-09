@@ -65,7 +65,17 @@ const displayGroups = computed<DifficultyGroup[]>(() => {
   defined.sort(
     (a, b) => (orderIndex.get(String(a.level)) ?? 0) - (orderIndex.get(String(b.level)) ?? 0)
   );
-  others.sort((a, b) => String(a.level).localeCompare(String(b.level)));
+  others.sort((a, b) => {
+    const as = String(a.level).trim();
+    const bs = String(b.level).trim();
+    const intRe = /^-?\d+$/;
+    const ai = intRe.test(as);
+    const bi = intRe.test(bs);
+    if (ai && bi) return parseInt(as, 10) - parseInt(bs, 10);
+    if (ai && !bi) return -1;
+    if (!ai && bi) return 1;
+    return as.localeCompare(bs);
+  });
   return [...defined, ...others];
 });
 
