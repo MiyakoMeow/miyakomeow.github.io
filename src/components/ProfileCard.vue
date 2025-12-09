@@ -45,8 +45,8 @@ defineProps<Props>();
 
 h1 {
   @apply my-2 text-[2.5rem] bg-[linear-gradient(90deg,#a78bfa,#f472b6,#60a5fa)] bg-clip-text text-transparent;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -background-clip: text;
+  -text-fill-color: transparent;
 }
 
 .subtitle {
