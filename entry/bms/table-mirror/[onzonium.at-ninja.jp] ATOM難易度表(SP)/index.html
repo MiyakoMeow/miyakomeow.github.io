@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="bmstable"
-      content="https://gh.llkk.cc/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bonzonium.at-ninja.jp%5D%20ATOM難易度表%28SP%29/header.json"
+      content="https://proxy.pipers.cn/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bonzonium.at-ninja.jp%5D%20ATOM難易度表%28SP%29/header.json"
     />
     <title>MiyakoMeow谱面合集（SP）</title>
   </head>
@@ -16,7 +16,11 @@
       import { createApp } from "vue";
       import BMSTable from "../../../../src/pages/BMSTable.vue";
 
-      const app = createApp(BMSTable, { header: "https://gh.llkk.cc/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bonzonium.at-ninja.jp%5D%20ATOM難易度表%28SP%29/header.json", origin_url: http://onzonium.at-ninja.jp/sp/ });
+      const app = createApp(BMSTable, {
+        header:
+          "https://proxy.pipers.cn/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bonzonium.at-ninja.jp%5D%20ATOM難易度表%28SP%29/header.json",
+        origin_url: "http://onzonium.at-ninja.jp/sp/",
+      });
       app.mount("#app");
     </script>
   </body>
