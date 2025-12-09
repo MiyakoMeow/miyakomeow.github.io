@@ -84,7 +84,7 @@ $items | each { |it|
   let dir = ($pages_dir | path join $it.dir_name)
   mkdir $dir
   let header_link = $"($result.best_proxy)($it.url)"
-  let out = ($tpl | str replace -a "./header.json" $header_link | str replace -a "null" $it.url_ori)
+  let out = ($tpl | str replace -a "./header.json" $header_link | str replace -a "null" $"\"($it.url_ori)\"")
   $out | save -f ($dir | path join "index.html")
 }
 
