@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BlogLayout from "../layout/BlogLayout.vue";
 import "../styles/main.pcss";
-import FloatingActions from "../components/FloatingActions.vue";
+import QuickActions from "../components/QuickActions.vue";
 
 interface LinkItem {
   href: string;
@@ -28,7 +28,7 @@ const links: LinkItem[] = [
       </div>
     </div>
   </BlogLayout>
-  <FloatingActions />
+  <QuickActions />
 </template>
 
 <style lang="postcss" scoped>

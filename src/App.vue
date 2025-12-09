@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BlogLayout from "./layout/BlogLayout.vue";
 import "./styles/main.pcss";
-import FloatingActions from "./components/FloatingActions.vue";
+import QuickActions from "./components/QuickActions.vue";
 </script>
 
 <template>
@@ -16,7 +16,7 @@ import FloatingActions from "./components/FloatingActions.vue";
       </div>
     </section>
   </BlogLayout>
-  <FloatingActions />
+  <QuickActions />
 </template>
 
 <style lang="postcss" scoped>
