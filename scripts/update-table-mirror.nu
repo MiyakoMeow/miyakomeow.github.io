@@ -66,8 +66,11 @@ def speedtest-proxies [raw_url: string, proxies: list<string>] {
 
 let result = (speedtest-proxies $raw_url $proxies)
 
+print "speedtest result"
+print ($result | to toml)
+
 # 输出所有成功记录的耗时
-$result.timings | each { |r| print $r }
+$result.timings | each { |r| print ($r | to toml) }
 
 # 若没有任何成功记录则直接退出
 let count = ($result.timings | length)
