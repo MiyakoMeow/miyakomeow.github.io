@@ -166,56 +166,25 @@ const tableStats = computed<TableStats>(() => {
   };
 });
 
-// 按难度分组谱面数据
-const groupedCharts = computed<Record<string, DifficultyGroup>>(() => {
+// 按难度分组谱面数据（保持出现顺序，不在此处排序）
+const groupedCharts = computed<DifficultyGroup[]>(() => {
   if (!tableData.value || !Array.isArray(tableData.value)) {
-    return {};
+    return [];
   }
-
-  const groups: Record<string, DifficultyGroup> = {};
+  const groupsMap = new Map<string, DifficultyGroup>();
   const charts = tableData.value;
-
   charts.forEach((chart) => {
     const level = chart.level || "unknown";
-    if (!groups[level]) {
-      groups[level] = {
-        level: level,
-        charts: [],
-      };
+    if (!groupsMap.has(level)) {
+      groupsMap.set(level, { level, charts: [] });
     }
-    groups[level].charts.push(chart);
+    groupsMap.get(level)!.charts.push(chart);
   });
-
-  // 按难度排序：数字部分按整数大小排序，非数字部分按字符编码排序
-  // 首先获取所有难度等级
-  const levels = Object.keys(groups);
-
-  // 对难度等级进行排序
-  // 按难度排序：数字部分按整数大小排序，非数字部分按字符编码排序
-  const sortedKeys = levels.sort(sortDifficultyLevels);
-
-  // 使用Map保持插入顺序，然后转换为数组
-  const sortedGroupsMap = new Map<string, DifficultyGroup>();
-  sortedKeys.forEach((key) => {
-    sortedGroupsMap.set(key, groups[key]);
-  });
-
-  // 将Map转换为对象（Vue模板需要普通对象）
-  const sortedGroups: Record<string, DifficultyGroup> = {};
-  sortedGroupsMap.forEach((value, key) => {
-    sortedGroups[key] = value;
-  });
-
-  return sortedGroups;
+  return Array.from(groupsMap.values());
 });
 
-// 获取排序后的难度组列表
-const sortedDifficultyGroups = computed<DifficultyGroup[]>(() => {
-  // 确保按排序后的键顺序获取值
-  const groups = groupedCharts.value;
-  const sortedKeys = Object.keys(groups).sort(sortDifficultyLevels);
-  return sortedKeys.map((key) => groups[key]);
-});
+// 获取用于展示的难度组列表（排序在展示层处理）
+const sortedDifficultyGroups = computed<DifficultyGroup[]>(() => groupedCharts.value);
 
 // 难度等级排序函数
 function sortDifficultyLevels(a: string, b: string): number {
