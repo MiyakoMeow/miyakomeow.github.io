@@ -56,5 +56,4 @@ const links: LinkItem[] = [
 .link-desc {
   @apply text-[0.95rem] text-white/80;
 }
-
 </style>

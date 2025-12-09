@@ -46,5 +46,4 @@ import ProfileCard from "../components/ProfileCard.vue";
     transform: translateY(0);
   }
 }
-
 </style>
