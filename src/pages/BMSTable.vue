@@ -4,6 +4,7 @@ import StarryBackground from "../components/StarryBackground.vue";
 import ChartsTableSection from "./BMSTable/ChartsTableSection.vue";
 import type { ChartData, DifficultyGroup } from "./BMSTable/ChartsTableSection.vue";
 import "../styles/main.pcss";
+import FloatingActions from "../components/FloatingActions.vue";
 
 interface HeaderData {
   name?: string;
@@ -380,6 +381,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <FloatingActions />
 </template>
 
 <style lang="postcss" scoped>

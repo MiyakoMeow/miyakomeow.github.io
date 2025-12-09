@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from "vue";
 import BlogLayout from "../layout/BlogLayout.vue";
 import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.vue";
 import "../styles/main.pcss";
+import FloatingActions from "../components/FloatingActions.vue";
 
 interface LinkItem {
   href: string;
@@ -136,6 +137,7 @@ onMounted(() => {
       </div>
     </section>
   </BlogLayout>
+  <FloatingActions />
 </template>
 
 <style lang="postcss" scoped>
