@@ -236,14 +236,14 @@ watch(
           <tbody>
             <tr v-for="(chart, index) in group.charts" :key="index">
               <td>
-            <span
-              class="level-badge"
-              :style="{
-                backgroundColor: segmentColor(gIndex, displayGroups.length),
-              }"
-            >
-              {{ group.level }}
-            </span>
+                <span
+                  class="level-badge"
+                  :style="{
+                    backgroundColor: segmentColor(gIndex, displayGroups.length),
+                  }"
+                >
+                  {{ group.level }}
+                </span>
               </td>
               <td class="download-cell">
                 <div class="download-buttons">
