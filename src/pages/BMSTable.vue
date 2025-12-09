@@ -69,7 +69,7 @@ async function copySiteUrl(): Promise<void> {
       document.body.appendChild(textarea);
       textarea.focus();
       textarea.select();
-      document.execCommand("copy");
+      await navigator.clipboard.writeText(textarea.value);
       document.body.removeChild(textarea);
     }
     copied.value = true;
