@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from "vue";
 import BlogLayout from "../layout/BlogLayout.vue";
 import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.vue";
 import "../styles/main.pcss";
+import QuickActions from "../components/QuickActions.vue";
 
 interface LinkItem {
   href: string;
@@ -136,6 +137,7 @@ onMounted(() => {
       </div>
     </section>
   </BlogLayout>
+  <QuickActions />
 </template>
 
 <style lang="postcss" scoped>
