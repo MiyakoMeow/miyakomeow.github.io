@@ -1,0 +1,58 @@
+name: Scheduled Table Update
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: scheduled-table-update
+  cancel-in-progress: true
+
+jobs:
+  run-and-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Nushell
+        uses: hustcer/setup-nu@v3
+        with:
+          check-latest: true
+
+      - name: Install dependencies
+        run: bun install --ci
+
+      - name: Run Nushell script
+        run: nu scripts/update-table-mirror.nu
+
+      - name: Format with Prettier
+        run: bun run format
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: scheduled table mirror update"
+          title: "Scheduled update: table mirror pages & tables.json"
+          body: "Automated update running every 10 minutes."
+          branch: "chore/scheduled-table-update"
+          delete-branch: true
+          labels: ["automation", "scheduled"]
+
+      - name: Enable Pull Request Automerge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash
