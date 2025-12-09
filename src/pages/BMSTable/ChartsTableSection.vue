@@ -54,13 +54,20 @@ const props = defineProps<{
 
 const displayGroups = computed<DifficultyGroup[]>(() => {
   const order = props.levelOrder ?? [];
-  if (!order.length) return props.groups;
-  const orderSet = new Set(order.map((x) => String(x)));
+  if (!order.length) {
+    return [...props.groups].sort((a, b) => String(a.level).localeCompare(String(b.level)));
+  }
+  const orderIndex = new Map<string, number>();
+  order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
   const defined: DifficultyGroup[] = [];
   const others: DifficultyGroup[] = [];
   for (const g of props.groups) {
-    (orderSet.has(String(g.level)) ? defined : others).push(g);
+    (orderIndex.has(String(g.level)) ? defined : others).push(g);
   }
+  defined.sort(
+    (a, b) => (orderIndex.get(String(a.level)) ?? 0) - (orderIndex.get(String(b.level)) ?? 0)
+  );
+  others.sort((a, b) => String(a.level).localeCompare(String(b.level)));
   return [...defined, ...others];
 });
 
@@ -173,7 +180,7 @@ watch(
             borderColor: group.color,
           }"
         >
-          {{ group.formattedLevel }}
+          {{ group.level }}
           <span class="chart-count">({{ group.charts.length }})</span>
         </button>
       </div>
@@ -193,7 +200,7 @@ watch(
               backgroundColor: group.color,
             }"
           >
-            难度 {{ group.formattedLevel }}
+            难度 {{ group.level }}
           </span>
           <span class="difficulty-group-count"> {{ group.charts.length }} 个谱面 </span>
         </div>
@@ -228,7 +235,7 @@ watch(
                     backgroundColor: group.color,
                   }"
                 >
-                  {{ group.formattedLevel }}
+                  {{ group.level }}
                 </span>
               </td>
               <td class="download-cell">
