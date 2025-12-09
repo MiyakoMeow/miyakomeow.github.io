@@ -6,6 +6,7 @@ import {
   onBeforeUnmount,
   nextTick,
   watch,
+  computed,
   type ComponentPublicInstance,
 } from "vue";
 export interface ChartData {
@@ -48,7 +49,20 @@ interface BmsLinks {
 const props = defineProps<{
   groups: DifficultyGroup[];
   totalCharts: number;
+  levelOrder?: string[];
 }>();
+
+const displayGroups = computed<DifficultyGroup[]>(() => {
+  const order = props.levelOrder ?? [];
+  if (!order.length) return props.groups;
+  const orderSet = new Set(order.map((x) => String(x)));
+  const defined: DifficultyGroup[] = [];
+  const others: DifficultyGroup[] = [];
+  for (const g of props.groups) {
+    (orderSet.has(String(g.level)) ? defined : others).push(g);
+  }
+  return [...defined, ...others];
+});
 
 function getChartDisplayInfo(chart: ChartData): ChartDisplayInfo {
   return {
@@ -150,7 +164,7 @@ watch(
     <div class="difficulty-groups-nav" v-if="props.groups.length > 1">
       <div class="difficulty-groups-tabs">
         <button
-          v-for="group in props.groups"
+          v-for="group in displayGroups"
           :key="group.level"
           class="difficulty-group-tab"
           @click="scrollToDifficultyGroup(group.level)"
@@ -166,7 +180,7 @@ watch(
     </div>
 
     <div
-      v-for="group in props.groups"
+      v-for="group in displayGroups"
       :key="group.level"
       :id="`difficulty-group-${group.level}`"
       class="difficulty-group-container"

@@ -454,6 +454,7 @@ onMounted(() => {
           v-if="sortedDifficultyGroups.length > 0"
           :groups="sortedDifficultyGroups"
           :total-charts="tableData?.length || 0"
+          :level-order="(headerData?.level_order as string[]) || []"
         />
 
         <!-- 空状态 -->
