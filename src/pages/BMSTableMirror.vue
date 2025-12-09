@@ -12,7 +12,11 @@ interface LinkItem {
 const redirecting = ref(false);
 const links: LinkItem[] = [
   { href: "../index.html", title: "返回 BMS", desc: "返回 BMS 页面" },
-  { href: "https://github.com/MiyakoMeow/bms-table-mirror", title: "镜像仓库", desc: "查看镜像项目" },
+  {
+    href: "https://github.com/MiyakoMeow/bms-table-mirror",
+    title: "镜像仓库",
+    desc: "查看镜像项目",
+  },
 ];
 
 onMounted(() => {
