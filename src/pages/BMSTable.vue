@@ -25,7 +25,7 @@ interface TableStats {
   averageLevel: string | number;
 }
 
-const props = defineProps<{ header: string }>();
+const props = defineProps<{ header: string; origin_url?: string }>();
 
 const pageTitle = ref("加载难度表header中");
 
@@ -67,6 +67,11 @@ async function copySiteUrl(): Promise<void> {
     copied.value = false;
   }
 }
+
+const originUrl = computed<string | null>(() => {
+  if (!props.origin_url) return null;
+  return String(props.origin_url);
+});
 
 // 模拟进度更新
 function updateProgress(step: string, progress: number): void {
@@ -289,6 +294,11 @@ onMounted(() => {
         >），然后在BeMusicSeeker或beatoraja中，粘贴至对应选项处。
         <span v-if="copied" class="copy-feedback">已复制</span>
       </div>
+      <div v-if="originUrl" class="page-subtitle origin-subtitle">
+        <a class="copy-action" :href="originUrl" target="_blank" rel="noopener noreferrer"
+          >原链接</a
+        >
+      </div>
     </div>
     <div class="bms-table-content">
       <!-- 加载状态 -->
@@ -506,6 +516,10 @@ onMounted(() => {
 }
 
 .usage-subtitle {
+  @apply mt-2;
+}
+
+.origin-subtitle {
   @apply mt-2;
 }
 
