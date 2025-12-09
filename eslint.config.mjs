@@ -4,9 +4,22 @@ import pluginBetterTailwind from "eslint-plugin-better-tailwindcss";
 import globals from "globals";
 import css from "@eslint/css";
 import { tailwind4 } from "tailwind-csstree";
+import vueScopedCss from "eslint-plugin-vue-scoped-css";
 
 export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
+  {
+    files: ["**/*.vue"],
+    plugins: {
+      "vue-scoped-css": vueScopedCss,
+    },
+    rules: {
+      "vue-scoped-css/no-parsing-error": "error",
+      "vue-scoped-css/enforce-style-type": "off",
+      "vue-scoped-css/no-unused-selector": "off",
+      "vue-scoped-css/no-unused-keyframes": "off",
+    },
+  },
   {
     ignores: ["dist/**", "node_modules/**", "bun.lockb"],
   },
