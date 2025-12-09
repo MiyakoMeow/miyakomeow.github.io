@@ -1,13 +1,6 @@
 <script setup lang="ts">
-import {
-  ref,
-  onMounted,
-  onBeforeUpdate,
-  onBeforeUnmount,
-  nextTick,
-  watch,
-  type ComponentPublicInstance,
-} from "vue";
+import { ref } from "vue";
+import ScrollSyncGroup from "@/components/ScrollSyncGroup.vue";
 
 interface MirrorTableItem {
   name: string;
@@ -54,170 +47,114 @@ function scrollToTag2(tag1: string, tag2: string): void {
   }
 }
 
-const tableWrapperRefs = ref<HTMLDivElement[]>([]);
-function setTableWrapperRef(el: Element | ComponentPublicInstance | null): void {
-  if (el && el instanceof HTMLDivElement) {
-    tableWrapperRefs.value.push(el);
-  }
-}
-
-let isSyncing = false;
-let rafId: number | null = null;
-function onWrapperScroll(e: Event): void {
-  if (isSyncing) return;
-  const target = e.target as HTMLDivElement;
-  const left = target.scrollLeft;
-  isSyncing = true;
-  tableWrapperRefs.value.forEach((w) => {
-    if (w !== target) {
-      w.scrollLeft = left;
-    }
-  });
-  if (rafId !== null) {
-    cancelAnimationFrame(rafId);
-  }
-  rafId = requestAnimationFrame(() => {
-    isSyncing = false;
-  });
-}
-
-function attachScrollSync(): void {
-  tableWrapperRefs.value.forEach((w) => {
-    w.addEventListener("scroll", onWrapperScroll, { passive: true });
-  });
-}
-
-function detachScrollSync(): void {
-  tableWrapperRefs.value.forEach((w) => {
-    w.removeEventListener("scroll", onWrapperScroll);
-  });
-}
-
-onMounted(async () => {
-  await nextTick();
-  attachScrollSync();
-});
-
-onBeforeUpdate(() => {
-  tableWrapperRefs.value = [];
-});
-
-onBeforeUnmount(() => {
-  detachScrollSync();
-});
-
-watch(
-  () => props.groups,
-  async () => {
-    await nextTick();
-    detachScrollSync();
-    attachScrollSync();
-  },
-  { deep: true }
-);
-
 const selectedMap = ref<Record<string, boolean>>({});
 </script>
 
 <template>
   <div class="grouped-tables-section" v-if="props.groups.length > 0">
-    <div class="groups-nav">
-      <div v-for="g in props.groups" :key="g.tag1" class="group-row">
-        <button class="tag1-button" @click="scrollToTag1(g.tag1)">
-          {{ g.tag1 }}
-        </button>
-        <div class="group-row-tag2">
-          <button
-            v-for="sg in g.subgroups"
-            :key="sg.tag2"
-            class="tag2-group-tab"
-            @click="scrollToTag2(g.tag1, sg.tag2)"
-          >
-            {{ sg.tag2 }}
-            <span class="chart-count">({{ sg.items.length }})</span>
+    <ScrollSyncGroup :watch-keys="props.groups" v-slot="{ setRef }">
+      <div class="groups-nav">
+        <div v-for="g in props.groups" :key="g.tag1" class="group-row">
+          <button class="tag1-button" @click="scrollToTag1(g.tag1)">
+            {{ g.tag1 }}
           </button>
-        </div>
-      </div>
-    </div>
-
-    <div
-      v-for="g in props.groups"
-      :key="g.tag1"
-      :id="`tag1-group-${slugifyTag(g.tag1)}`"
-      class="tag1-group-container"
-    >
-      <div class="tag1-group-header">
-        <div class="tag1-group-title">
-          <span class="tag1-badge">分类 {{ g.tag1 }}</span>
+          <div class="group-row-tag2">
+            <button
+              v-for="sg in g.subgroups"
+              :key="sg.tag2"
+              class="tag2-group-tab"
+              @click="scrollToTag2(g.tag1, sg.tag2)"
+            >
+              {{ sg.tag2 }}
+              <span class="chart-count">({{ sg.items.length }})</span>
+            </button>
+          </div>
         </div>
       </div>
 
       <div
-        v-for="sg in g.subgroups"
-        :key="sg.tag2"
-        :id="`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`"
-        class="tag2-section"
+        v-for="g in props.groups"
+        :key="g.tag1"
+        :id="`tag1-group-${slugifyTag(g.tag1)}`"
+        class="tag1-group-container"
       >
-        <h3 class="tag2-title">{{ sg.tag2 }}</h3>
-        <div class="table-wrapper" :ref="setTableWrapperRef">
-          <table class="tables-table">
-            <colgroup>
-              <col class="col-select" />
-              <col class="col-symbol" />
-              <col class="col-name" />
-              <col class="col-mirror" />
-              <col class="col-origin" />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>选择</th>
-                <th>符号</th>
-                <th>名称</th>
-                <th>镜像</th>
-                <th>原链接</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in sg.items" :key="item.url">
-                <td class="select-cell">
-                  <input type="checkbox" class="select-checkbox" v-model="selectedMap[item.url]" />
-                </td>
-                <td>
-                  {{ item.symbol || "" }}
-                </td>
-                <td class="name-cell">
-                  <strong>{{ item.name }}</strong>
-                </td>
-                <td class="mirror-cell">
-                  <a
-                    class="link-button mirror-link"
-                    :href="item.url"
-                    :title="item.url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    镜像
-                  </a>
-                </td>
-                <td class="origin-cell">
-                  <a
-                    v-if="item.url_ori"
-                    class="link-button origin-link"
-                    :href="item.url_ori"
-                    :title="item.url_ori"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    原链接
-                  </a>
-                  <span v-else class="link-missing">无</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="tag1-group-header">
+          <div class="tag1-group-title">
+            <span class="tag1-badge">分类 {{ g.tag1 }}</span>
+          </div>
+        </div>
+
+        <div
+          v-for="sg in g.subgroups"
+          :key="sg.tag2"
+          :id="`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`"
+          class="tag2-section"
+        >
+          <h3 class="tag2-title">{{ sg.tag2 }}</h3>
+          <div class="table-wrapper" :ref="setRef">
+            <table class="tables-table">
+              <colgroup>
+                <col class="col-select" />
+                <col class="col-symbol" />
+                <col class="col-name" />
+                <col class="col-mirror" />
+                <col class="col-origin" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>选择</th>
+                  <th>符号</th>
+                  <th>名称</th>
+                  <th>镜像</th>
+                  <th>原链接</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in sg.items" :key="item.url">
+                  <td class="select-cell">
+                    <input
+                      type="checkbox"
+                      class="select-checkbox"
+                      v-model="selectedMap[item.url]"
+                    />
+                  </td>
+                  <td>
+                    {{ item.symbol || "" }}
+                  </td>
+                  <td class="name-cell">
+                    <strong>{{ item.name }}</strong>
+                  </td>
+                  <td class="mirror-cell">
+                    <a
+                      class="link-button mirror-link"
+                      :href="item.url"
+                      :title="item.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      镜像
+                    </a>
+                  </td>
+                  <td class="origin-cell">
+                    <a
+                      v-if="item.url_ori"
+                      class="link-button origin-link"
+                      :href="item.url_ori"
+                      :title="item.url_ori"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      原链接
+                    </a>
+                    <span v-else class="link-missing">无</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+    </ScrollSyncGroup>
   </div>
   <div v-else class="empty-state">
     <div class="empty-icon">📊</div>
@@ -381,4 +318,10 @@ const selectedMap = ref<Record<string, boolean>>({});
   @apply text-[4rem] mb-4;
 }
 </style>
-.select-checkbox { width: 22px; height: 22px; transform: scale(1.2); }
+<style lang="postcss" scoped>
+.select-checkbox {
+  width: 22px;
+  height: 22px;
+  transform: scale(1.2);
+}
+</style>

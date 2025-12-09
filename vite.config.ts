@@ -36,6 +36,11 @@ export default defineConfig({
   define: {
     "process.env": {},
   },
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "src"),
+    },
+  },
   server: {
     host: "0.0.0.0",
     fs: { allow: [".."] },
