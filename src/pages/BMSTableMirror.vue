@@ -36,7 +36,7 @@ const loading = ref(true);
 const error = ref<string | null>(null);
 
 const links: LinkItem[] = [
-  { href: "../index.html", title: "返回 BMS", desc: "返回 BMS 页面" },
+  { href: "/bms", title: "返回 BMS", desc: "返回 BMS 页面" },
   {
     href: "https://github.com/MiyakoMeow/bms-table-mirror",
     title: "镜像仓库",
@@ -66,6 +66,11 @@ const groupedByTags = computed<Tag1Group[]>(() => {
     if (!tag2Map.has(tag2)) {
       tag2Map.set(tag2, []);
     }
+
+    // 修改item.url
+    // 对应`scripts/update-table-mirror.nu`生成的json文件定义的url。
+    item.url = item.url.substring("https://miyakomeow.github.io".length);
+
     tag2Map.get(tag2)!.push(item);
   });
 
