@@ -48,7 +48,8 @@ jobs:
           body: "Automated update running every 10 minutes."
           branch: "chore/scheduled-table-update"
           delete-branch: true
-          labels: ["automation", "scheduled"]
+          labels: |
+            automated
 
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
