@@ -2,6 +2,30 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "path";
+import { readdirSync } from "fs";
+import { relative } from "path";
+
+// 递归扫描 entry 目录下所有 .html 文件作为构建入口（保持路径不变）
+const entryRoot = resolve(__dirname, "entry");
+function collectHtmlFiles(dir: string, acc: string[] = []): string[] {
+  const entries = readdirSync(dir, { withFileTypes: true });
+  for (const e of entries) {
+    const full = resolve(dir, e.name);
+    if (e.isDirectory()) {
+      collectHtmlFiles(full, acc);
+    } else if (e.isFile() && e.name.endsWith(".html")) {
+      acc.push(full);
+    }
+  }
+  return acc;
+}
+
+const dynamicInputs: Record<string, string> = {};
+for (const file of collectHtmlFiles(entryRoot)) {
+  const rel = relative(entryRoot, file).split("\\").join("/");
+  const key = rel === "index.html" ? "main" : rel.replace(/\.html$/, "");
+  dynamicInputs[key] = file;
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -20,13 +44,7 @@ export default defineConfig({
     outDir: resolve(__dirname, "dist"),
     emptyOutDir: true,
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, "entry/index.html"),
-        "bms/index": resolve(__dirname, "entry/bms/index.html"),
-        "bms/self-table-sp": resolve(__dirname, "entry/bms/self-table-sp/index.html"),
-        "bms/self-table-dp": resolve(__dirname, "entry/bms/self-table-dp/index.html"),
-        "bms/table-mirror": resolve(__dirname, "entry/bms/table-mirror/index.html"),
-      },
+      input: dynamicInputs,
     },
   },
 });
