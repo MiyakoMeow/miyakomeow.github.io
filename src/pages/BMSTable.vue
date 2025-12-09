@@ -372,7 +372,10 @@ onMounted(() => {
         </div>
 
         <!-- 难度对照表 -->
-        <div class="rank-reference-section">
+        <div
+          v-if="headerData && headerData.name && headerData.name.startsWith('MiyakoMeow')"
+          class="rank-reference-section"
+        >
           <h3>难度对照表</h3>
           <div class="rank-reference-tables">
             <!-- 左边：负数部分 -->
