@@ -77,7 +77,7 @@ print $"best url: ($result.best_url)"
 ^curl -sSL --fail -L $result.best_url -o $dest
 
 let items = (open --raw $dest | from json)
-let tpl_path = ($script_root | path join "../entry/bms/self-table-sp/index.html")
+let tpl_path = ($script_root | path join "../entry/bms/table/self-sp/index.html")
 let tpl = (open --raw $tpl_path | into string)
 
 print "generating index pages"
