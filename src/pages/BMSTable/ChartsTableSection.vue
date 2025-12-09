@@ -1,14 +1,6 @@
 <script setup lang="ts">
-import {
-  ref,
-  onMounted,
-  onBeforeUpdate,
-  onBeforeUnmount,
-  nextTick,
-  watch,
-  computed,
-  type ComponentPublicInstance,
-} from "vue";
+import { computed } from "vue";
+import ScrollSyncGroup from "@/components/ScrollSyncGroup.vue";
 export interface ChartData {
   title?: string;
   artist?: string;
@@ -119,226 +111,166 @@ function scrollToDifficultyGroup(level: string): void {
     element.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
-
-const tableWrapperRefs = ref<HTMLDivElement[]>([]);
-function setTableWrapperRef(el: Element | ComponentPublicInstance | null): void {
-  if (el && el instanceof HTMLDivElement) {
-    tableWrapperRefs.value.push(el);
-  }
-}
-
-let isSyncing = false;
-let rafId: number | null = null;
-function onWrapperScroll(e: Event): void {
-  if (isSyncing) return;
-  const target = e.target as HTMLDivElement;
-  const left = target.scrollLeft;
-  isSyncing = true;
-  tableWrapperRefs.value.forEach((w) => {
-    if (w !== target) {
-      w.scrollLeft = left;
-    }
-  });
-  if (rafId !== null) {
-    cancelAnimationFrame(rafId);
-  }
-  rafId = requestAnimationFrame(() => {
-    isSyncing = false;
-  });
-}
-
-function attachScrollSync(): void {
-  tableWrapperRefs.value.forEach((w) => {
-    w.addEventListener("scroll", onWrapperScroll, { passive: true });
-  });
-}
-
-function detachScrollSync(): void {
-  tableWrapperRefs.value.forEach((w) => {
-    w.removeEventListener("scroll", onWrapperScroll);
-  });
-}
-
-onMounted(async () => {
-  await nextTick();
-  attachScrollSync();
-});
-
-onBeforeUpdate(() => {
-  tableWrapperRefs.value = [];
-});
-
-onBeforeUnmount(() => {
-  detachScrollSync();
-});
-
-watch(
-  () => props.groups,
-  async () => {
-    await nextTick();
-    detachScrollSync();
-    attachScrollSync();
-  },
-  { deep: true }
-);
 </script>
 
 <template>
   <div class="charts-table-section" v-if="props.groups.length > 0">
     <h3>谱面列表 ({{ props.totalCharts }} 个)</h3>
 
-    <div class="difficulty-groups-nav" v-if="props.groups.length > 1">
-      <div class="difficulty-groups-tabs">
-        <button
-          v-for="(group, idx) in displayGroups"
-          :key="group.level"
-          class="difficulty-group-tab"
-          @click="scrollToDifficultyGroup(group.level)"
-          :style="{
-            backgroundColor: segmentColor(idx, displayGroups.length),
-            borderColor: segmentColor(idx, displayGroups.length),
-          }"
-        >
-          {{ group.level }}
-          <span class="chart-count">({{ group.charts.length }})</span>
-        </button>
-      </div>
-    </div>
-
-    <div
-      v-for="(group, gIndex) in displayGroups"
-      :key="group.level"
-      :id="`difficulty-group-${group.level}`"
-      class="difficulty-group-container"
-    >
-      <div class="difficulty-group-header">
-        <div class="difficulty-group-title">
-          <span
-            class="difficulty-group-badge"
+    <ScrollSyncGroup :watch-keys="props.groups" v-slot="{ setRef }">
+      <div class="difficulty-groups-nav" v-if="props.groups.length > 1">
+        <div class="difficulty-groups-tabs">
+          <button
+            v-for="(group, idx) in displayGroups"
+            :key="group.level"
+            class="difficulty-group-tab"
+            @click="scrollToDifficultyGroup(group.level)"
             :style="{
-              backgroundColor: segmentColor(gIndex, displayGroups.length),
+              backgroundColor: segmentColor(idx, displayGroups.length),
+              borderColor: segmentColor(idx, displayGroups.length),
             }"
           >
-            难度 {{ group.level }}
-          </span>
-          <span class="difficulty-group-count"> {{ group.charts.length }} 个谱面 </span>
+            {{ group.level }}
+            <span class="chart-count">({{ group.charts.length }})</span>
+          </button>
         </div>
       </div>
 
-      <div class="table-wrapper" :ref="setTableWrapperRef">
-        <table class="charts-table">
-          <colgroup>
-            <col class="col-level" />
-            <col class="col-download" />
-            <col class="col-bmslinks" />
-            <col class="col-title" />
-            <col class="col-artist" />
-            <col class="col-comment" />
-          </colgroup>
-          <thead>
-            <tr>
-              <th>等级</th>
-              <th>下载</th>
-              <th>BMS网站</th>
-              <th>标题</th>
-              <th>艺术家</th>
-              <th class="comment-header">备注</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(chart, index) in group.charts" :key="index">
-              <td>
-                <span
-                  class="level-badge"
-                  :style="{
-                    backgroundColor: segmentColor(gIndex, displayGroups.length),
-                  }"
-                >
-                  {{ group.level }}
-                </span>
-              </td>
-              <td class="download-cell">
-                <div class="download-buttons">
-                  <a
-                    v-if="resolvedBundleUrl(chart)"
-                    class="download-button download-bundle"
-                    :href="resolvedBundleUrl(chart)"
-                    :title="resolvedBundleUrl(chart)"
-                    target="_blank"
-                    rel="noopener noreferrer"
+      <div
+        v-for="(group, gIndex) in displayGroups"
+        :key="group.level"
+        :id="`difficulty-group-${group.level}`"
+        class="difficulty-group-container"
+      >
+        <div class="difficulty-group-header">
+          <div class="difficulty-group-title">
+            <span
+              class="difficulty-group-badge"
+              :style="{
+                backgroundColor: segmentColor(gIndex, displayGroups.length),
+              }"
+            >
+              难度 {{ group.level }}
+            </span>
+            <span class="difficulty-group-count"> {{ group.charts.length }} 个谱面 </span>
+          </div>
+        </div>
+
+        <div class="table-wrapper" :ref="setRef">
+          <table class="charts-table">
+            <colgroup>
+              <col class="col-level" />
+              <col class="col-download" />
+              <col class="col-bmslinks" />
+              <col class="col-title" />
+              <col class="col-artist" />
+              <col class="col-comment" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>等级</th>
+                <th>下载</th>
+                <th>BMS网站</th>
+                <th>标题</th>
+                <th>艺术家</th>
+                <th class="comment-header">备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(chart, index) in group.charts" :key="index">
+                <td>
+                  <span
+                    class="level-badge"
+                    :style="{
+                      backgroundColor: segmentColor(gIndex, displayGroups.length),
+                    }"
                   >
-                    📦 同捆
-                  </a>
-                  <a
-                    v-if="resolvedDiffUrl(chart)"
-                    class="download-button download-diff"
-                    :href="resolvedDiffUrl(chart)"
-                    :title="resolvedDiffUrl(chart)"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    🔄 差分
-                  </a>
-                </div>
-              </td>
-              <td class="bms-links-cell">
-                <div class="bms-links">
-                  <a
-                    class="bms-link-button bms-score-viewer"
-                    v-if="hasMd5(chart)"
-                    :href="getBmsLinks(chart).bmsScoreViewer"
-                    :title="getBmsLinks(chart).bmsScoreViewer"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    📊
-                  </a>
-                  <a
-                    class="bms-link-button lr2ir"
-                    v-if="hasMd5(chart)"
-                    :href="getBmsLinks(chart).lr2ir"
-                    :title="getBmsLinks(chart).lr2ir"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    LR2
-                  </a>
-                  <a
-                    class="bms-link-button mocha"
-                    v-if="hasSha256(chart)"
-                    :href="getBmsLinks(chart).mocha"
-                    :title="getBmsLinks(chart).mocha"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img src="/assets/logo/mocha_logo.gif" alt="Mocha" class="bms-icon" />
-                  </a>
-                  <a
-                    class="bms-link-button minir"
-                    v-if="hasSha256(chart)"
-                    :href="getBmsLinks(chart).minir"
-                    :title="getBmsLinks(chart).minir"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img src="/assets/logo/minir_logo.gif" alt="Minir" class="bms-icon" />
-                  </a>
-                </div>
-              </td>
-              <td class="chart-title">
-                <strong>{{ chart.title || "未知标题" }}</strong>
-              </td>
-              <td>
-                {{ chart.artist || "未知艺术家" }}
-              </td>
-              <td class="comment-cell">
-                {{ chart.comment || "" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                    {{ group.level }}
+                  </span>
+                </td>
+                <td class="download-cell">
+                  <div class="download-buttons">
+                    <a
+                      v-if="resolvedBundleUrl(chart)"
+                      class="download-button download-bundle"
+                      :href="resolvedBundleUrl(chart)"
+                      :title="resolvedBundleUrl(chart)"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      📦 同捆
+                    </a>
+                    <a
+                      v-if="resolvedDiffUrl(chart)"
+                      class="download-button download-diff"
+                      :href="resolvedDiffUrl(chart)"
+                      :title="resolvedDiffUrl(chart)"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      🔄 差分
+                    </a>
+                  </div>
+                </td>
+                <td class="bms-links-cell">
+                  <div class="bms-links">
+                    <a
+                      class="bms-link-button bms-score-viewer"
+                      v-if="hasMd5(chart)"
+                      :href="getBmsLinks(chart).bmsScoreViewer"
+                      :title="getBmsLinks(chart).bmsScoreViewer"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      📊
+                    </a>
+                    <a
+                      class="bms-link-button lr2ir"
+                      v-if="hasMd5(chart)"
+                      :href="getBmsLinks(chart).lr2ir"
+                      :title="getBmsLinks(chart).lr2ir"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      LR2
+                    </a>
+                    <a
+                      class="bms-link-button mocha"
+                      v-if="hasSha256(chart)"
+                      :href="getBmsLinks(chart).mocha"
+                      :title="getBmsLinks(chart).mocha"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img src="/assets/logo/mocha_logo.gif" alt="Mocha" class="bms-icon" />
+                    </a>
+                    <a
+                      class="bms-link-button minir"
+                      v-if="hasSha256(chart)"
+                      :href="getBmsLinks(chart).minir"
+                      :title="getBmsLinks(chart).minir"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img src="/assets/logo/minir_logo.gif" alt="Minir" class="bms-icon" />
+                    </a>
+                  </div>
+                </td>
+                <td class="chart-title">
+                  <strong>{{ chart.title || "未知标题" }}</strong>
+                </td>
+                <td>
+                  {{ chart.artist || "未知艺术家" }}
+                </td>
+                <td class="comment-cell">
+                  {{ chart.comment || "" }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </ScrollSyncGroup>
   </div>
   <div v-else class="empty-state">
     <div class="empty-icon">📊</div>
