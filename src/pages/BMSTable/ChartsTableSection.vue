@@ -1,4 +1,13 @@
 <script setup lang="ts">
+import {
+  ref,
+  onMounted,
+  onBeforeUpdate,
+  onBeforeUnmount,
+  nextTick,
+  watch,
+  type ComponentPublicInstance,
+} from "vue";
 export interface ChartData {
   title?: string;
   artist?: string;
@@ -70,6 +79,68 @@ function scrollToDifficultyGroup(level: string): void {
     element.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
+
+const tableWrapperRefs = ref<HTMLDivElement[]>([]);
+function setTableWrapperRef(el: Element | ComponentPublicInstance | null): void {
+  if (el && el instanceof HTMLDivElement) {
+    tableWrapperRefs.value.push(el);
+  }
+}
+
+let isSyncing = false;
+let rafId: number | null = null;
+function onWrapperScroll(e: Event): void {
+  if (isSyncing) return;
+  const target = e.target as HTMLDivElement;
+  const left = target.scrollLeft;
+  isSyncing = true;
+  tableWrapperRefs.value.forEach((w) => {
+    if (w !== target) {
+      w.scrollLeft = left;
+    }
+  });
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId);
+  }
+  rafId = requestAnimationFrame(() => {
+    isSyncing = false;
+  });
+}
+
+function attachScrollSync(): void {
+  tableWrapperRefs.value.forEach((w) => {
+    w.addEventListener("scroll", onWrapperScroll, { passive: true });
+  });
+}
+
+function detachScrollSync(): void {
+  tableWrapperRefs.value.forEach((w) => {
+    w.removeEventListener("scroll", onWrapperScroll);
+  });
+}
+
+onMounted(async () => {
+  await nextTick();
+  attachScrollSync();
+});
+
+onBeforeUpdate(() => {
+  tableWrapperRefs.value = [];
+});
+
+onBeforeUnmount(() => {
+  detachScrollSync();
+});
+
+watch(
+  () => props.groups,
+  async () => {
+    await nextTick();
+    detachScrollSync();
+    attachScrollSync();
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -114,7 +185,7 @@ function scrollToDifficultyGroup(level: string): void {
         </div>
       </div>
 
-      <div class="table-wrapper">
+      <div class="table-wrapper" :ref="setTableWrapperRef">
         <table class="charts-table">
           <colgroup>
             <col class="col-level" />
@@ -249,7 +320,7 @@ function scrollToDifficultyGroup(level: string): void {
 }
 
 .charts-table {
-  @apply w-full border-collapse min-w-[900px];
+  @apply w-full border-collapse min-w-[900px] table-fixed;
   @media (max-width: 480px) {
     @apply min-w-[800px];
     td:nth-child(6) {
