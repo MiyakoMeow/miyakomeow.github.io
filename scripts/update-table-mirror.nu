@@ -15,7 +15,8 @@ let pages_dir = ($script_root | path join "../entry/bms/table-mirror")
 
 # 反代列表（按此列表进行测速与选择）
 let proxies = [
-  "https://proxy.pipers.cn/"
+  "https://proxy.pipers.cn/",
+  "https://gh.llkk.cc/"
 ]
 
 # 数据类型定义：
