@@ -25,16 +25,9 @@ interface TableStats {
   averageLevel: string | number;
 }
 
-// 从URL路径获取难度表类型
-function getTableTypeFromPath(): "sp" | "dp" {
-  const path = window.location.pathname;
-  if (path.includes("self-table-dp")) {
-    return "dp";
-  }
-  return "sp"; // 默认为sp
-}
+const props = defineProps<{ header: string }>();
 
-const tableType = ref<"sp" | "dp">(getTableTypeFromPath());
+// 移除表类型推断，完全由传入的 header 决定数据源
 const title = computed(() => {
   if (headerData.value && headerData.value.name) {
     return headerData.value.name;
@@ -92,8 +85,12 @@ async function lazyLoadTableData(): Promise<void> {
   try {
     updateProgress("正在加载表头信息...", 25);
 
-    // 加载header.json
-    const headerResponse = await fetch(`/bms/self-table-${tableType.value}/header.json`);
+    if (!props.header) {
+      throw new Error("必须提供header参数");
+    }
+    const headerUrlBase = new URL(props.header, window.location.href).toString();
+
+    const headerResponse = await fetch(headerUrlBase);
     if (!headerResponse.ok) {
       throw new Error(`无法加载表头信息: ${headerResponse.status}`);
     }
@@ -101,7 +98,6 @@ async function lazyLoadTableData(): Promise<void> {
 
     updateProgress("表头信息加载完成", 50);
 
-    // 从header.json中获取data_url
     const dataUrl = headerData.value?.data_url;
     if (!dataUrl) {
       throw new Error("表头信息中未找到data_url");
@@ -109,8 +105,11 @@ async function lazyLoadTableData(): Promise<void> {
 
     updateProgress("正在加载谱面数据...", 75);
 
-    // 加载data.json
-    const dataResponse = await fetch(`/bms/self-table-${tableType.value}/${dataUrl}`);
+    const isAbsolute = (u: string) => /^(https?:)?\/\//i.test(u) || u.startsWith("/");
+    const dataFetchUrl = isAbsolute(String(dataUrl))
+      ? String(dataUrl)
+      : new URL(String(dataUrl), headerUrlBase).toString();
+    const dataResponse = await fetch(dataFetchUrl);
     if (!dataResponse.ok) {
       throw new Error(`无法加载谱面数据: ${dataResponse.status}`);
     }
