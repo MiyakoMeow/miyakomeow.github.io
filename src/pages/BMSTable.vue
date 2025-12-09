@@ -54,6 +54,33 @@ const tableData = ref<ChartData[] | null>(null);
 const headerData = ref<HeaderData | null>(null);
 const error = ref<string | null>(null);
 
+const copied = ref(false);
+
+async function copySiteUrl(): Promise<void> {
+  try {
+    const url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(url);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+    copied.value = true;
+    setTimeout(() => {
+      copied.value = false;
+    }, 1500);
+  } catch {
+    copied.value = false;
+  }
+}
+
 // 模拟进度更新
 function updateProgress(step: string, progress: number): void {
   loadingState.currentStep = step;
@@ -257,6 +284,12 @@ onMounted(() => {
       <h1 class="page-title">{{ title }}</h1>
       <div v-if="headerData && headerData.symbol" class="page-subtitle">
         难度表符号: {{ headerData.symbol }}
+      </div>
+      <div class="page-subtitle usage-subtitle">
+        使用方式：复制本网站链接（<button class="copy-action" type="button" @click="copySiteUrl">
+          点击复制</button
+        >），然后在BeMusicSeeker或beatoraja中，粘贴至对应选项处。
+        <span v-if="copied" class="copy-feedback">已复制</span>
       </div>
     </div>
     <div class="bms-table-content">
@@ -469,6 +502,24 @@ onMounted(() => {
   @media (max-width: 480px) {
     @apply text-[1rem];
   }
+}
+
+.usage-subtitle {
+  @apply mt-2;
+}
+
+.copy-action {
+  @apply text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium;
+}
+
+.copy-action {
+  &:hover {
+    @apply text-[#42a5f5];
+  }
+}
+
+.copy-feedback {
+  @apply ml-2 text-[#4caf50];
 }
 
 .bms-table-content {
