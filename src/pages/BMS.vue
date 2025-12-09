@@ -33,6 +33,9 @@ const links: LinkItem[] = [
 
 .links-grid {
   @apply grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4 mt-4;
+  @media (max-width: 768px) {
+    @apply grid-cols-1;
+  }
 }
 
 .link-card {
@@ -40,11 +43,10 @@ const links: LinkItem[] = [
   transition:
     transform 0.15s ease,
     background 0.3s ease;
-}
-
-.link-card:hover {
-  @apply bg-[rgba(255,255,255,0.06)];
-  transform: translateY(-2px);
+  &:hover {
+    @apply bg-[rgba(255,255,255,0.06)];
+    transform: translateY(-2px);
+  }
 }
 
 .link-title {
@@ -55,9 +57,4 @@ const links: LinkItem[] = [
   @apply text-[0.95rem] text-white/80;
 }
 
-@media (max-width: 768px) {
-  .links-grid {
-    @apply grid-cols-1;
-  }
-}
 </style>

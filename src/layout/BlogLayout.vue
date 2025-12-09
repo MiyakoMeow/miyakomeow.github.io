@@ -20,6 +20,12 @@ import ProfileCard from "../components/ProfileCard.vue";
 
 .blog-container {
   @apply grid grid-cols-[380px_1fr] gap-8 items-start max-w-[1400px] m-0 mx-auto p-8 w-full box-border;
+  @media (max-width: 1024px) {
+    @apply grid-cols-1 max-w-[95%] p-6;
+  }
+  @media (max-width: 768px) {
+    @apply max-w-full p-4;
+  }
 }
 
 .sidebar {
@@ -41,15 +47,4 @@ import ProfileCard from "../components/ProfileCard.vue";
   }
 }
 
-@media (max-width: 1024px) {
-  .blog-container {
-    @apply grid-cols-1 max-w-[95%] p-6;
-  }
-}
-
-@media (max-width: 768px) {
-  .blog-container {
-    @apply max-w-full p-4;
-  }
-}
 </style>
