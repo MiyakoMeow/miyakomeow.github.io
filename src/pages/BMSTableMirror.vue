@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
 import BlogLayout from "../layout/BlogLayout.vue";
 import "../styles/main.pcss";
 
@@ -8,30 +9,44 @@ interface LinkItem {
   desc: string;
 }
 
+const redirecting = ref(false);
 const links: LinkItem[] = [
-  { href: "./self-table-sp/", title: "MiyakoMeow谱面合集（SP）", desc: "SP 谱面合集" },
-  { href: "./self-table-dp/", title: "MiyakoMeow谱面合集（DP）", desc: "DP 谱面合集" },
-  { href: "./table-mirror/", title: "表镜像", desc: "无参数显示导航，有参数跳转" },
+  { href: "../index.html", title: "返回 BMS", desc: "返回 BMS 页面" },
+  { href: "https://github.com/MiyakoMeow/bms-table-mirror", title: "镜像仓库", desc: "查看镜像项目" },
 ];
+
+onMounted(() => {
+  const proxyUrl = "https://proxy.pipers.cn/";
+  const params = new URLSearchParams(window.location.search);
+  const tableName = params.get("table");
+  if (!tableName) {
+    redirecting.value = false;
+    return;
+  }
+  const encodedTableName = encodeURIComponent(tableName);
+  const targetUrl = `${proxyUrl}https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/${encodedTableName}/header.json`;
+  redirecting.value = true;
+  window.location.replace(targetUrl);
+});
 </script>
 
 <template>
   <BlogLayout>
-    <div class="glass-container bms-index-container">
-      <h1 class="content-title">BMS</h1>
-      <div class="links-grid">
+    <section class="glass-container bms-index-container">
+      <h1 class="content-title">BMS 难度表镜像</h1>
+      <div v-if="redirecting">正在跳转...</div>
+      <div v-else class="links-grid">
         <a v-for="link in links" :key="link.href" class="link-card" :href="link.href">
           <div class="link-title">{{ link.title }}</div>
           <div class="link-desc">{{ link.desc }}</div>
         </a>
       </div>
-    </div>
+    </section>
   </BlogLayout>
 </template>
 
 <style lang="postcss" scoped>
 @reference "tailwindcss";
-
 .links-grid {
   @apply grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4 mt-4;
   @media (max-width: 768px) {

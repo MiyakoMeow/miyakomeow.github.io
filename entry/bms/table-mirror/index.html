@@ -1,29 +1,19 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script>
-      // 立即重定向 - 最简版本
-      (function () {
-        const proxyUrl = "https://proxy.pipers.cn/";
-
-        // 获取查询参数中的table值
-        const urlParams = new URLSearchParams(window.location.search);
-        const tableName = urlParams.get("table");
-
-        if (!tableName) {
-          window.location.replace("https://github.com/MiyakoMeow/bms-table-mirror");
-          return;
-        }
-
-        // 编码表名并构建目标URL
-        const encodedTableName = encodeURIComponent(tableName);
-        const targetUrl = `${proxyUrl}https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/${encodedTableName}/header.json`;
-
-        window.location.replace(targetUrl);
-      })();
-    </script>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Redirecting...</title>
   </head>
-  <body></body>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import { createApp } from "vue";
+      import BMSTableMirror from "../../../src/pages/BMSTableMirror.vue";
+
+      const app = createApp(BMSTableMirror);
+      app.mount("#app");
+    </script>
+  </body>
 </html>

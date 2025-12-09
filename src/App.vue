@@ -11,6 +11,7 @@ import "./styles/main.pcss";
         <a class="link-item" href="./bms/index.html">BMS</a>
         <a class="link-item" href="./bms/self-table-sp/index.html">谱面合集（SP）</a>
         <a class="link-item" href="./bms/self-table-dp/index.html">谱面合集（DP）</a>
+        <a class="link-item" href="./bms/table-mirror/index.html">表镜像</a>
       </div>
     </section>
   </BlogLayout>
