@@ -69,12 +69,17 @@ const groupedByTags = computed<Tag1Group[]>(() => {
     tag2Map.get(tag2)!.push(item);
   });
 
-  const tag1Groups: Tag1Group[] = Array.from(groupsMap.entries()).map(([tag1, { order, tag2Map }]) => {
-    const subgroups: Tag2Group[] = Array.from(tag2Map.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([tag2, items]) => ({ tag2, items: items.sort((x, y) => (x.name || "").localeCompare(y.name || "")) }));
-    return { tag1, order: isNaN(order) ? 999 : order, subgroups };
-  });
+  const tag1Groups: Tag1Group[] = Array.from(groupsMap.entries()).map(
+    ([tag1, { order, tag2Map }]) => {
+      const subgroups: Tag2Group[] = Array.from(tag2Map.entries())
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([tag2, items]) => ({
+          tag2,
+          items: items.sort((x, y) => (x.name || "").localeCompare(y.name || "")),
+        }));
+      return { tag1, order: isNaN(order) ? 999 : order, subgroups };
+    }
+  );
 
   tag1Groups.sort((a, b) => a.order - b.order || a.tag1.localeCompare(b.tag1));
   return tag1Groups;
@@ -119,12 +124,8 @@ onMounted(() => {
         </a>
       </div>
 
-      <div v-if="loading" class="loading-section">
-        正在加载镜像列表...
-      </div>
-      <div v-else-if="error" class="error-section">
-        加载失败：{{ error }}
-      </div>
+      <div v-if="loading" class="loading-section">正在加载镜像列表...</div>
+      <div v-else-if="error" class="error-section">加载失败：{{ error }}</div>
       <div v-else>
         <GroupedTablesSection :groups="groupedByTags" />
       </div>
@@ -167,6 +168,4 @@ onMounted(() => {
 .error-section {
   @apply mt-6 text-red-300;
 }
-
- 
 </style>

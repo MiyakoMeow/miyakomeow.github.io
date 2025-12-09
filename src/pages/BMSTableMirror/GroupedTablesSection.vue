@@ -54,7 +54,6 @@ function scrollToTag2(tag1: string, tag2: string): void {
   }
 }
 
-
 const tableWrapperRefs = ref<HTMLDivElement[]>([]);
 function setTableWrapperRef(el: Element | ComponentPublicInstance | null): void {
   if (el && el instanceof HTMLDivElement) {
@@ -123,11 +122,7 @@ const selectedMap = ref<Record<string, boolean>>({});
 <template>
   <div class="grouped-tables-section" v-if="props.groups.length > 0">
     <div class="groups-nav">
-      <div
-        v-for="g in props.groups"
-        :key="g.tag1"
-        class="group-row"
-      >
+      <div v-for="g in props.groups" :key="g.tag1" class="group-row">
         <button class="tag1-button" @click="scrollToTag1(g.tag1)">
           {{ g.tag1 }}
         </button>
@@ -237,13 +232,29 @@ const selectedMap = ref<Record<string, boolean>>({});
   @apply mt-8;
 }
 
-.groups-nav { @apply mb-8 mt-6; }
-.group-row { @apply mb-4; }
-.tag1-button { @apply px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10 mr-3; }
-.tag1-button:hover { @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)]; transform: translateY(-2px); }
-.group-row-tag2 { @apply flex flex-wrap gap-2 mt-2; }
-.tag2-group-tab { @apply px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10; }
-.tag2-group-tab:hover { @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)]; transform: translateY(-2px); }
+.groups-nav {
+  @apply mb-8 mt-6;
+}
+.group-row {
+  @apply mb-4;
+}
+.tag1-button {
+  @apply px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10 mr-3;
+}
+.tag1-button:hover {
+  @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
+  transform: translateY(-2px);
+}
+.group-row-tag2 {
+  @apply flex flex-wrap gap-2 mt-2;
+}
+.tag2-group-tab {
+  @apply px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10;
+}
+.tag2-group-tab:hover {
+  @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
+  transform: translateY(-2px);
+}
 
 .tag1-group-container {
   @apply mb-12 scroll-mt-[20px];
@@ -306,32 +317,68 @@ const selectedMap = ref<Record<string, boolean>>({});
   @apply p-4 border-b border-white/5 text-white/90 break-words;
 }
 
-.tables-table col.col-select { width: 60px; }
-.tables-table col.col-symbol { width: 120px; }
-.tables-table col.col-name { width: 320px; }
-.tables-table col.col-mirror { width: 160px; }
-.tables-table col.col-origin { width: 160px; }
+.tables-table col.col-select {
+  width: 60px;
+}
+.tables-table col.col-symbol {
+  width: 120px;
+}
+.tables-table col.col-name {
+  width: 320px;
+}
+.tables-table col.col-mirror {
+  width: 160px;
+}
+.tables-table col.col-origin {
+  width: 160px;
+}
 
-.name-cell { @apply min-w-[200px]; }
-.mirror-cell, .origin-cell { @apply min-w-[130px]; }
+.name-cell {
+  @apply min-w-[200px];
+}
+.mirror-cell,
+.origin-cell {
+  @apply min-w-[130px];
+}
 
 .link-button {
   @apply px-[0.5rem] py-[0.35rem] border-none rounded-[6px] text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center gap-[0.2rem] min-w-[60px] no-underline text-inherit;
 }
 
-.link-button:hover { @apply shadow-[0_4px_8px_rgba(0,0,0,0.2)]; transform: translateY(-2px); }
+.link-button:hover {
+  @apply shadow-[0_4px_8px_rgba(0,0,0,0.2)];
+  transform: translateY(-2px);
+}
 
-.mirror-link { @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white; }
-.mirror-link:hover { @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)]; }
+.mirror-link {
+  @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white;
+}
+.mirror-link:hover {
+  @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
+}
 
-.origin-link { @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white; }
-.origin-link:hover { @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)]; }
+.origin-link {
+  @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white;
+}
+.origin-link:hover {
+  @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
+}
 
-.link-missing { @apply text-white/50; }
+.link-missing {
+  @apply text-white/50;
+}
 
-.empty-state { @apply text-center p-12; }
-.empty-state h3 { @apply text-white mb-4; }
-.empty-state p { @apply text-white/70; }
-.empty-icon { @apply text-[4rem] mb-4; }
+.empty-state {
+  @apply text-center p-12;
+}
+.empty-state h3 {
+  @apply text-white mb-4;
+}
+.empty-state p {
+  @apply text-white/70;
+}
+.empty-icon {
+  @apply text-[4rem] mb-4;
+}
 </style>
 .select-checkbox { width: 22px; height: 22px; transform: scale(1.2); }
