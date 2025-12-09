@@ -68,6 +68,7 @@ const groupedByTags = computed<Tag1Group[]>(() => {
     }
 
     // 修改item.url
+    // 对应`scripts/update-table-mirror.nu`生成的json文件定义的url。
     item.url = item.url.substring("https://miyakomeow.github.io".length);
 
     tag2Map.get(tag2)!.push(item);
