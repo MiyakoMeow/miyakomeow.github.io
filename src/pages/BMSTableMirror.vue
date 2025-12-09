@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import BlogLayout from "../layout/BlogLayout.vue";
+import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.vue";
 import "../styles/main.pcss";
 
 interface LinkItem {
@@ -9,7 +10,31 @@ interface LinkItem {
   desc: string;
 }
 
-const redirecting = ref(false);
+interface MirrorTableItem {
+  name: string;
+  symbol?: string;
+  url: string;
+  url_ori?: string;
+  comment?: string;
+  tag1?: string;
+  tag2?: string;
+  tag_order?: string | number;
+}
+
+interface Tag2Group {
+  tag2: string;
+  items: MirrorTableItem[];
+}
+
+interface Tag1Group {
+  tag1: string;
+  order: number;
+  subgroups: Tag2Group[];
+}
+
+const loading = ref(true);
+const error = ref<string | null>(null);
+
 const links: LinkItem[] = [
   { href: "../index.html", title: "返回 BMS", desc: "返回 BMS 页面" },
   {
@@ -19,18 +44,71 @@ const links: LinkItem[] = [
   },
 ];
 
-onMounted(() => {
-  const proxyUrl = "https://proxy.pipers.cn/";
-  const params = new URLSearchParams(window.location.search);
-  const tableName = params.get("table");
-  if (!tableName) {
-    redirecting.value = false;
-    return;
+const tables = ref<MirrorTableItem[]>([]);
+
+const groupedByTags = computed<Tag1Group[]>(() => {
+  const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>();
+
+  tables.value.forEach((item) => {
+    const tag1 = item.tag1 || "未分类";
+    const tag2 = item.tag2 || "其它";
+    const orderRaw = item.tag_order;
+    const order = typeof orderRaw === "number" ? orderRaw : parseInt(String(orderRaw || "999"), 10);
+
+    if (!groupsMap.has(tag1)) {
+      groupsMap.set(tag1, { order, tag2Map: new Map<string, MirrorTableItem[]>() });
+    } else {
+      const existing = groupsMap.get(tag1)!;
+      existing.order = Math.min(existing.order, isNaN(order) ? 999 : order);
+    }
+
+    const tag2Map = groupsMap.get(tag1)!.tag2Map;
+    if (!tag2Map.has(tag2)) {
+      tag2Map.set(tag2, []);
+    }
+    tag2Map.get(tag2)!.push(item);
+  });
+
+  const tag1Groups: Tag1Group[] = Array.from(groupsMap.entries()).map(
+    ([tag1, { order, tag2Map }]) => {
+      const subgroups: Tag2Group[] = Array.from(tag2Map.entries())
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([tag2, items]) => ({
+          tag2,
+          items: items.sort((x, y) => (x.name || "").localeCompare(y.name || "")),
+        }));
+      return { tag1, order: isNaN(order) ? 999 : order, subgroups };
+    }
+  );
+
+  tag1Groups.sort((a, b) => a.order - b.order || a.tag1.localeCompare(b.tag1));
+  return tag1Groups;
+});
+
+async function loadTablesJson(): Promise<void> {
+  try {
+    const url = new URL("/bms/table-mirror/tables.json", window.location.origin).toString();
+    const res = await fetch(url, { redirect: "follow" });
+    if (!res.ok) {
+      throw new Error(`无法加载tables.json: ${res.status}`);
+    }
+    const data = (await res.json()) as unknown;
+    if (!Array.isArray(data)) {
+      throw new Error("tables.json 格式错误：不是数组");
+    }
+    tables.value = data as MirrorTableItem[];
+    error.value = null;
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : "未知错误";
+  } finally {
+    loading.value = false;
   }
-  const encodedTableName = encodeURIComponent(tableName);
-  const targetUrl = `${proxyUrl}https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/${encodedTableName}/header.json`;
-  redirecting.value = true;
-  window.location.replace(targetUrl);
+}
+
+onMounted(() => {
+  setTimeout(() => {
+    loadTablesJson();
+  }, 250);
 });
 </script>
 
@@ -38,12 +116,18 @@ onMounted(() => {
   <BlogLayout>
     <section class="glass-container bms-index-container">
       <h1 class="content-title">BMS 难度表镜像</h1>
-      <div v-if="redirecting">正在跳转...</div>
-      <div v-else class="links-grid">
+
+      <div class="links-grid">
         <a v-for="link in links" :key="link.href" class="link-card" :href="link.href">
           <div class="link-title">{{ link.title }}</div>
           <div class="link-desc">{{ link.desc }}</div>
         </a>
+      </div>
+
+      <div v-if="loading" class="loading-section">正在加载镜像列表...</div>
+      <div v-else-if="error" class="error-section">加载失败：{{ error }}</div>
+      <div v-else>
+        <GroupedTablesSection :groups="groupedByTags" />
       </div>
     </section>
   </BlogLayout>
@@ -75,5 +159,13 @@ onMounted(() => {
 
 .link-desc {
   @apply text-[0.95rem] text-white/80;
+}
+
+.loading-section {
+  @apply mt-6 text-white/80;
+}
+
+.error-section {
+  @apply mt-6 text-red-300;
 }
 </style>
