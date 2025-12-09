@@ -11,6 +11,7 @@ interface LinkItem {
 const links: LinkItem[] = [
   { href: "./self-table-sp/", title: "MiyakoMeow谱面合集（SP）", desc: "SP 谱面合集" },
   { href: "./self-table-dp/", title: "MiyakoMeow谱面合集（DP）", desc: "DP 谱面合集" },
+  { href: "./table-mirror/", title: "表镜像", desc: "无参数显示导航，有参数跳转" },
 ];
 </script>
 
