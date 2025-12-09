@@ -30,7 +30,10 @@ def speedtest-proxies [raw_url: string, proxies: list<string>] {
     $proxies | each { |p|
       let u = $"($p)($raw_url)"
       let start = (date now)
-      let status = (try { ^curl -sSL --fail -o NUL -L $u; "ok" } catch { "fail" })
+      let status = (try {
+        let _ = (^curl -sSLI --fail -o - -L $u | lines | length)
+        "ok"
+      } catch { "fail" })
       if $status == "ok" {
         let end = (date now)
         { proxy: $p, url: $u, time: ($end - $start) }
