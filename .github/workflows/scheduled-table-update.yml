@@ -43,8 +43,8 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v7
         with:
-          commit-message: "chore: scheduled table mirror update"
-          title: "Scheduled update: table mirror pages & tables.json"
+          commit-message: "automated: scheduled table mirror update"
+          title: "automated: update table mirror pages & tables.json"
           body: "Automated update running every 10 minutes."
           branch: "chore/scheduled-table-update"
           delete-branch: true
