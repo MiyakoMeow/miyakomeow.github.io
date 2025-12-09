@@ -14,6 +14,7 @@ interface MirrorTableItem {
   name: string;
   symbol?: string;
   url: string;
+  url_ori?: string;
   comment?: string;
   tag1?: string;
   tag2?: string;
