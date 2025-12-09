@@ -38,10 +38,9 @@ defineProps<Props>();
 .avatar img {
   @apply w-[120px] h-[120px] rounded-full border-[4px] border-white/30 mb-4 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-300;
   transition: transform 0.3s ease;
-}
-
-.avatar img:hover {
-  @apply hover:scale-105 hover:rotate-[5deg];
+  &:hover {
+    @apply scale-105 rotate-[5deg];
+  }
 }
 
 h1 {
@@ -65,10 +64,9 @@ h1 {
 .link-btn {
   @apply px-[1.5rem] py-[0.8rem] bg-white/10 border border-white/20 rounded-[50px] text-white no-underline font-medium;
   transition: all 0.3s ease;
-}
-
-.link-btn:hover {
-  @apply bg-white/20 hover:shadow-[0_5px_15px_rgba(0,0,0,0.2)];
-  transform: translateY(-2px);
+  &:hover {
+    @apply bg-white/20 shadow-[0_5px_15px_rgba(0,0,0,0.2)];
+    transform: translateY(-2px);
+  }
 }
 </style>

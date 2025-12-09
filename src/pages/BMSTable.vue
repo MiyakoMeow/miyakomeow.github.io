@@ -646,10 +646,25 @@ onMounted(() => {
 @reference "tailwindcss";
 .bms-table-container {
   @apply max-w-[1500px] my-8 mx-auto p-8 bg-white/5 backdrop-blur-[10px] rounded-[20px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)];
+  @media (max-width: 768px) {
+    @apply p-4 m-4 max-w-[calc(100%_-_2rem)];
+  }
+  @media (max-width: 480px) {
+    @apply p-4 my-4 mx-auto rounded-[15px] overflow-x-auto;
+    h1 {
+      @apply text-[2rem];
+    }
+  }
 }
 
 .page-header {
   @apply mb-8 text-center;
+  @media (max-width: 768px) {
+    @apply mb-6;
+  }
+  @media (max-width: 480px) {
+    @apply mb-4;
+  }
 }
 
 .page-title {
@@ -658,10 +673,22 @@ onMounted(() => {
   -background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  @media (max-width: 768px) {
+    @apply text-[2rem] mb-2;
+  }
+  @media (max-width: 480px) {
+    @apply text-[1.75rem] mb-2;
+  }
 }
 
 .page-subtitle {
   @apply text-white/70 text-[1.2rem] italic;
+  @media (max-width: 768px) {
+    @apply text-[1.1rem];
+  }
+  @media (max-width: 480px) {
+    @apply text-[1rem];
+  }
 }
 
 .bms-table-content {
@@ -679,14 +706,22 @@ onMounted(() => {
 
 .progress-header {
   @apply flex justify-between items-center mb-6;
+  @media (max-width: 480px) {
+    @apply flex-col items-start gap-2;
+  }
 }
 
-.progress-header h3 {
-  @apply text-white m-0 text-[1.5rem];
+.progress-header {
+  h3 {
+    @apply text-white m-0 text-[1.5rem];
+  }
 }
 
 .progress-percentage {
   @apply bg-[#64b5f6]/20 text-[#64b5f6] px-4 py-2 rounded-[20px] font-bold text-[1.2rem];
+  @media (max-width: 480px) {
+    @apply self-start;
+  }
 }
 
 .progress-bar {
@@ -700,6 +735,9 @@ onMounted(() => {
 
 .progress-steps {
   @apply grid grid-cols-2 gap-4;
+  @media (max-width: 480px) {
+    @apply grid-cols-1;
+  }
 }
 
 .step-info {
@@ -736,8 +774,10 @@ onMounted(() => {
   transition: background 0.3s ease;
 }
 
-.retry-button:hover {
-  @apply hover:bg-[#42a5f5];
+.retry-button {
+  &:hover {
+    @apply bg-[#42a5f5];
+  }
 }
 
 /* 数据展示样式 */
@@ -747,26 +787,43 @@ onMounted(() => {
 
 .table-header {
   @apply grid grid-cols-2 gap-8 mb-8 p-6 bg-black/20 rounded-[15px];
+  @media (max-width: 768px) {
+    @apply flex flex-col gap-6;
+  }
 }
 
-.header-info h2 {
-  @apply text-white mt-0 mb-4;
+.header-info {
+  h2 {
+    @apply text-white mt-0 mb-4;
+  }
 }
 
-.header-details p {
-  @apply my-2 text-white/80;
+.header-details {
+  p {
+    @apply my-2 text-white/80;
+  }
+  strong {
+    @apply text-[#64b5f6];
+  }
 }
 
-.header-details strong {
-  @apply text-[#64b5f6];
-}
-
-.stats-summary h3 {
-  @apply text-white mt-0 mb-4;
+.stats-summary {
+  h3 {
+    @apply text-white mt-0 mb-4;
+  }
 }
 
 .stats-grid {
   @apply grid grid-cols-3 gap-4;
+  @media (max-width: 768px) {
+    @apply grid-cols-2;
+  }
+  @media (max-width: 480px) {
+    @apply grid-cols-3 gap-3;
+  }
+  @media (max-width: 480px) {
+    @apply grid-cols-1;
+  }
 }
 
 .stat-card {
@@ -784,44 +841,62 @@ onMounted(() => {
 /* 难度对照表样式 */
 .rank-reference-section {
   @apply mt-8 mb-8 p-6 bg-black/20 rounded-[15px] border border-white/10;
+  @media (max-width: 768px) {
+    @apply p-4 mt-6 mb-6;
+  }
+  @media (max-width: 480px) {
+    @apply p-3 mt-4 mb-4;
+  }
 }
 
-.rank-reference-section h3 {
-  @apply text-white mt-0 mb-6 text-[1.3rem] text-center;
+.rank-reference-section {
+  h3 {
+    @apply text-white mt-0 mb-6 text-[1.3rem] text-center;
+  }
 }
 
 .rank-reference-tables {
   @apply flex gap-8 justify-center;
+  @media (max-width: 768px) {
+    @apply gap-4;
+  }
+  @media (max-width: 480px) {
+    @apply flex-col gap-4;
+  }
 }
 
 .rank-reference-left,
 .rank-reference-right {
   @apply flex-1 min-w-0;
-}
-
-.rank-reference-left table,
-.rank-reference-right table {
-  @apply w-full border-collapse bg-white/5 rounded-[10px] overflow-hidden;
-}
-
-.rank-reference-left th,
-.rank-reference-right th {
-  @apply bg-[rgba(100,181,246,0.3)] text-white px-4 py-3 text-left font-semibold border-b-2 border-white/10;
-}
-
-.rank-reference-left td,
-.rank-reference-right td {
-  @apply px-4 py-3 border-b border-white/5 text-white/90;
-}
-
-.rank-reference-left tbody tr:hover,
-.rank-reference-right tbody tr:hover {
-  @apply bg-white/5;
-}
-
-.rank-reference-left tbody tr:last-child td,
-.rank-reference-right tbody tr:last-child td {
-  @apply border-b-0;
+  table {
+    @apply w-full border-collapse bg-white/5 rounded-[10px] overflow-hidden;
+  }
+  th {
+    @apply bg-[rgba(100,181,246,0.3)] text-white px-4 py-3 text-left font-semibold border-b-2 border-white/10;
+  }
+  td {
+    @apply px-4 py-3 border-b border-white/5 text-white/90;
+  }
+  tbody tr {
+    &:hover {
+      @apply bg-white/5;
+    }
+    &:last-child td {
+      @apply border-b-0;
+    }
+  }
+  @media (max-width: 768px) {
+    th,
+    td {
+      @apply px-3 py-2 text-[0.9rem];
+    }
+  }
+  @media (max-width: 480px) {
+    th,
+    td {
+      @apply px-2 py-[0.4rem] text-[0.85rem];
+    }
+  }
 }
 
 /* 谱面列表样式 */
@@ -829,8 +904,10 @@ onMounted(() => {
   @apply mt-8;
 }
 
-.charts-table-section h3 {
-  @apply text-white mb-4;
+.charts-table-section {
+  h3 {
+    @apply text-white mb-4;
+  }
 }
 
 .table-wrapper {
@@ -839,45 +916,77 @@ onMounted(() => {
 
 .charts-table {
   @apply w-full border-collapse min-w-[900px];
+  @media (max-width: 480px) {
+    @apply min-w-[800px];
+    td:nth-child(6) {
+      @apply max-w-[120px] text-[0.8em];
+    }
+    th,
+    td {
+      @apply p-3;
+    }
+  }
 }
 
-.charts-table th {
-  @apply bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10;
-}
-
-.charts-table td {
-  @apply p-4 border-b border-white/5 text-white/90 break-words;
-}
-
-.charts-table col.col-level {
-  width: 50px;
-}
-.charts-table col.col-download {
-  width: 140px;
-}
-.charts-table col.col-bmslinks {
-  width: 140px;
-}
-.charts-table col.col-title {
-  width: 260px;
-}
-.charts-table col.col-artist {
-  width: 200px;
-}
-.charts-table col.col-comment {
-  width: 260px;
-}
-
-.charts-table tbody tr:hover {
-  @apply bg-white/5;
+.charts-table {
+  th {
+    @apply bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10;
+  }
+  td {
+    @apply p-4 border-b border-white/5 text-white/90 break-words;
+  }
+  col {
+    &.col-level {
+      width: 50px;
+    }
+    &.col-download {
+      width: 140px;
+    }
+    &.col-bmslinks {
+      width: 140px;
+    }
+    &.col-title {
+      width: 260px;
+    }
+    &.col-artist {
+      width: 200px;
+    }
+    &.col-comment {
+      width: 260px;
+    }
+  }
+  tbody tr {
+    &:hover {
+      @apply bg-white/5;
+    }
+  }
+  @media (max-width: 480px) {
+    @apply min-w-[600px];
+    th,
+    td {
+      @apply p-2;
+    }
+  }
 }
 
 .chart-title {
   @apply min-w-[200px];
+  @media (max-width: 480px) {
+    @apply min-w-[150px];
+  }
+  @media (max-width: 480px) {
+    @apply min-w-[120px];
+  }
 }
 
 .comment-cell {
   @apply min-w-[150px] max-w-[300px];
+  @media (max-width: 480px) {
+    @apply min-w-[100px] max-w-[200px];
+  }
+  @media (max-width: 480px) {
+    @apply min-w-[80px] max-w-[150px] text-[0.85rem];
+  }
 }
 
 .level-badge {
@@ -887,97 +996,141 @@ onMounted(() => {
 /* 下载按钮样式 */
 .download-cell {
   @apply min-w-[130px] max-w-[180px];
+  @media (max-width: 480px) {
+    @apply min-w-[110px] max-w-[150px];
+  }
+  @media (max-width: 480px) {
+    @apply min-w-[90px] max-w-[120px];
+  }
 }
 
 .download-buttons {
   @apply flex flex-row gap-[0.3rem] flex-wrap;
+  @media (max-width: 480px) {
+    @apply gap-[0.3rem];
+  }
 }
 
 .download-button {
   @apply px-[0.5rem] py-[0.35rem] border-none rounded-[6px] text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center gap-[0.2rem] min-w-[60px] flex-1 no-underline text-inherit;
+  @media (max-width: 480px) {
+    @apply px-[0.4rem] py-[0.25rem] text-[0.75rem] min-w-[55px];
+  }
+  @media (max-width: 480px) {
+    @apply px-[0.3rem] py-[0.2rem] text-[0.7rem] min-w-[50px];
+  }
 }
 
-.download-button:hover {
-  @apply hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)];
-  transform: translateY(-2px);
-}
-
-.download-button:active {
-  transform: translateY(0);
+.download-button {
+  &:hover {
+    @apply shadow-[0_4px_8px_rgba(0,0,0,0.2)];
+    transform: translateY(-2px);
+  }
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .download-bundle {
   @apply bg-[linear-gradient(135deg,#4caf50,#2e7d32)] text-white;
 }
 
-.download-bundle:hover {
-  @apply bg-[linear-gradient(135deg,#66bb6a,#388e3c)];
+.download-bundle {
+  &:hover {
+    @apply bg-[linear-gradient(135deg,#66bb6a,#388e3c)];
+  }
 }
 
 .download-diff {
   @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white;
 }
 
-.download-diff:hover {
-  @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
+.download-diff {
+  &:hover {
+    @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
+  }
 }
 
 /* BMS网站链接样式 */
 .bms-links-cell {
   @apply min-w-[140px] max-w-[180px];
+  @media (max-width: 480px) {
+    @apply min-w-[120px] max-w-[140px];
+  }
+  @media (max-width: 480px) {
+    @apply min-w-[100px] max-w-[120px];
+  }
 }
 
 .bms-links {
   @apply flex flex-wrap gap-[0.4rem] justify-center;
+  @media (max-width: 480px) {
+    @apply gap-[0.3rem];
+  }
 }
 
 .bms-link-button {
   @apply w-[36px] h-[36px] border-none rounded-full text-[1.2rem] cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center p-0 overflow-hidden no-underline text-inherit;
+  @media (max-width: 480px) {
+    @apply w-[32px] h-[32px] text-[1rem];
+  }
+  @media (max-width: 480px) {
+    @apply w-[28px] h-[28px] text-[0.9rem];
+  }
+}
+
+.bms-link-button {
+  &:hover {
+    @apply shadow-[0_4px_8px_rgba(0,0,0,0.3)];
+    transform: scale(1.1);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 .bms-icon {
   @apply w-6 h-6 object-contain;
 }
 
-.bms-link-button:hover {
-  @apply hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)];
-  transform: scale(1.1);
-}
-
-.bms-link-button:active {
-  transform: scale(0.95);
-}
-
 .bms-score-viewer {
   @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white;
 }
 
-.bms-score-viewer:hover {
-  @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
+.bms-score-viewer {
+  &:hover {
+    @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
+  }
 }
 
 .lr2ir {
   @apply bg-[linear-gradient(135deg,#9c27b0,#7b1fa2)] text-white;
 }
 
-.lr2ir:hover {
-  @apply bg-[linear-gradient(135deg,#ba68c8,#9c27b0)];
+.lr2ir {
+  &:hover {
+    @apply bg-[linear-gradient(135deg,#ba68c8,#9c27b0)];
+  }
 }
 
 .mocha {
   @apply bg-[linear-gradient(135deg,#795548,#5d4037)] text-white;
 }
 
-.mocha:hover {
-  @apply bg-[linear-gradient(135deg,#a1887f,#795548)];
+.mocha {
+  &:hover {
+    @apply bg-[linear-gradient(135deg,#a1887f,#795548)];
+  }
 }
 
 .minir {
   @apply bg-[linear-gradient(135deg,#00bcd4,#0097a7)] text-white;
 }
 
-.minir:hover {
-  @apply bg-[linear-gradient(135deg,#4dd0e1,#00bcd4)];
+.minir {
+  &:hover {
+    @apply bg-[linear-gradient(135deg,#4dd0e1,#00bcd4)];
+  }
 }
 
 /* 空状态样式 */
@@ -985,16 +1138,17 @@ onMounted(() => {
   @apply text-center p-12;
 }
 
+.empty-state {
+  h3 {
+    @apply text-white mb-4;
+  }
+  p {
+    @apply text-white/70;
+  }
+}
+
 .empty-icon {
   @apply text-[4rem] mb-4;
-}
-
-.empty-state h3 {
-  @apply text-white mb-4;
-}
-
-.empty-state p {
-  @apply text-white/70;
 }
 
 /* 难度分组导航样式 */
@@ -1004,20 +1158,33 @@ onMounted(() => {
 
 .difficulty-groups-tabs {
   @apply flex flex-wrap gap-3 mb-6;
+  @media (max-width: 768px) {
+    @apply flex-wrap gap-2;
+  }
+  @media (max-width: 480px) {
+    @apply flex-col;
+  }
 }
 
 .difficulty-group-tab {
   @apply px-6 py-3 border-2 border-transparent rounded-[25px] font-bold text-[1.1rem] text-white cursor-pointer transition-all duration-300 ease-in-out flex items-center justify-center gap-2 opacity-70;
+  @media (max-width: 768px) {
+    @apply flex-[1_0_calc(33.333%_-_0.5rem)] min-w-[80px] px-4 py-[0.6rem] text-[1rem];
+  }
+  @media (max-width: 480px) {
+    @apply w-full text-center;
+  }
 }
 
-.difficulty-group-tab:hover {
-  @apply opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)];
-  transform: translateY(-2px);
-}
-
-.difficulty-group-tab:active {
-  @apply opacity-90;
-  transform: translateY(-1px);
+.difficulty-group-tab {
+  &:hover {
+    @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
+    transform: translateY(-2px);
+  }
+  &:active {
+    @apply opacity-90;
+    transform: translateY(-1px);
+  }
 }
 
 .chart-count {
@@ -1036,210 +1203,22 @@ onMounted(() => {
 
 .difficulty-group-title {
   @apply flex items-center gap-4;
+  @media (max-width: 480px) {
+    @apply flex-col items-start gap-2;
+  }
 }
 
 .difficulty-group-badge {
   @apply px-6 py-2 rounded-[20px] font-bold text-[1.2rem] text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)];
+  @media (max-width: 480px) {
+    @apply text-[1rem] px-[0.8rem] py-[0.3rem];
+  }
 }
 
 .difficulty-group-count {
   @apply text-[1.1rem] text-white/80;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .bms-table-container {
-    @apply p-4 m-4 max-w-[calc(100%_-_2rem)];
-  }
-
-  .rank-reference-section {
-    @apply p-4 mt-6 mb-6;
-  }
-
-  .rank-reference-tables {
-    @apply gap-4;
-  }
-
-  .rank-reference-left th,
-  .rank-reference-left td,
-  .rank-reference-right th,
-  .rank-reference-right td {
-    @apply px-3 py-2 text-[0.9rem];
-  }
-  .page-header {
-    @apply mb-6;
-  }
-  .page-title {
-    @apply text-[2rem] mb-2;
-  }
-  .page-subtitle {
-    @apply text-[1.1rem];
-  }
-  .table-header {
-    @apply flex flex-col gap-6;
-  }
-  .stats-grid {
-    @apply grid-cols-2;
-  }
-  .difficulty-groups-tabs {
-    @apply flex-wrap gap-2;
-  }
-  .difficulty-group-tab {
-    @apply flex-[1_0_calc(33.333%_-_0.5rem)] min-w-[80px] px-4 py-[0.6rem] text-[1rem];
-  }
-}
-
-@media (max-width: 480px) {
-  .bms-table-container {
-    @apply p-4 my-4 mx-auto;
-  }
-
-  .charts-table td:nth-child(6) {
-    @apply max-w-[120px] text-[0.8em];
-  }
-
-  .bms-table-container h1 {
-    @apply text-[2rem];
-  }
-
-  .progress-steps {
-    @apply grid-cols-1;
-  }
-
-  .stats-grid {
-    @apply grid-cols-3 gap-3;
-  }
-
-  .stat-value {
-    @apply text-[1.5rem];
-  }
-
-  .charts-table th,
-  .charts-table td {
-    @apply p-3;
-  }
-
-  .charts-table {
-    @apply min-w-[800px];
-  }
-
-  .chart-title {
-    @apply min-w-[150px];
-  }
-
-  .comment-cell {
-    @apply min-w-[100px] max-w-[200px];
-  }
-
-  .download-cell {
-    @apply min-w-[110px] max-w-[150px];
-  }
-
-  .download-button {
-    @apply px-[0.4rem] py-[0.25rem] text-[0.75rem] min-w-[55px] flex-1;
-  }
-
-  .bms-links-cell {
-    @apply min-w-[120px] max-w-[140px];
-  }
-
-  .bms-link-button {
-    @apply w-[32px] h-[32px] text-[1rem];
-  }
-}
-
-@media (max-width: 480px) {
-  .bms-table-container {
-    @apply p-4 m-4 max-w-[calc(100%_-_2rem)] rounded-[15px] overflow-x-auto;
-  }
-
-  .rank-reference-section {
-    @apply p-3 mt-4 mb-4;
-  }
-
-  .rank-reference-tables {
-    @apply flex-col gap-4;
-  }
-
-  .rank-reference-left th,
-  .rank-reference-left td,
-  .rank-reference-right th,
-  .rank-reference-right td {
-    @apply px-2 py-[0.4rem] text-[0.85rem];
-  }
-  .page-header {
-    @apply mb-4;
-  }
-  .page-title {
-    @apply text-[1.75rem] mb-2;
-  }
-  .page-subtitle {
+  @media (max-width: 480px) {
     @apply text-[1rem];
-  }
-  .stats-grid {
-    @apply grid-cols-1;
-  }
-  .progress-header {
-    @apply flex-col items-start gap-2;
-  }
-  .progress-percentage {
-    @apply self-start;
-  }
-  .difficulty-groups-tabs {
-    @apply flex-col;
-  }
-  .difficulty-group-tab {
-    @apply w-full text-center;
-  }
-  .difficulty-group-badge {
-    @apply text-[1rem] px-[0.8rem] py-[0.3rem];
-  }
-  .difficulty-group-title {
-    @apply flex-col items-start gap-2;
-  }
-  .difficulty-group-count {
-    @apply text-[1rem];
-  }
-
-  .charts-table {
-    @apply min-w-[600px];
-  }
-
-  .chart-title {
-    @apply min-w-[120px];
-  }
-
-  .comment-cell {
-    @apply min-w-[80px] max-w-[150px] text-[0.85rem];
-  }
-
-  .download-cell {
-    @apply min-w-[90px] max-w-[120px];
-  }
-
-  .download-button {
-    @apply px-[0.3rem] py-[0.2rem] text-[0.7rem] min-w-[50px] flex-1;
-  }
-
-  .download-buttons {
-    @apply gap-[0.3rem];
-  }
-
-  .bms-links-cell {
-    @apply min-w-[100px] max-w-[120px];
-  }
-
-  .bms-link-button {
-    @apply w-[28px] h-[28px] text-[0.9rem];
-  }
-
-  .bms-links {
-    @apply gap-[0.3rem];
-  }
-
-  .charts-table th,
-  .charts-table td {
-    @apply p-2;
   }
 }
 </style>

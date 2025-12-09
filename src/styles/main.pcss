@@ -20,7 +20,10 @@ body {
 }
 
 a {
-  @apply font-medium text-[#646cff] no-underline hover:text-[#535bf2];
+  @apply font-medium text-[#646cff] no-underline;
+  &:hover {
+    @apply text-[#535bf2];
+  }
 }
 
 h1 {
@@ -31,30 +34,54 @@ button {
   @apply rounded-[8px] border border-transparent px-[1.2em] py-[0.6em] text-base font-medium bg-[#1a1a1a] cursor-pointer;
   font-family: inherit;
   transition: border-color 0.25s;
-}
-button:hover {
-  @apply hover:border-[#646cff];
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  &:hover {
+    @apply border-[#646cff];
+  }
+  &:focus,
+  &:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
 }
 
 /* 通用玻璃态效果容器 */
 .glass-container {
   @apply bg-white/10 backdrop-blur-[10px] rounded-[20px] p-8 mt-8 border border-white/10 text-white w-full shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-[fadeIn_0.8s_ease-out];
+
+  @media (max-width: 768px) {
+    @apply p-6 mt-6;
+  }
+
+  @media (max-width: 480px) {
+    @apply p-4 mt-4 rounded-[16px];
+  }
 }
 
 /* 通用玻璃态卡片（用于ProfileCard等组件） */
 .glass-card {
   @apply bg-white/10 backdrop-blur-[10px] border border-white/20 rounded-[16px] p-8 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)];
   -webkit-backdrop-filter: blur(10px);
+
+  @media (max-width: 768px) {
+    @apply p-6 rounded-[14px];
+  }
+
+  @media (max-width: 480px) {
+    @apply p-4 rounded-[12px];
+  }
 }
 
 /* 内容卡片标题样式 */
 .content-title {
   @apply text-white text-center mb-8 text-[2.5rem];
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 768px) {
+    @apply text-[2rem] mb-6;
+  }
+
+  @media (max-width: 480px) {
+    @apply text-[1.75rem] mb-4;
+  }
 }
 
 /* 淡入动画 */
@@ -66,34 +93,5 @@ button:focus-visible {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-  .glass-container {
-    @apply p-6 mt-6;
-  }
-
-  .glass-card {
-    @apply p-6 rounded-[14px];
-  }
-
-  .content-title {
-    @apply text-[2rem] mb-6;
-  }
-}
-
-@media (max-width: 480px) {
-  .glass-container {
-    @apply p-4 mt-4 rounded-[16px];
-  }
-
-  .glass-card {
-    @apply p-4 rounded-[12px];
-  }
-
-  .content-title {
-    @apply text-[1.75rem] mb-4;
   }
 }

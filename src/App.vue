@@ -26,10 +26,9 @@ import "./styles/main.pcss";
 .link-item {
   @apply inline-block px-[1.5rem] py-[0.8rem] bg-white/10 border border-white/20 rounded-[12px] text-white no-underline;
   transition: all 0.2s ease;
-}
-
-.link-item:hover {
-  @apply bg-white/20;
-  transform: translateY(-2px);
+  &:hover {
+    @apply bg-white/20;
+    transform: translateY(-2px);
+  }
 }
 </style>
