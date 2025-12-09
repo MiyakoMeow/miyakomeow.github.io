@@ -27,13 +27,7 @@ interface TableStats {
 
 const props = defineProps<{ header: string }>();
 
-// 移除表类型推断，完全由传入的 header 决定数据源
-const title = computed(() => {
-  if (headerData.value && headerData.value.name) {
-    return headerData.value.name;
-  }
-  return "加载中...";
-});
+const pageTitle = ref("加载难度表header中");
 
 // 加载状态管理
 const loadingState = reactive<LoadingState>({
@@ -83,6 +77,8 @@ function updateProgress(step: string, progress: number): void {
 // 懒加载JSON数据
 async function lazyLoadTableData(): Promise<void> {
   try {
+    pageTitle.value = "加载难度表header中";
+    document.title = pageTitle.value;
     updateProgress("正在加载表头信息...", 25);
 
     if (!props.header) {
@@ -90,11 +86,14 @@ async function lazyLoadTableData(): Promise<void> {
     }
     const headerUrlBase = new URL(props.header, window.location.href).toString();
 
-    const headerResponse = await fetch(headerUrlBase);
+    const headerResponse = await fetch(headerUrlBase, { redirect: "follow" });
     if (!headerResponse.ok) {
       throw new Error(`无法加载表头信息: ${headerResponse.status}`);
     }
     headerData.value = await headerResponse.json();
+
+    pageTitle.value = String(headerData.value?.name || "未命名");
+    document.title = pageTitle.value;
 
     updateProgress("表头信息加载完成", 50);
 
@@ -109,7 +108,7 @@ async function lazyLoadTableData(): Promise<void> {
     const dataFetchUrl = isAbsolute(String(dataUrl))
       ? String(dataUrl)
       : new URL(String(dataUrl), headerUrlBase).toString();
-    const dataResponse = await fetch(dataFetchUrl);
+    const dataResponse = await fetch(dataFetchUrl, { redirect: "follow" });
     if (!dataResponse.ok) {
       throw new Error(`无法加载谱面数据: ${dataResponse.status}`);
     }
@@ -280,7 +279,7 @@ onMounted(() => {
   <StarryBackground />
   <div class="bms-table-container">
     <div class="page-header">
-      <h1 class="page-title">{{ title }}</h1>
+      <h1 class="page-title">{{ pageTitle }}</h1>
       <div v-if="headerData && headerData.symbol" class="page-subtitle">
         难度表符号: {{ headerData.symbol }}
       </div>
