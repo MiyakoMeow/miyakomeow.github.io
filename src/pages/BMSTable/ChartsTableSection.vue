@@ -26,17 +26,6 @@ export interface DifficultyGroup {
   charts: ChartData[];
 }
 
-interface ChartDisplayInfo {
-  title: string;
-  artist: string;
-  level: string;
-  sha256: string | undefined;
-  md5: string | undefined;
-  comment: string;
-  url: string;
-  url_diff: string;
-}
-
 interface BmsLinks {
   bmsScoreViewer: string;
   lr2ir: string;
@@ -85,27 +74,43 @@ function segmentColor(index: number, total: number): string {
   return palette[ci];
 }
 
-function getChartDisplayInfo(chart: ChartData): ChartDisplayInfo {
+function getBmsLinks(chart: ChartData): BmsLinks {
+  const md5 = typeof chart.md5 === "string" ? chart.md5.trim() : "";
+  const sha = typeof chart.sha256 === "string" ? chart.sha256.trim() : "";
   return {
-    title: chart.title || "未知标题",
-    artist: chart.artist || "未知艺术家",
-    level: chart.level || "N/A",
-    sha256: chart.sha256,
-    md5: chart.md5,
-    comment: chart.comment || "",
-    url: chart.url || "",
-    url_diff: chart.url_diff || "",
+    bmsScoreViewer: `https://bms-score-viewer.pages.dev/view?md5=${encodeURIComponent(md5)}`,
+    lr2ir: `http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=${encodeURIComponent(md5)}`,
+    mocha: `https://mocha-repository.info/song.php?sha256=${encodeURIComponent(sha)}`,
+    minir: `https://www.gaftalk.com/minir/#/viewer/song/${encodeURIComponent(sha)}/0`,
   };
 }
 
-function getBmsLinks(chart: ChartData): BmsLinks {
-  const info = getChartDisplayInfo(chart);
-  return {
-    bmsScoreViewer: `https://bms-score-viewer.pages.dev/view?md5=${info.md5}`,
-    lr2ir: `http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=${info.md5}`,
-    mocha: `https://mocha-repository.info/song.php?sha256=${info.sha256}`,
-    minir: `https://www.gaftalk.com/minir/#/viewer/song/${info.sha256}/0`,
-  };
+function hasMd5(chart: ChartData): boolean {
+  const v = chart.md5;
+  return typeof v === "string" && v.trim().length > 0;
+}
+
+function hasSha256(chart: ChartData): boolean {
+  const v = chart.sha256;
+  return typeof v === "string" && v.trim().length > 0;
+}
+
+function expandToValidLink(raw: string | undefined): string | undefined {
+  const s = (raw ?? "").trim();
+  if (!s) return undefined;
+  if (/^https?:\/\//i.test(s)) return s;
+  if (/^\/\//.test(s)) return `https:${s}`;
+  if (/^\//.test(s)) return s;
+  if (/^[\w.-]+\.[A-Za-z]{2,}(?:\/.*)?$/.test(s)) return `https://${s}`;
+  return undefined;
+}
+
+function resolvedBundleUrl(chart: ChartData): string | undefined {
+  return expandToValidLink(chart.url);
+}
+
+function resolvedDiffUrl(chart: ChartData): string | undefined {
+  return expandToValidLink(chart.url_diff);
 }
 
 function scrollToDifficultyGroup(level: string): void {
@@ -255,20 +260,20 @@ watch(
               <td class="download-cell">
                 <div class="download-buttons">
                   <a
-                    v-if="getChartDisplayInfo(chart).url"
+                    v-if="resolvedBundleUrl(chart)"
                     class="download-button download-bundle"
-                    :href="getChartDisplayInfo(chart).url"
-                    :title="getChartDisplayInfo(chart).url"
+                    :href="resolvedBundleUrl(chart)"
+                    :title="resolvedBundleUrl(chart)"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     📦 同捆
                   </a>
                   <a
-                    v-if="getChartDisplayInfo(chart).url_diff"
+                    v-if="resolvedDiffUrl(chart)"
                     class="download-button download-diff"
-                    :href="getChartDisplayInfo(chart).url_diff"
-                    :title="getChartDisplayInfo(chart).url_diff"
+                    :href="resolvedDiffUrl(chart)"
+                    :title="resolvedDiffUrl(chart)"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -280,6 +285,7 @@ watch(
                 <div class="bms-links">
                   <a
                     class="bms-link-button bms-score-viewer"
+                    v-if="hasMd5(chart)"
                     :href="getBmsLinks(chart).bmsScoreViewer"
                     :title="getBmsLinks(chart).bmsScoreViewer"
                     target="_blank"
@@ -289,6 +295,7 @@ watch(
                   </a>
                   <a
                     class="bms-link-button lr2ir"
+                    v-if="hasMd5(chart)"
                     :href="getBmsLinks(chart).lr2ir"
                     :title="getBmsLinks(chart).lr2ir"
                     target="_blank"
@@ -298,6 +305,7 @@ watch(
                   </a>
                   <a
                     class="bms-link-button mocha"
+                    v-if="hasSha256(chart)"
                     :href="getBmsLinks(chart).mocha"
                     :title="getBmsLinks(chart).mocha"
                     target="_blank"
@@ -307,6 +315,7 @@ watch(
                   </a>
                   <a
                     class="bms-link-button minir"
+                    v-if="hasSha256(chart)"
                     :href="getBmsLinks(chart).minir"
                     :title="getBmsLinks(chart).minir"
                     target="_blank"
@@ -317,13 +326,13 @@ watch(
                 </div>
               </td>
               <td class="chart-title">
-                <strong>{{ getChartDisplayInfo(chart).title }}</strong>
+                <strong>{{ chart.title || "未知标题" }}</strong>
               </td>
               <td>
-                {{ getChartDisplayInfo(chart).artist }}
+                {{ chart.artist || "未知艺术家" }}
               </td>
               <td class="comment-cell">
-                {{ getChartDisplayInfo(chart).comment }}
+                {{ chart.comment || "" }}
               </td>
             </tr>
           </tbody>
