@@ -155,6 +155,13 @@ onMounted(() => {
         对于BeMusicSeeker用户，可以使用tables.json链接（
         <button class="copy-action" type="button" @click="copyTablesJsonUrl">点击复制</button>
         ），导入难度表清单至BeMusicSeeker。
+        <a
+          class="copy-action"
+          href="https://darksabun.club/table/tablelist.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          >使用教程</a
+        >
         <span v-if="copied" class="copy-feedback">已复制</span>
       </div>
 
