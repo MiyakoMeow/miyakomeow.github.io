@@ -161,7 +161,7 @@ const tableStats = computed<TableStats>(() => {
 
   return {
     totalCharts: charts.length,
-    difficulties: Array.from(difficulties).sort(sortDifficultyLevels),
+    difficulties: Array.from(difficulties),
     averageLevel: validLevelCount > 0 ? (totalLevel / validLevelCount).toFixed(2) : "N/A",
   };
 });
@@ -185,34 +185,6 @@ const groupedCharts = computed<DifficultyGroup[]>(() => {
 
 // 获取用于展示的难度组列表（排序在展示层处理）
 const sortedDifficultyGroups = computed<DifficultyGroup[]>(() => groupedCharts.value);
-
-// 难度等级排序函数
-function sortDifficultyLevels(a: string, b: string): number {
-  // 使用正则表达式检查是否为整数（包括负数）
-  const intRegex = /^-?\d+$/;
-  const aIsInt = intRegex.test(a.trim());
-  const bIsInt = intRegex.test(b.trim());
-
-  if (aIsInt && bIsInt) {
-    // 都是整数，按数值大小排序
-    const numA = parseInt(a, 10);
-    const numB = parseInt(b, 10);
-    return numA - numB;
-  }
-
-  // 如果只有a是整数，a排在前面
-  if (aIsInt && !bIsInt) {
-    return -1;
-  }
-
-  // 如果只有b是整数，b排在后面
-  if (!aIsInt && bIsInt) {
-    return 1;
-  }
-
-  // 如果都不是整数，按字符编码排序
-  return a.localeCompare(b);
-}
 
 onMounted(() => {
   // 延迟开始加载，让用户看到初始状态
