@@ -88,3 +88,12 @@ $items | each { |it|
   )
   $out | save -f ($dir | path join "index.html")
 }
+
+let site_base = "https://miyakomeow.github.io/bms/table-mirror/"
+let tables_out = ($json_dir | path join "tables.json")
+def encode-component [s: string] { $s | url encode --all }
+
+$items | each { |it|
+  let encoded_dir = (encode-component $it.dir_name)
+  ($it | upsert url $"($site_base)($encoded_dir)/")
+} | to json | save -f $tables_out
