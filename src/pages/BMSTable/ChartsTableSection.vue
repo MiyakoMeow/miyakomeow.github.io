@@ -52,9 +52,6 @@ const props = defineProps<{
 
 const displayGroups = computed<DifficultyGroup[]>(() => {
   const order = props.levelOrder ?? [];
-  if (!order.length) {
-    return [...props.groups].sort((a, b) => String(a.level).localeCompare(String(b.level)));
-  }
   const orderIndex = new Map<string, number>();
   order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
   const defined: DifficultyGroup[] = [];
