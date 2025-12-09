@@ -161,89 +161,30 @@ const tableStats = computed<TableStats>(() => {
 
   return {
     totalCharts: charts.length,
-    difficulties: Array.from(difficulties).sort(sortDifficultyLevels),
+    difficulties: Array.from(difficulties),
     averageLevel: validLevelCount > 0 ? (totalLevel / validLevelCount).toFixed(2) : "N/A",
   };
 });
 
-// 按难度分组谱面数据
-const groupedCharts = computed<Record<string, DifficultyGroup>>(() => {
+// 按难度分组谱面数据（保持出现顺序，不在此处排序）
+const groupedCharts = computed<DifficultyGroup[]>(() => {
   if (!tableData.value || !Array.isArray(tableData.value)) {
-    return {};
+    return [];
   }
-
-  const groups: Record<string, DifficultyGroup> = {};
+  const groupsMap = new Map<string, DifficultyGroup>();
   const charts = tableData.value;
-
   charts.forEach((chart) => {
     const level = chart.level || "unknown";
-    if (!groups[level]) {
-      groups[level] = {
-        level: level,
-        charts: [],
-      };
+    if (!groupsMap.has(level)) {
+      groupsMap.set(level, { level, charts: [] });
     }
-    groups[level].charts.push(chart);
+    groupsMap.get(level)!.charts.push(chart);
   });
-
-  // 按难度排序：数字部分按整数大小排序，非数字部分按字符编码排序
-  // 首先获取所有难度等级
-  const levels = Object.keys(groups);
-
-  // 对难度等级进行排序
-  // 按难度排序：数字部分按整数大小排序，非数字部分按字符编码排序
-  const sortedKeys = levels.sort(sortDifficultyLevels);
-
-  // 使用Map保持插入顺序，然后转换为数组
-  const sortedGroupsMap = new Map<string, DifficultyGroup>();
-  sortedKeys.forEach((key) => {
-    sortedGroupsMap.set(key, groups[key]);
-  });
-
-  // 将Map转换为对象（Vue模板需要普通对象）
-  const sortedGroups: Record<string, DifficultyGroup> = {};
-  sortedGroupsMap.forEach((value, key) => {
-    sortedGroups[key] = value;
-  });
-
-  return sortedGroups;
+  return Array.from(groupsMap.values());
 });
 
-// 获取排序后的难度组列表
-const sortedDifficultyGroups = computed<DifficultyGroup[]>(() => {
-  // 确保按排序后的键顺序获取值
-  const groups = groupedCharts.value;
-  const sortedKeys = Object.keys(groups).sort(sortDifficultyLevels);
-  return sortedKeys.map((key) => groups[key]);
-});
-
-// 难度等级排序函数
-function sortDifficultyLevels(a: string, b: string): number {
-  // 使用正则表达式检查是否为整数（包括负数）
-  const intRegex = /^-?\d+$/;
-  const aIsInt = intRegex.test(a.trim());
-  const bIsInt = intRegex.test(b.trim());
-
-  if (aIsInt && bIsInt) {
-    // 都是整数，按数值大小排序
-    const numA = parseInt(a, 10);
-    const numB = parseInt(b, 10);
-    return numA - numB;
-  }
-
-  // 如果只有a是整数，a排在前面
-  if (aIsInt && !bIsInt) {
-    return -1;
-  }
-
-  // 如果只有b是整数，b排在后面
-  if (!aIsInt && bIsInt) {
-    return 1;
-  }
-
-  // 如果都不是整数，按字符编码排序
-  return a.localeCompare(b);
-}
+// 获取用于展示的难度组列表（排序在展示层处理）
+const sortedDifficultyGroups = computed<DifficultyGroup[]>(() => groupedCharts.value);
 
 onMounted(() => {
   // 延迟开始加载，让用户看到初始状态
