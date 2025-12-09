@@ -16,8 +16,7 @@ let pages_dir = ($script_root | path join "../entry/bms/table-mirror")
 # 反代列表（按此列表进行测速与选择）
 let proxies = [
   "https://proxy.pipers.cn/",
-  "https://gh.llkk.cc/",
-  "https://gh-proxy.com/"
+  "https://gh.llkk.cc/"
 ]
 
 # 数据类型定义：
@@ -85,10 +84,7 @@ $items | each { |it|
   let dir = ($pages_dir | path join $it.dir_name)
   mkdir $dir
   let header_link = $"($result.best_proxy)($it.url)"
-  let out = ($tpl
-    | str replace -a "./header.json" $header_link
-    | str replace "../../../src/pages/BMSTable.vue" "../../../../src/pages/BMSTable.vue"
-  )
+  let out = ($tpl | str replace -a "./header.json" $header_link)
   $out | save -f ($dir | path join "index.html")
 }
 
