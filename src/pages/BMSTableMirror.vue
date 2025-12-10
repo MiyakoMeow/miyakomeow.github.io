@@ -20,6 +20,7 @@ interface MirrorTableItem {
   tag1?: string;
   tag2?: string;
   tag_order?: string | number;
+  dir_name?: string;
 }
 
 interface Tag2Group {
@@ -96,9 +97,10 @@ const groupedByTags = computed<Tag1Group[]>(() => {
       tag2Map.set(tag2, []);
     }
 
-    // 修改item.url
-    // 对应`scripts/update-table-mirror.nu`生成的json文件定义的url。
-    item.url = item.url.substring("https://miyakomeow.github.io".length);
+    const dir = String(item.dir_name || "").replace(/^\/+|\/+$/g, "");
+    if (dir) {
+      item.url = `/bms/table-mirror/${dir}/`;
+    }
 
     tag2Map.get(tag2)!.push(item);
   });
