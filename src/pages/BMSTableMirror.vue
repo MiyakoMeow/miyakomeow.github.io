@@ -40,29 +40,12 @@ const error = ref<string | null>(null);
 const copied = ref(false);
 const tablesJsonPath = new URL("/bms/table-mirror/tables.json", window.location.origin).toString();
 
-async function copyTablesJsonUrl(): Promise<void> {
-  try {
-    const url = tablesJsonPath;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(url);
-    } else {
-      const textarea = document.createElement("textarea");
-      textarea.value = url;
-      textarea.style.position = "fixed";
-      textarea.style.opacity = "0";
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-      await navigator.clipboard.writeText(textarea.value);
-      document.body.removeChild(textarea);
-    }
-    copied.value = true;
-    setTimeout(() => {
-      copied.value = false;
-    }, 1500);
-  } catch {
+async function copyTables(): Promise<void> {
+  await copySelected(tablesJsonPath);
+  copied.value = true;
+  setTimeout(() => {
     copied.value = false;
-  }
+  }, 1500);
 }
 
 const links: LinkItem[] = [
@@ -121,14 +104,6 @@ async function copySelected(data: string): Promise<void> {
       document.body.removeChild(textarea);
     }
   } catch {}
-}
-
-async function copySelectedMirror(): Promise<void> {
-  await copySelected(JSON.stringify(selectedMirrorArray.value, null, 2));
-}
-
-async function copySelectedOrigin(): Promise<void> {
-  await copySelected(JSON.stringify(selectedOriginArray.value, null, 2));
 }
 
 const groupedByTags = computed<Tag1Group[]>(() => {
@@ -210,7 +185,7 @@ onMounted(() => {
 
       <div class="page-subtitle usage-subtitle">
         对于BeMusicSeeker用户，可以使用tables.json链接（
-        <button class="copy-action" type="button" @click="copyTablesJsonUrl">点击复制</button>
+        <button class="copy-action" type="button" @click="copyTables()">点击复制</button>
         ），导入难度表清单至BeMusicSeeker。
         <a
           class="copy-action"
@@ -244,13 +219,13 @@ onMounted(() => {
           class="copy-button mirror-copy"
           type="button"
           :title="tooltipMirror"
-          @click="copySelectedMirror"
+          @click="copySelected(JSON.stringify(selectedMirrorArray, null, 2))"
         >复制镜像链接</button>
         <button
           class="copy-button origin-copy"
           type="button"
           :title="tooltipOrigin"
-          @click="copySelectedOrigin"
+          @click="copySelected(JSON.stringify(selectedOriginArray, null, 2))"
         >复制原链接</button>
       </div>
     </div>
