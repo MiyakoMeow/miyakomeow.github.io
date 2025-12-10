@@ -11,11 +11,15 @@ export default defineComponent({
       <>
         <BlogLayout>
           <section class="glass-container">
-            <h1 class="content-title">导航</h1>
-            <div class="link-list">
+            <h1 class="link-title">BMS</h1>
+            <div class="link-list bms-main-link">
               <a class="link-item" href="/bms/index.html">
-                BMS
+                BMS 主页
               </a>
+            </div>
+
+            <h2 class="link-title">其他链接</h2>
+            <div class="link-list-horizontal">
               <a class="link-item" href="/bms/table/self-sp/index.html">
                 谱面合集（SP）
               </a>
