@@ -40,6 +40,7 @@ const loadingState = reactive<LoadingState>({
 
 const tableData = ref<ChartData[] | null>(null);
 const headerData = ref<HeaderData | null>(null);
+const dataFetchUrl = ref<string | null>(null);
 const error = ref<string | null>(null);
 
 const copied = ref(false);
@@ -111,10 +112,10 @@ async function lazyLoadTableData(): Promise<void> {
     updateProgress("正在加载谱面数据...", 75);
 
     const isAbsolute = (u: string) => /^(https?:)?\/\//i.test(u) || u.startsWith("/");
-    const dataFetchUrl = isAbsolute(String(dataUrl))
+    dataFetchUrl.value = isAbsolute(String(dataUrl))
       ? String(dataUrl)
       : new URL(String(dataUrl), headerUrlBase).toString();
-    const dataResponse = await fetch(dataFetchUrl, { redirect: "follow" });
+    const dataResponse = await fetch(dataFetchUrl.value, { redirect: "follow" });
     if (!dataResponse.ok) {
       throw new Error(`无法加载谱面数据: ${dataResponse.status}`);
     }
@@ -227,11 +228,11 @@ onMounted(() => {
           rel="noopener noreferrer"
           >查看header.json</a
         >
-        <span v-if="headerData?.data_url" class="mx-2"> | </span>
+        <span v-if="(props.header || originUrl) && dataFetchUrl" class="mx-2">|</span>
         <a
-          v-if="headerData?.data_url"
+          v-if="dataFetchUrl"
           class="copy-action"
-          :href="headerData.data_url"
+          :href="dataFetchUrl"
           target="_blank"
           rel="noopener noreferrer"
           >查看data.json</a
