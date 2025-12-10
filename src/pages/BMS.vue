@@ -39,24 +39,21 @@ const links: LinkItem[] = [
   @media (max-width: 768px) {
     @apply grid-cols-1;
   }
-}
-
-.link-card {
-  @apply block p-[1.25rem] rounded-[14px] bg-black/20 border border-white/10 text-white no-underline;
-  transition:
-    transform 0.15s ease,
-    background 0.3s ease;
-  &:hover {
-    @apply bg-[rgba(255,255,255,0.06)];
-    transform: translateY(-2px);
+  .link-card {
+    @apply block p-[1.25rem] rounded-[14px] bg-black/20 border border-white/10 text-white no-underline;
+    transition:
+      transform 0.15s ease,
+      background 0.3s ease;
+    &:hover {
+      @apply bg-[rgba(255,255,255,0.06)];
+      transform: translateY(-2px);
+    }
   }
-}
-
-.link-title {
-  @apply text-[1.2rem] font-bold mb-[0.5rem] text-[#64b5f6];
-}
-
-.link-desc {
-  @apply text-[0.95rem] text-white/80;
+  .link-title {
+    @apply text-[1.2rem] font-bold mb-[0.5rem] text-[#64b5f6];
+  }
+  .link-desc {
+    @apply text-[0.95rem] text-white/80;
+  }
 }
 </style>
