@@ -40,6 +40,7 @@ const loadingState = reactive<LoadingState>({
 
 const tableData = ref<ChartData[] | null>(null);
 const headerData = ref<HeaderData | null>(null);
+const dataFetchUrl = ref<string | null>(null);
 const error = ref<string | null>(null);
 
 const copied = ref(false);
@@ -111,10 +112,10 @@ async function lazyLoadTableData(): Promise<void> {
     updateProgress("正在加载谱面数据...", 75);
 
     const isAbsolute = (u: string) => /^(https?:)?\/\//i.test(u) || u.startsWith("/");
-    const dataFetchUrl = isAbsolute(String(dataUrl))
+    dataFetchUrl.value = isAbsolute(String(dataUrl))
       ? String(dataUrl)
       : new URL(String(dataUrl), headerUrlBase).toString();
-    const dataResponse = await fetch(dataFetchUrl, { redirect: "follow" });
+    const dataResponse = await fetch(dataFetchUrl.value, { redirect: "follow" });
     if (!dataResponse.ok) {
       throw new Error(`无法加载谱面数据: ${dataResponse.status}`);
     }
@@ -209,9 +210,32 @@ onMounted(() => {
         >），然后在BeMusicSeeker或beatoraja中，粘贴至对应选项处。
         <span v-if="copied" class="copy-feedback">已复制</span>
       </div>
-      <div v-if="originUrl" class="page-subtitle origin-subtitle">
-        <a class="copy-action" :href="originUrl" target="_blank" rel="noopener noreferrer"
+      <div class="page-subtitle origin-subtitle">
+        <a
+          v-if="originUrl"
+          class="copy-action"
+          :href="originUrl"
+          target="_blank"
+          rel="noopener noreferrer"
           >原链接</a
+        >
+        <span v-if="originUrl && props.header" class="mx-2"> | </span>
+        <a
+          v-if="props.header"
+          class="copy-action"
+          :href="props.header"
+          target="_blank"
+          rel="noopener noreferrer"
+          >查看header.json</a
+        >
+        <span v-if="(props.header || originUrl) && dataFetchUrl" class="mx-2">|</span>
+        <a
+          v-if="dataFetchUrl"
+          class="copy-action"
+          :href="dataFetchUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          >查看data.json</a
         >
       </div>
     </div>
