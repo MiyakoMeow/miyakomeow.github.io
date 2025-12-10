@@ -177,20 +177,20 @@ const selectedMap = ref<Record<string, boolean>>({});
 }
 .tag1-button {
   @apply px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10 mr-3;
-}
-.tag1-button:hover {
-  @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
-  transform: translateY(-2px);
+  &:hover {
+    @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
+    transform: translateY(-2px);
+  }
 }
 .group-row-tag2 {
   @apply flex flex-wrap gap-2 mt-2;
 }
 .tag2-group-tab {
   @apply px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10;
-}
-.tag2-group-tab:hover {
-  @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
-  transform: translateY(-2px);
+  &:hover {
+    @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
+    transform: translateY(-2px);
+  }
 }
 
 .tag1-group-container {
@@ -217,15 +217,6 @@ const selectedMap = ref<Record<string, boolean>>({});
   @apply flex flex-wrap gap-3 mb-6;
 }
 
-.tag2-group-tab {
-  @apply px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10;
-}
-
-.tag2-group-tab:hover {
-  @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
-  transform: translateY(-2px);
-}
-
 .chart-count {
   @apply text-[0.9rem] opacity-90 bg-black/20 py-[0.1rem] px-2 rounded-[10px];
 }
@@ -244,30 +235,37 @@ const selectedMap = ref<Record<string, boolean>>({});
 
 .tables-table {
   @apply w-full border-collapse min-w-[800px] table-fixed;
-}
-
-.tables-table th {
-  @apply bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10;
-}
-
-.tables-table td {
-  @apply p-4 border-b border-white/5 text-white/90 break-words;
-}
-
-.tables-table col.col-select {
-  width: 60px;
-}
-.tables-table col.col-symbol {
-  width: 120px;
-}
-.tables-table col.col-name {
-  width: 320px;
-}
-.tables-table col.col-mirror {
-  width: 160px;
-}
-.tables-table col.col-origin {
-  width: 160px;
+  th {
+    @apply bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10;
+  }
+  td {
+    @apply p-4 border-b border-white/5 text-white/90 break-words;
+  }
+  col {
+    &.col-select {
+      width: 60px;
+    }
+    &.col-symbol {
+      width: 120px;
+    }
+    &.col-name {
+      width: 320px;
+    }
+    &.col-mirror {
+      width: 160px;
+    }
+    &.col-origin {
+      width: 160px;
+    }
+  }
+  tbody tr {
+    &:hover {
+      @apply bg-white/5;
+    }
+    &:last-child td {
+      @apply border-b-0;
+    }
+  }
 }
 
 .name-cell {
@@ -280,25 +278,24 @@ const selectedMap = ref<Record<string, boolean>>({});
 
 .link-button {
   @apply px-[0.5rem] py-[0.35rem] border-none rounded-[6px] text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center gap-[0.2rem] min-w-[60px] no-underline text-inherit;
-}
-
-.link-button:hover {
-  @apply shadow-[0_4px_8px_rgba(0,0,0,0.2)];
-  transform: translateY(-2px);
+  &:hover {
+    @apply shadow-[0_4px_8px_rgba(0,0,0,0.2)];
+    transform: translateY(-2px);
+  }
 }
 
 .mirror-link {
   @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white;
-}
-.mirror-link:hover {
-  @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
+  &:hover {
+    @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
+  }
 }
 
 .origin-link {
   @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white;
-}
-.origin-link:hover {
-  @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
+  &:hover {
+    @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
+  }
 }
 
 .link-missing {
@@ -307,21 +304,22 @@ const selectedMap = ref<Record<string, boolean>>({});
 
 .empty-state {
   @apply text-center p-12;
+  h3 {
+    @apply text-white mb-4;
+  }
+  p {
+    @apply text-white/70;
+  }
+  .empty-icon {
+    @apply text-[4rem] mb-4;
+  }
 }
-.empty-state h3 {
-  @apply text-white mb-4;
-}
-.empty-state p {
-  @apply text-white/70;
-}
-.empty-icon {
-  @apply text-[4rem] mb-4;
-}
-</style>
-<style lang="postcss" scoped>
-.select-checkbox {
-  width: 22px;
-  height: 22px;
-  transform: scale(1.2);
+
+.select-cell {
+  .select-checkbox {
+    width: 22px;
+    height: 22px;
+    transform: scale(1.2);
+  }
 }
 </style>

@@ -189,25 +189,22 @@ onMounted(() => {
   @media (max-width: 768px) {
     @apply grid-cols-1;
   }
-}
-
-.link-card {
-  @apply block p-[1.25rem] rounded-[14px] bg-black/20 border border-white/10 text-white no-underline;
-  transition:
-    transform 0.15s ease,
-    background 0.3s ease;
-  &:hover {
-    @apply bg-[rgba(255,255,255,0.06)];
-    transform: translateY(-2px);
+  .link-card {
+    @apply block p-[1.25rem] rounded-[14px] bg-black/20 border border-white/10 text-white no-underline;
+    transition:
+      transform 0.15s ease,
+      background 0.3s ease;
+    &:hover {
+      @apply bg-[rgba(255,255,255,0.06)];
+      transform: translateY(-2px);
+    }
   }
-}
-
-.link-title {
-  @apply text-[1.2rem] font-bold mb-[0.5rem] text-[#64b5f6];
-}
-
-.link-desc {
-  @apply text-[0.95rem] text-white/80;
+  .link-title {
+    @apply text-[1.2rem] font-bold mb-[0.5rem] text-[#64b5f6];
+  }
+  .link-desc {
+    @apply text-[0.95rem] text-white/80;
+  }
 }
 
 .loading-section {
@@ -220,6 +217,15 @@ onMounted(() => {
 
 .page-subtitle {
   @apply text-white/70 text-[1.1rem] italic;
+  .copy-action {
+    @apply text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium;
+    &:hover {
+      @apply text-[#42a5f5];
+    }
+  }
+  .copy-feedback {
+    @apply ml-2 text-[#4caf50];
+  }
 }
 
 .usage-subtitle {
@@ -228,19 +234,5 @@ onMounted(() => {
 
 .origin-subtitle {
   @apply mt-2;
-}
-
-.copy-action {
-  @apply text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium;
-}
-
-.copy-action {
-  &:hover {
-    @apply text-[#42a5f5];
-  }
-}
-
-.copy-feedback {
-  @apply ml-2 text-[#4caf50];
 }
 </style>

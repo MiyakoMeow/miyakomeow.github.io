@@ -32,15 +32,11 @@ function goHome(): void {
 
 .fab {
   @apply flex size-24 items-center justify-center rounded-full border border-white/25 bg-white/15 text-white shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[8px] transition-all;
-}
-
-.fab {
   &:hover {
     @apply bg-white/25;
   }
-}
-
-.icon {
-  @apply size-[60px];
+  .icon {
+    @apply size-[60px];
+  }
 }
 </style>
