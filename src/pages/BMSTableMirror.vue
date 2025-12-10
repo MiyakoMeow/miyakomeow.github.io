@@ -75,6 +75,61 @@ const links: LinkItem[] = [
 ];
 
 const tables = ref<MirrorTableItem[]>([]);
+const selectedMap = ref<Record<string, boolean>>({});
+
+const selectedCount = computed(() => Object.values(selectedMap.value).filter(Boolean).length);
+const totalCount = computed(() => tables.value.length);
+
+const selectedMirrorArray = computed<string[]>(() =>
+  Object.entries(selectedMap.value)
+    .filter(([, v]) => !!v)
+    .map(([url]) => url)
+);
+
+const urlToOrigin = computed<Map<string, string>>(() => {
+  const m = new Map<string, string>();
+  tables.value.forEach((t) => {
+    if (t.url) {
+      m.set(t.url, t.url_ori || "");
+    }
+  });
+  return m;
+});
+
+const selectedOriginArray = computed<string[]>(() =>
+  selectedMirrorArray.value
+    .map((u) => urlToOrigin.value.get(u) || "")
+    .filter((v) => v.length > 0)
+);
+
+const tooltipMirror = computed(() => JSON.stringify(selectedMirrorArray.value));
+const tooltipOrigin = computed(() => JSON.stringify(selectedOriginArray.value));
+
+async function copySelected(data: string): Promise<void> {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(data);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = data;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      await navigator.clipboard.writeText(textarea.value);
+      document.body.removeChild(textarea);
+    }
+  } catch {}
+}
+
+async function copySelectedMirror(): Promise<void> {
+  await copySelected(JSON.stringify(selectedMirrorArray.value));
+}
+
+async function copySelectedOrigin(): Promise<void> {
+  await copySelected(JSON.stringify(selectedOriginArray.value));
+}
 
 const groupedByTags = computed<Tag1Group[]>(() => {
   const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>();
@@ -177,10 +232,29 @@ onMounted(() => {
       <div v-if="loading" class="loading-section">正在加载镜像列表...</div>
       <div v-else-if="error" class="error-section">加载失败：{{ error }}</div>
       <div v-else>
-        <GroupedTablesSection :groups="groupedByTags" />
+        <GroupedTablesSection :groups="groupedByTags" @update:selectedMap="selectedMap = { ...$event }" />
       </div>
     </section>
   </BlogLayout>
+  <div v-if="selectedCount > 0" class="selection-float">
+    <div class="selection-content">
+      <div class="selection-summary">已选中 {{ selectedCount }} / {{ totalCount }}</div>
+      <div class="selection-actions">
+        <button
+          class="copy-button mirror-copy"
+          type="button"
+          :title="tooltipMirror"
+          @click="copySelectedMirror"
+        >复制镜像链接</button>
+        <button
+          class="copy-button origin-copy"
+          type="button"
+          :title="tooltipOrigin"
+          @click="copySelectedOrigin"
+        >复制原链接</button>
+      </div>
+    </div>
+  </div>
   <QuickActions />
 </template>
 
@@ -236,5 +310,27 @@ onMounted(() => {
 
 .origin-subtitle {
   @apply mt-2;
+}
+
+.selection-float {
+  @apply fixed bottom-4 left-1/2 translate-x-[-50%] z-[999];
+}
+.selection-content {
+  @apply p-3 px-4 flex items-center gap-4 bg-white/10 border border-white/20 rounded-[12px] shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px];
+}
+.selection-summary {
+  @apply text-white font-semibold;
+}
+.selection-actions {
+  @apply flex gap-3;
+}
+.copy-button {
+  @apply px-[0.8rem] py-[0.5rem] border-none rounded-[8px] text-[0.9rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out text-white;
+}
+.mirror-copy {
+  @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)];
+}
+.origin-copy {
+  @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)];
 }
 </style>

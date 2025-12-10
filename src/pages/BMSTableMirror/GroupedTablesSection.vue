@@ -48,6 +48,10 @@ function scrollToTag2(tag1: string, tag2: string): void {
 }
 
 const selectedMap = ref<Record<string, boolean>>({});
+const emit = defineEmits<{ (e: "update:selectedMap", value: Record<string, boolean>): void }>();
+function emitSelected(): void {
+  emit("update:selectedMap", selectedMap.value);
+}
 
 function getTag1Urls(g: Tag1Group): string[] {
   const urls: string[] = [];
@@ -89,12 +93,18 @@ function onTag1Change(checked: boolean, g: Tag1Group): void {
   for (const url of getTag1Urls(g)) {
     selectedMap.value[url] = checked;
   }
+  emitSelected();
 }
 
 function onTag2Change(checked: boolean, sg: Tag2Group): void {
   for (const url of getTag2Urls(sg)) {
     selectedMap.value[url] = checked;
   }
+  emitSelected();
+}
+function onRowChange(checked: boolean, url: string): void {
+  selectedMap.value[url] = checked;
+  emitSelected();
 }
 const vIndeterminate = {
   mounted(el: HTMLElement, binding: { value: boolean }): void {
@@ -187,7 +197,8 @@ const vIndeterminate = {
                     <input
                       type="checkbox"
                       class="select-checkbox"
-                      v-model="selectedMap[item.url]"
+                      :checked="!!selectedMap[item.url]"
+                      @change="onRowChange(($event.target as HTMLInputElement).checked, item.url)"
                     />
                   </td>
                   <td>
