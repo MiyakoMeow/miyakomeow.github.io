@@ -328,30 +328,14 @@ function scrollToDifficultyGroup(level: string): void {
       @apply bg-white/5;
     }
   }
-  @media (max-width: 480px) {
-    @apply min-w-[600px];
-    td:nth-child(6) {
-      @apply max-w-[120px] text-[0.8em];
-    }
-    th,
-    td {
-      @apply p-2;
-    }
-  }
 }
 
 .chart-title {
   @apply min-w-[200px];
-  @media (max-width: 480px) {
-    @apply min-w-[120px];
-  }
 }
 
 .comment-cell {
   @apply min-w-[150px] max-w-[300px];
-  @media (max-width: 480px) {
-    @apply min-w-[80px] max-w-[150px] text-[0.85rem];
-  }
 }
 
 .level-badge {
@@ -360,23 +344,14 @@ function scrollToDifficultyGroup(level: string): void {
 
 .download-cell {
   @apply min-w-[130px] max-w-[180px];
-  @media (max-width: 480px) {
-    @apply min-w-[90px] max-w-[120px];
-  }
 }
 
 .download-buttons {
   @apply flex flex-row gap-[0.3rem] flex-wrap;
-  @media (max-width: 480px) {
-    @apply gap-[0.3rem];
-  }
 }
 
 .download-button {
   @apply px-[0.5rem] py-[0.35rem] border-none rounded-[6px] text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center gap-[0.2rem] min-w-[60px] flex-1 no-underline text-inherit;
-  @media (max-width: 480px) {
-    @apply px-[0.3rem] py-[0.2rem] text-[0.7rem] min-w-[50px];
-  }
 }
 
 .download-button {
@@ -411,23 +386,14 @@ function scrollToDifficultyGroup(level: string): void {
 
 .bms-links-cell {
   @apply min-w-[140px] max-w-[180px];
-  @media (max-width: 480px) {
-    @apply min-w-[100px] max-w-[120px];
-  }
 }
 
 .bms-links {
   @apply flex flex-wrap gap-[0.4rem] justify-center;
-  @media (max-width: 480px) {
-    @apply gap-[0.3rem];
-  }
 }
 
 .bms-link-button {
   @apply w-[36px] h-[36px] border-none rounded-full text-[1.2rem] cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center p-0 overflow-hidden no-underline text-inherit;
-  @media (max-width: 480px) {
-    @apply w-[28px] h-[28px] text-[0.9rem];
-  }
 }
 
 .bms-link-button {
@@ -493,18 +459,12 @@ function scrollToDifficultyGroup(level: string): void {
   @media (max-width: 768px) {
     @apply flex-wrap gap-2;
   }
-  @media (max-width: 480px) {
-    @apply flex-col;
-  }
 }
 
 .difficulty-group-tab {
   @apply px-6 py-3 border-2 border-transparent rounded-[25px] font-bold text-[1.1rem] text-white cursor-pointer transition-all duration-300 ease-in-out flex items-center justify-center gap-2 opacity-70;
   @media (max-width: 768px) {
     @apply flex-[1_0_calc(33.333%_-_0.5rem)] min-w-[80px] px-4 py-[0.6rem] text-[1rem];
-  }
-  @media (max-width: 480px) {
-    @apply w-full text-center;
   }
 }
 
@@ -533,23 +493,14 @@ function scrollToDifficultyGroup(level: string): void {
 
 .difficulty-group-title {
   @apply flex items-center gap-4;
-  @media (max-width: 480px) {
-    @apply flex-col items-start gap-2;
-  }
 }
 
 .difficulty-group-badge {
   @apply px-6 py-2 rounded-[20px] font-bold text-[1.2rem] text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)];
-  @media (max-width: 480px) {
-    @apply text-[1rem] px-[0.8rem] py-[0.3rem];
-  }
 }
 
 .difficulty-group-count {
   @apply text-[1.1rem] text-white/80;
-  @media (max-width: 480px) {
-    @apply text-[1rem];
-  }
 }
 
 .empty-state {

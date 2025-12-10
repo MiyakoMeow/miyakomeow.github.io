@@ -391,21 +391,12 @@ onMounted(() => {
   @media (max-width: 768px) {
     @apply p-4 m-4 max-w-[calc(100%_-_2rem)];
   }
-  @media (max-width: 480px) {
-    @apply p-4 my-4 mx-auto rounded-[15px] overflow-x-auto;
-    h1 {
-      @apply text-[2rem];
-    }
-  }
 }
 
 .page-header {
   @apply mb-8 text-center;
   @media (max-width: 768px) {
     @apply mb-6;
-  }
-  @media (max-width: 480px) {
-    @apply mb-4;
   }
 }
 
@@ -417,18 +408,12 @@ onMounted(() => {
   @media (max-width: 768px) {
     @apply text-[2rem] mb-2;
   }
-  @media (max-width: 480px) {
-    @apply text-[1.75rem] mb-2;
-  }
 }
 
 .page-subtitle {
   @apply text-white/70 text-[1.2rem] italic;
   @media (max-width: 768px) {
     @apply text-[1.1rem];
-  }
-  @media (max-width: 480px) {
-    @apply text-[1rem];
   }
 }
 
@@ -466,18 +451,12 @@ onMounted(() => {
   }
   .progress-header {
     @apply flex justify-between items-center mb-6;
-    @media (max-width: 480px) {
-      @apply flex-col items-start gap-2;
-    }
     h3 {
       @apply text-white m-0 text-[1.5rem];
     }
   }
   .progress-percentage {
     @apply bg-[#64b5f6]/20 text-[#64b5f6] px-4 py-2 rounded-[20px] font-bold text-[1.2rem];
-    @media (max-width: 480px) {
-      @apply self-start;
-    }
   }
   .progress-bar {
     @apply h-[12px] bg-white/10 rounded-[6px] overflow-hidden mb-6;
@@ -488,9 +467,6 @@ onMounted(() => {
   }
   .progress-steps {
     @apply grid grid-cols-2 gap-4;
-    @media (max-width: 480px) {
-      @apply grid-cols-1;
-    }
   }
   .step-info {
     @apply flex flex-col gap-2;
@@ -562,12 +538,6 @@ onMounted(() => {
   @media (max-width: 768px) {
     @apply grid-cols-2;
   }
-  @media (max-width: 480px) {
-    @apply grid-cols-3 gap-3;
-  }
-  @media (max-width: 480px) {
-    @apply grid-cols-1;
-  }
 }
 
 .stat-card {
@@ -588,9 +558,6 @@ onMounted(() => {
   @media (max-width: 768px) {
     @apply p-4 mt-6 mb-6;
   }
-  @media (max-width: 480px) {
-    @apply p-3 mt-4 mb-4;
-  }
 }
 
 .rank-reference-section {
@@ -603,9 +570,6 @@ onMounted(() => {
   @apply flex gap-8 justify-center;
   @media (max-width: 768px) {
     @apply gap-4;
-  }
-  @media (max-width: 480px) {
-    @apply flex-col gap-4;
   }
 }
 
@@ -633,12 +597,6 @@ onMounted(() => {
     th,
     td {
       @apply px-3 py-2 text-[0.9rem];
-    }
-  }
-  @media (max-width: 480px) {
-    th,
-    td {
-      @apply px-2 py-[0.4rem] text-[0.85rem];
     }
   }
 }

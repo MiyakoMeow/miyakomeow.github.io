@@ -30,10 +30,23 @@ import ProfileCard from "../components/ProfileCard.vue";
 
 .sidebar {
   @apply flex justify-center w-full;
+  @media (min-width: 769px) {
+    @apply mt-8;
+  }
 }
 
 .profile-card {
   @apply max-w-[360px] w-full animate-[fadeIn_0.8s_ease-out] m-0 mx-auto block;
+}
+
+.content {
+  @apply w-full;
+  @media (max-width: 768px) {
+    @apply flex justify-center;
+    :deep(.glass-container) {
+      @apply max-w-[360px] w-full;
+    }
+  }
 }
 
 @keyframes fadeIn {
