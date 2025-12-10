@@ -2,7 +2,7 @@
   <div v-if="shouldShow && levelRefData.length > 0" class="rank-reference-section">
     <h3>难度对照表</h3>
     <div class="rank-reference-tables">
-      <!-- 左边：负数部分 -->
+      <!-- 左边表格 -->
       <div class="rank-reference-left">
         <table>
           <thead>
@@ -12,7 +12,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in negativeLevels" :key="item.level">
+            <tr v-for="item in leftTableData" :key="item.level">
               <td>{{ item.level }}</td>
               <td>{{ item.ref }}</td>
             </tr>
@@ -20,7 +20,7 @@
         </table>
       </div>
 
-      <!-- 右边：0及以上部分 -->
+      <!-- 右边表格 -->
       <div class="rank-reference-right">
         <table>
           <thead>
@@ -30,7 +30,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in nonNegativeLevels" :key="item.level">
+            <tr v-for="item in rightTableData" :key="item.level">
               <td>{{ item.level }}</td>
               <td>{{ item.ref }}</td>
             </tr>
@@ -62,22 +62,18 @@ const shouldShow = ref(false);
 const loading = ref(false);
 const error = ref<string | null>(null);
 
-// 计算负数等级
-const negativeLevels = computed(() => {
-  return levelRefData.value.filter((item) => {
-    const level = item.level;
-    // 检查是否为负数（以"-"开头且不是"0"）
-    return level.startsWith("-") && level !== "0";
-  });
+// 计算左边表格数据（前半部分）
+const leftTableData = computed(() => {
+  const data = levelRefData.value;
+  const midIndex = Math.ceil(data.length / 2);
+  return data.slice(0, midIndex);
 });
 
-// 计算非负数等级
-const nonNegativeLevels = computed(() => {
-  return levelRefData.value.filter((item) => {
-    const level = item.level;
-    // 检查是否为非负数（不以"-"开头或者是"0"）
-    return !level.startsWith("-") || level === "0";
-  });
+// 计算右边表格数据（后半部分）
+const rightTableData = computed(() => {
+  const data = levelRefData.value;
+  const midIndex = Math.ceil(data.length / 2);
+  return data.slice(midIndex);
 });
 
 // 构建 level-ref.json 的 URL
