@@ -209,9 +209,32 @@ onMounted(() => {
         >），然后在BeMusicSeeker或beatoraja中，粘贴至对应选项处。
         <span v-if="copied" class="copy-feedback">已复制</span>
       </div>
-      <div v-if="originUrl" class="page-subtitle origin-subtitle">
-        <a class="copy-action" :href="originUrl" target="_blank" rel="noopener noreferrer"
+      <div class="page-subtitle origin-subtitle">
+        <a
+          v-if="originUrl"
+          class="copy-action"
+          :href="originUrl"
+          target="_blank"
+          rel="noopener noreferrer"
           >原链接</a
+        >
+        <span v-if="originUrl && props.header" class="mx-2"> | </span>
+        <a
+          v-if="props.header"
+          class="copy-action"
+          :href="props.header"
+          target="_blank"
+          rel="noopener noreferrer"
+          >查看header.json</a
+        >
+        <span v-if="headerData?.data_url" class="mx-2"> | </span>
+        <a
+          v-if="headerData?.data_url"
+          class="copy-action"
+          :href="headerData.data_url"
+          target="_blank"
+          rel="noopener noreferrer"
+          >查看data.json</a
         >
       </div>
     </div>
