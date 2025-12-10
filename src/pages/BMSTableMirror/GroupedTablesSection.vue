@@ -48,6 +48,72 @@ function scrollToTag2(tag1: string, tag2: string): void {
 }
 
 const selectedMap = ref<Record<string, boolean>>({});
+const emit = defineEmits<{ (e: "update:selectedMap", value: Record<string, boolean>): void }>();
+function emitSelected(): void {
+  emit("update:selectedMap", selectedMap.value);
+}
+
+function getTag1Urls(g: Tag1Group): string[] {
+  const urls: string[] = [];
+  for (const sg of g.subgroups) {
+    for (const item of sg.items) {
+      urls.push(item.url);
+    }
+  }
+  return urls;
+}
+
+function getTag2Urls(sg: Tag2Group): string[] {
+  return sg.items.map((item) => item.url);
+}
+enum CheckboxState {
+  Unchecked,
+  Indeterminate,
+  Checked,
+}
+
+function aggregateCheckboxState(urls: string[]): CheckboxState {
+  if (urls.length === 0) return CheckboxState.Unchecked;
+  let selected = 0;
+  for (const u of urls) if (selectedMap.value[u]) selected++;
+  if (selected === 0) return CheckboxState.Unchecked;
+  if (selected === urls.length) return CheckboxState.Checked;
+  return CheckboxState.Indeterminate;
+}
+
+function tag1State(g: Tag1Group): CheckboxState {
+  return aggregateCheckboxState(getTag1Urls(g));
+}
+
+function tag2State(sg: Tag2Group): CheckboxState {
+  return aggregateCheckboxState(getTag2Urls(sg));
+}
+
+function onTag1Change(checked: boolean, g: Tag1Group): void {
+  for (const url of getTag1Urls(g)) {
+    selectedMap.value[url] = checked;
+  }
+  emitSelected();
+}
+
+function onTag2Change(checked: boolean, sg: Tag2Group): void {
+  for (const url of getTag2Urls(sg)) {
+    selectedMap.value[url] = checked;
+  }
+  emitSelected();
+}
+function onRowChange(checked: boolean, url: string): void {
+  selectedMap.value[url] = checked;
+  emitSelected();
+}
+const vIndeterminate = {
+  mounted(el: HTMLElement, binding: { value: boolean }): void {
+    (el as HTMLInputElement).indeterminate = !!binding.value;
+  },
+  updated(el: HTMLElement, binding: { value: boolean }): void {
+    (el as HTMLInputElement).indeterminate = !!binding.value;
+  },
+};
 </script>
 
 <template>
@@ -80,6 +146,13 @@ const selectedMap = ref<Record<string, boolean>>({});
       >
         <div class="tag1-group-header">
           <div class="tag1-group-title">
+            <input
+              type="checkbox"
+              class="select-checkbox"
+              v-indeterminate="tag1State(g) === CheckboxState.Indeterminate"
+              :checked="tag1State(g) === CheckboxState.Checked"
+              @change="onTag1Change(($event.target as HTMLInputElement).checked, g)"
+            />
             <span class="tag1-badge">分类 {{ g.tag1 }}</span>
           </div>
         </div>
@@ -90,7 +163,16 @@ const selectedMap = ref<Record<string, boolean>>({});
           :id="`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`"
           class="tag2-section"
         >
-          <h3 class="tag2-title">{{ sg.tag2 }}</h3>
+          <h3 class="tag2-title">
+            <input
+              type="checkbox"
+              class="select-checkbox"
+              v-indeterminate="tag2State(sg) === CheckboxState.Indeterminate"
+              :checked="tag2State(sg) === CheckboxState.Checked"
+              @change="onTag2Change(($event.target as HTMLInputElement).checked, sg)"
+            />
+            {{ sg.tag2 }}
+          </h3>
           <div class="table-wrapper" :ref="setRef">
             <table class="tables-table">
               <colgroup>
@@ -115,7 +197,8 @@ const selectedMap = ref<Record<string, boolean>>({});
                     <input
                       type="checkbox"
                       class="select-checkbox"
-                      v-model="selectedMap[item.url]"
+                      :checked="!!selectedMap[item.url]"
+                      @change="onRowChange(($event.target as HTMLInputElement).checked, item.url)"
                     />
                   </td>
                   <td>
@@ -226,7 +309,7 @@ const selectedMap = ref<Record<string, boolean>>({});
 }
 
 .tag2-title {
-  @apply text-white mt-2 mb-2 text-[1.1rem];
+  @apply text-white mt-2 mb-2 text-[1.1rem] flex items-center gap-2;
 }
 
 .table-wrapper {
@@ -321,5 +404,11 @@ const selectedMap = ref<Record<string, boolean>>({});
     height: 22px;
     transform: scale(1.2);
   }
+}
+
+.select-checkbox {
+  width: 22px;
+  height: 22px;
+  transform: scale(1.2);
 }
 </style>
