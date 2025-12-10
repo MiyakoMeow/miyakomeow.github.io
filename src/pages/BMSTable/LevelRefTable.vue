@@ -79,34 +79,14 @@ const rightTableData = computed(() => {
 // 构建 level-ref.json 的 URL
 const buildLevelRefUrl = (headerUrl: string): string => {
   try {
-    // 如果 headerUrl 是绝对路径，直接使用
-    if (
-      headerUrl.startsWith("http://") ||
-      headerUrl.startsWith("https://") ||
-      headerUrl.startsWith("/")
-    ) {
-      const url = new URL(headerUrl, window.location.href);
-      const pathParts = url.pathname.split("/");
-      // 移除文件名（header.json）
-      pathParts.pop();
-      // 添加 level-ref.json
-      pathParts.push("level-ref.json");
-      url.pathname = pathParts.join("/");
-      return url.toString();
-    }
+    // 使用 URL 构造函数处理相对/绝对路径
+    const baseUrl = new URL(headerUrl, window.location.href);
 
-    // 如果是相对路径，基于当前页面构建
-    const baseUrl = new URL(window.location.href);
+    // 替换文件名从 header.json 到 level-ref.json
     const pathParts = baseUrl.pathname.split("/");
-    // 移除当前页面的路径部分
-    pathParts.pop();
-    // 添加 headerUrl 的目录部分
-    const headerParts = headerUrl.split("/");
-    headerParts.pop(); // 移除 header.json
-    pathParts.push(...headerParts);
-    // 添加 level-ref.json
-    pathParts.push("level-ref.json");
+    pathParts[pathParts.length - 1] = "level-ref.json";
     baseUrl.pathname = pathParts.join("/");
+
     return baseUrl.toString();
   } catch (err) {
     console.error("构建 level-ref.json URL 失败:", err);
