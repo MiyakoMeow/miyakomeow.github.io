@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import "./QuickActions.pcss";
+
 function scrollToTop(): void {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -22,21 +24,3 @@ function goHome(): void {
     </button>
   </div>
 </template>
-
-<style lang="postcss" scoped>
-@reference "tailwindcss";
-
-.floating-actions {
-  @apply fixed right-4 bottom-4 z-[1000] flex flex-col gap-3;
-}
-
-.fab {
-  @apply flex size-24 items-center justify-center rounded-full border border-white/25 bg-white/15 text-white shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[8px] transition-all;
-  &:hover {
-    @apply bg-white/25;
-  }
-  .icon {
-    @apply size-[60px];
-  }
-}
-</style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
+import "./StarryBackground.pcss";
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 let animationId: number | null = null;
@@ -114,11 +115,3 @@ onMounted(() => {
 <template>
   <canvas ref="canvasRef" class="starry-background"></canvas>
 </template>
-
-<style lang="postcss" scoped>
-@reference "tailwindcss";
-
-.starry-background {
-  @apply fixed top-0 left-0 w-full h-full z-[-1] pointer-events-none;
-}
-</style>
