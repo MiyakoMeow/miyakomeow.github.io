@@ -9,8 +9,8 @@
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
     "type-check:watch": "vue-tsc --noEmit --watch",
-    "lint": "eslint . --ext .js,.ts,.vue,.css,.pcss",
-    "lint:fix": "eslint . --ext .js,.ts,.vue,.css,.pcss --fix",
+    "lint": "eslint . --ext .js,.ts,.tsx,.vue,.css,.pcss",
+    "lint:fix": "eslint . --ext .js,.ts,.tsx,.vue,.css,.pcss --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check"
   },
@@ -24,6 +24,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.2",
+    "@vitejs/plugin-vue-jsx": "^5.1.2",
     "@vue/eslint-config-typescript": "^14.6.0",
     "autoprefixer": "^10.4.22",
     "eslint": "^9.39.1",

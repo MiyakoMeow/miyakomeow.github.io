@@ -1,0 +1,185 @@
+@reference "tailwindcss";
+
+.bms-table-container {
+  @apply max-w-[1500px] my-8 mx-auto p-8 bg-white/5 backdrop-blur-[10px] rounded-[20px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)];
+  @media (max-width: 768px) {
+    @apply p-4 m-4 max-w-[calc(100%_-_2rem)];
+  }
+}
+
+.page-header {
+  @apply mb-8 text-center;
+  @media (max-width: 768px) {
+    @apply mb-6;
+  }
+}
+
+.page-title {
+  @apply text-white text-[2.5rem] font-bold mb-2 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] bg-clip-text text-transparent;
+  -background-clip: text;
+  -text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  @media (max-width: 768px) {
+    @apply text-[2rem] mb-2;
+  }
+}
+
+.page-subtitle {
+  @apply text-white/70 text-[1.2rem] italic;
+  @media (max-width: 768px) {
+    @apply text-[1.1rem];
+  }
+}
+
+.usage-subtitle {
+  @apply mt-2;
+}
+
+.origin-subtitle {
+  @apply mt-2;
+}
+
+.copy-action {
+  @apply text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium;
+}
+
+.copy-action {
+  &:hover {
+    @apply text-[#42a5f5];
+  }
+}
+
+.copy-feedback {
+  @apply ml-2 text-[#4caf50];
+}
+
+.bms-table-content {
+  @apply text-white/90 text-[1.1rem] leading-[1.6] w-full;
+}
+
+/* 加载状态样式 */
+.loading-section {
+  @apply p-8;
+  .progress-container {
+    @apply bg-black/20 rounded-[15px] p-8 border border-white/10;
+  }
+  .progress-header {
+    @apply flex justify-between items-center mb-6;
+    h3 {
+      @apply text-white m-0 text-[1.5rem];
+    }
+  }
+  .progress-percentage {
+    @apply bg-[#64b5f6]/20 text-[#64b5f6] px-4 py-2 rounded-[20px] font-bold text-[1.2rem];
+  }
+  .progress-bar {
+    @apply h-[12px] bg-white/10 rounded-[6px] overflow-hidden mb-6;
+  }
+  .progress-fill {
+    @apply h-full bg-[linear-gradient(90deg,#4caf50,#64b5f6)] rounded-[6px];
+    transition: width 0.3s ease;
+  }
+  .progress-steps {
+    @apply grid grid-cols-2 gap-4;
+  }
+  .step-info {
+    @apply flex flex-col gap-2;
+  }
+  .step-label {
+    @apply text-white/60 text-[0.9rem];
+  }
+  .step-text {
+    @apply text-white font-medium;
+  }
+}
+
+/* 错误状态样式 */
+.error-section {
+  @apply text-center p-12;
+  .error-icon {
+    @apply text-[4rem] mb-4;
+  }
+  h3 {
+    @apply text-[#ff6b6b] mb-4;
+  }
+  .error-message {
+    @apply bg-[rgba(255,107,107,0.1)] p-4 rounded-[10px] my-6 border-l-[4px] border-[#ff6b6b];
+  }
+  .retry-button {
+    @apply bg-[#64b5f6] text-white border-none px-8 py-3 rounded-[25px] text-[1rem] font-semibold cursor-pointer mt-4;
+    transition: background 0.3s ease;
+    &:hover {
+      @apply bg-[#42a5f5];
+    }
+  }
+}
+
+/* 数据展示样式 */
+.data-section {
+  @apply py-4;
+}
+
+.table-header {
+  @apply grid grid-cols-2 gap-8 mb-8 p-6 bg-black/20 rounded-[15px];
+  @media (max-width: 768px) {
+    @apply flex flex-col gap-6;
+  }
+}
+
+.header-info {
+  h2 {
+    @apply text-white mt-0 mb-4;
+  }
+}
+
+.header-details {
+  p {
+    @apply my-2 text-white/80;
+  }
+  strong {
+    @apply text-[#64b5f6];
+  }
+}
+
+.stats-summary {
+  h3 {
+    @apply text-white mt-0 mb-4;
+  }
+}
+
+.stats-grid {
+  @apply grid grid-cols-3 gap-4;
+  @media (max-width: 768px) {
+    @apply grid-cols-2;
+  }
+}
+
+.stat-card {
+  @apply bg-white/5 rounded-[10px] p-4 text-center border border-white/10;
+}
+
+.stat-value {
+  @apply text-[2rem] font-bold text-[#64b5f6] mb-2;
+}
+
+.stat-label {
+  @apply text-white/70 text-[0.9rem];
+}
+
+/* 空状态样式 */
+.empty-state {
+  @apply text-center p-12;
+}
+
+.empty-state {
+  h3 {
+    @apply text-white mb-4;
+  }
+  p {
+    @apply text-white/70;
+  }
+}
+
+.empty-icon {
+  @apply text-[4rem] mb-4;
+}

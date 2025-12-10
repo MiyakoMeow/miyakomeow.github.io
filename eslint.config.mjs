@@ -30,7 +30,7 @@ export default defineConfigWithVueTs(
     },
   },
   {
-    files: ["**/*.{vue,ts,js}"],
+    files: ["**/*.{vue,ts,tsx,js}"],
     plugins: {
       "better-tailwindcss": pluginBetterTailwind,
     },
