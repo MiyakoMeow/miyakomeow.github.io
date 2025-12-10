@@ -80,9 +80,7 @@ const urlToOrigin = computed<Map<string, string>>(() => {
 });
 
 const selectedOriginArray = computed<string[]>(() =>
-  selectedMirrorArray.value
-    .map((u) => urlToOrigin.value.get(u) || "")
-    .filter((v) => v.length > 0)
+  selectedMirrorArray.value.map((u) => urlToOrigin.value.get(u) || "").filter((v) => v.length > 0)
 );
 
 const tooltipMirror = computed(() => JSON.stringify(selectedMirrorArray.value, null, 2));
@@ -207,7 +205,10 @@ onMounted(() => {
       <div v-if="loading" class="loading-section">正在加载镜像列表...</div>
       <div v-else-if="error" class="error-section">加载失败：{{ error }}</div>
       <div v-else>
-        <GroupedTablesSection :groups="groupedByTags" @update:selectedMap="selectedMap = { ...$event }" />
+        <GroupedTablesSection
+          :groups="groupedByTags"
+          @update:selectedMap="selectedMap = { ...$event }"
+        />
       </div>
     </section>
   </BlogLayout>
@@ -220,13 +221,17 @@ onMounted(() => {
           type="button"
           :title="tooltipMirror"
           @click="copySelected(JSON.stringify(selectedMirrorArray, null, 2))"
-        >复制镜像链接</button>
+        >
+          复制镜像链接
+        </button>
         <button
           class="copy-button origin-copy"
           type="button"
           :title="tooltipOrigin"
           @click="copySelected(JSON.stringify(selectedOriginArray, null, 2))"
-        >复制原链接</button>
+        >
+          复制原链接
+        </button>
       </div>
     </div>
   </div>
