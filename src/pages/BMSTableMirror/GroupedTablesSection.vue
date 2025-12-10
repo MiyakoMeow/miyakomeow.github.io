@@ -48,6 +48,42 @@ function scrollToTag2(tag1: string, tag2: string): void {
 }
 
 const selectedMap = ref<Record<string, boolean>>({});
+
+function getTag1Urls(g: Tag1Group): string[] {
+  const urls: string[] = [];
+  for (const sg of g.subgroups) {
+    for (const item of sg.items) {
+      urls.push(item.url);
+    }
+  }
+  return urls;
+}
+
+function getTag2Urls(sg: Tag2Group): string[] {
+  return sg.items.map((item) => item.url);
+}
+
+function isTag1FullySelected(g: Tag1Group): boolean {
+  const urls = getTag1Urls(g);
+  return urls.length > 0 && urls.every((u) => !!selectedMap.value[u]);
+}
+
+function isTag2FullySelected(sg: Tag2Group): boolean {
+  const urls = getTag2Urls(sg);
+  return urls.length > 0 && urls.every((u) => !!selectedMap.value[u]);
+}
+
+function onTag1Change(checked: boolean, g: Tag1Group): void {
+  for (const url of getTag1Urls(g)) {
+    selectedMap.value[url] = checked;
+  }
+}
+
+function onTag2Change(checked: boolean, sg: Tag2Group): void {
+  for (const url of getTag2Urls(sg)) {
+    selectedMap.value[url] = checked;
+  }
+}
 </script>
 
 <template>
@@ -80,6 +116,12 @@ const selectedMap = ref<Record<string, boolean>>({});
       >
         <div class="tag1-group-header">
           <div class="tag1-group-title">
+            <input
+              type="checkbox"
+              class="select-checkbox"
+              :checked="isTag1FullySelected(g)"
+              @change="onTag1Change(($event.target as HTMLInputElement).checked, g)"
+            />
             <span class="tag1-badge">分类 {{ g.tag1 }}</span>
           </div>
         </div>
@@ -90,7 +132,15 @@ const selectedMap = ref<Record<string, boolean>>({});
           :id="`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`"
           class="tag2-section"
         >
-          <h3 class="tag2-title">{{ sg.tag2 }}</h3>
+          <h3 class="tag2-title">
+            <input
+              type="checkbox"
+              class="select-checkbox"
+              :checked="isTag2FullySelected(sg)"
+              @change="onTag2Change(($event.target as HTMLInputElement).checked, sg)"
+            />
+            {{ sg.tag2 }}
+          </h3>
           <div class="table-wrapper" :ref="setRef">
             <table class="tables-table">
               <colgroup>
@@ -226,7 +276,7 @@ const selectedMap = ref<Record<string, boolean>>({});
 }
 
 .tag2-title {
-  @apply text-white mt-2 mb-2 text-[1.1rem];
+  @apply text-white mt-2 mb-2 text-[1.1rem] flex items-center gap-2;
 }
 
 .table-wrapper {
@@ -321,5 +371,11 @@ const selectedMap = ref<Record<string, boolean>>({});
     height: 22px;
     transform: scale(1.2);
   }
+}
+
+.select-checkbox {
+  width: 22px;
+  height: 22px;
+  transform: scale(1.2);
 }
 </style>
