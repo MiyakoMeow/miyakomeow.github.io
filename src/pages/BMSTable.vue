@@ -321,11 +321,7 @@ onMounted(() => {
         </div>
 
         <!-- 难度对照表 -->
-        <LevelRefTable
-          :should-show="
-            !!(headerData && headerData.name && headerData.name.startsWith('MiyakoMeow'))
-          "
-        />
+        <LevelRefTable :header-url="props.header" />
 
         <!-- 按难度分组的谱面表格 -->
         <ChartsTableSection

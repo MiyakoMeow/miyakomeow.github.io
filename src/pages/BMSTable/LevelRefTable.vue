@@ -1,5 +1,5 @@
 <template>
-  <div v-if="shouldShow" class="rank-reference-section">
+  <div v-if="shouldShow && levelRefData.length > 0" class="rank-reference-section">
     <h3>难度对照表</h3>
     <div class="rank-reference-tables">
       <!-- 左边：负数部分 -->
@@ -12,21 +12,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>-5</td>
-              <td>☆1-☆2</td>
-            </tr>
-            <tr>
-              <td>-4</td>
-              <td>☆3-☆4</td>
-            </tr>
-            <tr>
-              <td>-3</td>
-              <td>☆5-☆6</td>
-            </tr>
-            <tr>
-              <td>-2</td>
-              <td>☆7-☆8</td>
+            <tr v-for="item in negativeLevels" :key="item.level">
+              <td>{{ item.level }}</td>
+              <td>{{ item.ref }}</td>
             </tr>
           </tbody>
         </table>
@@ -42,21 +30,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>-1</td>
-              <td>☆9-☆10</td>
-            </tr>
-            <tr>
-              <td>0</td>
-              <td>☆11-☆12（sl0）</td>
-            </tr>
-            <tr>
-              <td>1-12</td>
-              <td>sl1-12 + st0下</td>
-            </tr>
-            <tr>
-              <td>13-24</td>
-              <td>st0上 + st1-12</td>
+            <tr v-for="item in nonNegativeLevels" :key="item.level">
+              <td>{{ item.level }}</td>
+              <td>{{ item.ref }}</td>
             </tr>
           </tbody>
         </table>
@@ -66,11 +42,142 @@
 </template>
 
 <script setup lang="ts">
-interface Props {
-  shouldShow?: boolean;
+import { ref, computed, onMounted, watch } from "vue";
+
+interface LevelRefItem {
+  level: string;
+  ref: string;
 }
 
-defineProps<Props>();
+interface Props {
+  headerUrl?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  headerUrl: "",
+});
+
+const levelRefData = ref<LevelRefItem[]>([]);
+const shouldShow = ref(false);
+const loading = ref(false);
+const error = ref<string | null>(null);
+
+// 计算负数等级
+const negativeLevels = computed(() => {
+  return levelRefData.value.filter((item) => {
+    const level = item.level;
+    // 检查是否为负数（以"-"开头且不是"0"）
+    return level.startsWith("-") && level !== "0";
+  });
+});
+
+// 计算非负数等级
+const nonNegativeLevels = computed(() => {
+  return levelRefData.value.filter((item) => {
+    const level = item.level;
+    // 检查是否为非负数（不以"-"开头或者是"0"）
+    return !level.startsWith("-") || level === "0";
+  });
+});
+
+// 构建 level-ref.json 的 URL
+const buildLevelRefUrl = (headerUrl: string): string => {
+  try {
+    // 如果 headerUrl 是绝对路径，直接使用
+    if (
+      headerUrl.startsWith("http://") ||
+      headerUrl.startsWith("https://") ||
+      headerUrl.startsWith("/")
+    ) {
+      const url = new URL(headerUrl, window.location.href);
+      const pathParts = url.pathname.split("/");
+      // 移除文件名（header.json）
+      pathParts.pop();
+      // 添加 level-ref.json
+      pathParts.push("level-ref.json");
+      url.pathname = pathParts.join("/");
+      return url.toString();
+    }
+
+    // 如果是相对路径，基于当前页面构建
+    const baseUrl = new URL(window.location.href);
+    const pathParts = baseUrl.pathname.split("/");
+    // 移除当前页面的路径部分
+    pathParts.pop();
+    // 添加 headerUrl 的目录部分
+    const headerParts = headerUrl.split("/");
+    headerParts.pop(); // 移除 header.json
+    pathParts.push(...headerParts);
+    // 添加 level-ref.json
+    pathParts.push("level-ref.json");
+    baseUrl.pathname = pathParts.join("/");
+    return baseUrl.toString();
+  } catch (err) {
+    console.error("构建 level-ref.json URL 失败:", err);
+    return "";
+  }
+};
+
+// 加载 level-ref.json 数据
+const loadLevelRefData = async () => {
+  if (!props.headerUrl) {
+    shouldShow.value = false;
+    return;
+  }
+
+  loading.value = true;
+  error.value = null;
+
+  try {
+    const levelRefUrl = buildLevelRefUrl(props.headerUrl);
+    if (!levelRefUrl) {
+      shouldShow.value = false;
+      return;
+    }
+
+    const response = await fetch(levelRefUrl);
+
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        levelRefData.value = data;
+        shouldShow.value = true;
+      } else {
+        console.warn("level-ref.json 格式不正确，应为数组");
+        shouldShow.value = false;
+      }
+    } else if (response.status === 404) {
+      // 文件不存在，不显示该组件
+      shouldShow.value = false;
+    } else {
+      throw new Error(`加载失败: ${response.status} ${response.statusText}`);
+    }
+  } catch (err) {
+    console.error("加载难度对照表数据失败:", err);
+    error.value = err instanceof Error ? err.message : "未知错误";
+    shouldShow.value = false;
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 监听 headerUrl 变化
+watch(
+  () => props.headerUrl,
+  (newUrl) => {
+    if (newUrl) {
+      loadLevelRefData();
+    }
+  },
+  { immediate: true }
+);
+
+// 初始加载
+onMounted(() => {
+  if (props.headerUrl) {
+    loadLevelRefData();
+  }
+});
 </script>
 
 <style lang="postcss" scoped>
