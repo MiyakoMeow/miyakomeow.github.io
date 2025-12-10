@@ -23,7 +23,6 @@ interface LoadingState {
 interface TableStats {
   totalCharts: number;
   difficulties: string[];
-  averageLevel: string | number;
 }
 
 const props = defineProps<{ header: string; origin_url?: string }>();
@@ -133,37 +132,29 @@ async function lazyLoadTableData(): Promise<void> {
   }
 }
 
-// 计算难度表统计数据
+// 计算难度表统计数据（基于已分组的谱面数据）
 const tableStats = computed<TableStats>(() => {
-  if (!tableData.value || !Array.isArray(tableData.value)) {
+  const groups = groupedCharts.value;
+  if (!groups || groups.length === 0) {
     return {
       totalCharts: 0,
       difficulties: [],
-      averageLevel: 0,
     };
   }
 
-  const charts = tableData.value;
-  const difficulties = new Set<string>();
-  let totalLevel = 0;
-  let validLevelCount = 0;
-
-  charts.forEach((chart) => {
-    if (chart.level) {
-      difficulties.add(chart.level);
-      // 尝试解析等级为数字
-      const levelNum = parseFloat(chart.level);
-      if (!isNaN(levelNum)) {
-        totalLevel += levelNum;
-        validLevelCount++;
-      }
-    }
-  });
+  // 使用reduce方法简化计算
+  const { totalCharts, difficulties } = groups.reduce(
+    (acc, group) => {
+      acc.difficulties.add(group.level);
+      acc.totalCharts += group.charts.length;
+      return acc;
+    },
+    { totalCharts: 0, difficulties: new Set<string>() }
+  );
 
   return {
-    totalCharts: charts.length,
+    totalCharts,
     difficulties: Array.from(difficulties),
-    averageLevel: validLevelCount > 0 ? (totalLevel / validLevelCount).toFixed(2) : "N/A",
   };
 });
 
@@ -263,10 +254,6 @@ onMounted(() => {
                 <strong>难度表符号:</strong>
                 {{ headerData.symbol || "未定义" }}
               </p>
-              <p v-if="headerData && headerData.level_order">
-                <strong>难度顺序:</strong>
-                {{ (headerData.level_order as string[])?.join(", ") || "N/A" }}
-              </p>
             </div>
           </div>
 
@@ -284,12 +271,6 @@ onMounted(() => {
                   {{ tableStats.difficulties.length }}
                 </div>
                 <div class="stat-label">难度等级数</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-value">
-                  {{ tableStats.averageLevel }}
-                </div>
-                <div class="stat-label">平均难度</div>
               </div>
             </div>
           </div>
