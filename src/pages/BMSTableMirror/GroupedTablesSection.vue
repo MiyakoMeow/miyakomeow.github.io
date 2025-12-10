@@ -62,15 +62,27 @@ function getTag1Urls(g: Tag1Group): string[] {
 function getTag2Urls(sg: Tag2Group): string[] {
   return sg.items.map((item) => item.url);
 }
-
-function isTag1FullySelected(g: Tag1Group): boolean {
-  const urls = getTag1Urls(g);
-  return urls.length > 0 && urls.every((u) => !!selectedMap.value[u]);
+enum CheckboxState {
+  Unchecked,
+  Indeterminate,
+  Checked,
 }
 
-function isTag2FullySelected(sg: Tag2Group): boolean {
-  const urls = getTag2Urls(sg);
-  return urls.length > 0 && urls.every((u) => !!selectedMap.value[u]);
+function aggregateCheckboxState(urls: string[]): CheckboxState {
+  if (urls.length === 0) return CheckboxState.Unchecked;
+  let selected = 0;
+  for (const u of urls) if (selectedMap.value[u]) selected++;
+  if (selected === 0) return CheckboxState.Unchecked;
+  if (selected === urls.length) return CheckboxState.Checked;
+  return CheckboxState.Indeterminate;
+}
+
+function tag1State(g: Tag1Group): CheckboxState {
+  return aggregateCheckboxState(getTag1Urls(g));
+}
+
+function tag2State(sg: Tag2Group): CheckboxState {
+  return aggregateCheckboxState(getTag2Urls(sg));
 }
 
 function onTag1Change(checked: boolean, g: Tag1Group): void {
@@ -84,6 +96,14 @@ function onTag2Change(checked: boolean, sg: Tag2Group): void {
     selectedMap.value[url] = checked;
   }
 }
+const vIndeterminate = {
+  mounted(el: HTMLElement, binding: { value: boolean }): void {
+    (el as HTMLInputElement).indeterminate = !!binding.value;
+  },
+  updated(el: HTMLElement, binding: { value: boolean }): void {
+    (el as HTMLInputElement).indeterminate = !!binding.value;
+  },
+};
 </script>
 
 <template>
@@ -119,7 +139,8 @@ function onTag2Change(checked: boolean, sg: Tag2Group): void {
             <input
               type="checkbox"
               class="select-checkbox"
-              :checked="isTag1FullySelected(g)"
+              v-indeterminate="tag1State(g) === CheckboxState.Indeterminate"
+              :checked="tag1State(g) === CheckboxState.Checked"
               @change="onTag1Change(($event.target as HTMLInputElement).checked, g)"
             />
             <span class="tag1-badge">分类 {{ g.tag1 }}</span>
@@ -136,7 +157,8 @@ function onTag2Change(checked: boolean, sg: Tag2Group): void {
             <input
               type="checkbox"
               class="select-checkbox"
-              :checked="isTag2FullySelected(sg)"
+              v-indeterminate="tag2State(sg) === CheckboxState.Indeterminate"
+              :checked="tag2State(sg) === CheckboxState.Checked"
               @change="onTag2Change(($event.target as HTMLInputElement).checked, sg)"
             />
             {{ sg.tag2 }}
