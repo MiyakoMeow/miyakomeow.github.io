@@ -102,8 +102,8 @@ const selectedOriginArray = computed<string[]>(() =>
     .filter((v) => v.length > 0)
 );
 
-const tooltipMirror = computed(() => JSON.stringify(selectedMirrorArray.value));
-const tooltipOrigin = computed(() => JSON.stringify(selectedOriginArray.value));
+const tooltipMirror = computed(() => JSON.stringify(selectedMirrorArray.value, null, 2));
+const tooltipOrigin = computed(() => JSON.stringify(selectedOriginArray.value, null, 2));
 
 async function copySelected(data: string): Promise<void> {
   try {
@@ -124,11 +124,11 @@ async function copySelected(data: string): Promise<void> {
 }
 
 async function copySelectedMirror(): Promise<void> {
-  await copySelected(JSON.stringify(selectedMirrorArray.value));
+  await copySelected(JSON.stringify(selectedMirrorArray.value, null, 2));
 }
 
 async function copySelectedOrigin(): Promise<void> {
-  await copySelected(JSON.stringify(selectedOriginArray.value));
+  await copySelected(JSON.stringify(selectedOriginArray.value, null, 2));
 }
 
 const groupedByTags = computed<Tag1Group[]>(() => {
@@ -314,23 +314,23 @@ onMounted(() => {
 
 .selection-float {
   @apply fixed bottom-4 left-1/2 translate-x-[-50%] z-[999];
-}
-.selection-content {
-  @apply p-3 px-4 flex items-center gap-4 bg-white/10 border border-white/20 rounded-[12px] shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px];
-}
-.selection-summary {
-  @apply text-white font-semibold;
-}
-.selection-actions {
-  @apply flex gap-3;
-}
-.copy-button {
-  @apply px-[0.8rem] py-[0.5rem] border-none rounded-[8px] text-[0.9rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out text-white;
-}
-.mirror-copy {
-  @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)];
-}
-.origin-copy {
-  @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)];
+  .selection-content {
+    @apply p-3 px-4 flex items-center gap-4 bg-white/10 border border-white/20 rounded-[12px] shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px];
+    .selection-summary {
+      @apply text-white font-semibold;
+    }
+    .selection-actions {
+      @apply flex gap-3;
+      .copy-button {
+        @apply px-[0.8rem] py-[0.5rem] border-none rounded-[8px] text-[0.9rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out text-white;
+      }
+      .mirror-copy {
+        @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)];
+      }
+      .origin-copy {
+        @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)];
+      }
+    }
+  }
 }
 </style>
