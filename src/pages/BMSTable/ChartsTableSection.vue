@@ -297,19 +297,6 @@ function scrollToDifficultyGroup(level: string): void {
 
 .charts-table {
   @apply w-full border-collapse min-w-[900px] table-fixed;
-  @media (max-width: 480px) {
-    @apply min-w-[800px];
-    td:nth-child(6) {
-      @apply max-w-[120px] text-[0.8em];
-    }
-    th,
-    td {
-      @apply p-3;
-    }
-  }
-}
-
-.charts-table {
   th {
     @apply bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10;
   }
@@ -343,6 +330,9 @@ function scrollToDifficultyGroup(level: string): void {
   }
   @media (max-width: 480px) {
     @apply min-w-[600px];
+    td:nth-child(6) {
+      @apply max-w-[120px] text-[0.8em];
+    }
     th,
     td {
       @apply p-2;
@@ -353,18 +343,12 @@ function scrollToDifficultyGroup(level: string): void {
 .chart-title {
   @apply min-w-[200px];
   @media (max-width: 480px) {
-    @apply min-w-[150px];
-  }
-  @media (max-width: 480px) {
     @apply min-w-[120px];
   }
 }
 
 .comment-cell {
   @apply min-w-[150px] max-w-[300px];
-  @media (max-width: 480px) {
-    @apply min-w-[100px] max-w-[200px];
-  }
   @media (max-width: 480px) {
     @apply min-w-[80px] max-w-[150px] text-[0.85rem];
   }
@@ -376,9 +360,6 @@ function scrollToDifficultyGroup(level: string): void {
 
 .download-cell {
   @apply min-w-[130px] max-w-[180px];
-  @media (max-width: 480px) {
-    @apply min-w-[110px] max-w-[150px];
-  }
   @media (max-width: 480px) {
     @apply min-w-[90px] max-w-[120px];
   }
@@ -393,9 +374,6 @@ function scrollToDifficultyGroup(level: string): void {
 
 .download-button {
   @apply px-[0.5rem] py-[0.35rem] border-none rounded-[6px] text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center gap-[0.2rem] min-w-[60px] flex-1 no-underline text-inherit;
-  @media (max-width: 480px) {
-    @apply px-[0.4rem] py-[0.25rem] text-[0.75rem] min-w-[55px];
-  }
   @media (max-width: 480px) {
     @apply px-[0.3rem] py-[0.2rem] text-[0.7rem] min-w-[50px];
   }
@@ -434,9 +412,6 @@ function scrollToDifficultyGroup(level: string): void {
 .bms-links-cell {
   @apply min-w-[140px] max-w-[180px];
   @media (max-width: 480px) {
-    @apply min-w-[120px] max-w-[140px];
-  }
-  @media (max-width: 480px) {
     @apply min-w-[100px] max-w-[120px];
   }
 }
@@ -450,9 +425,6 @@ function scrollToDifficultyGroup(level: string): void {
 
 .bms-link-button {
   @apply w-[36px] h-[36px] border-none rounded-full text-[1.2rem] cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center p-0 overflow-hidden no-underline text-inherit;
-  @media (max-width: 480px) {
-    @apply w-[32px] h-[32px] text-[1rem];
-  }
   @media (max-width: 480px) {
     @apply w-[28px] h-[28px] text-[0.9rem];
   }

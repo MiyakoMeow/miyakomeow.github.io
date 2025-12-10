@@ -461,85 +461,66 @@ onMounted(() => {
 /* 加载状态样式 */
 .loading-section {
   @apply p-8;
-}
-
-.progress-container {
-  @apply bg-black/20 rounded-[15px] p-8 border border-white/10;
-}
-
-.progress-header {
-  @apply flex justify-between items-center mb-6;
-  @media (max-width: 480px) {
-    @apply flex-col items-start gap-2;
+  .progress-container {
+    @apply bg-black/20 rounded-[15px] p-8 border border-white/10;
   }
-}
-
-.progress-header {
-  h3 {
-    @apply text-white m-0 text-[1.5rem];
+  .progress-header {
+    @apply flex justify-between items-center mb-6;
+    @media (max-width: 480px) {
+      @apply flex-col items-start gap-2;
+    }
+    h3 {
+      @apply text-white m-0 text-[1.5rem];
+    }
   }
-}
-
-.progress-percentage {
-  @apply bg-[#64b5f6]/20 text-[#64b5f6] px-4 py-2 rounded-[20px] font-bold text-[1.2rem];
-  @media (max-width: 480px) {
-    @apply self-start;
+  .progress-percentage {
+    @apply bg-[#64b5f6]/20 text-[#64b5f6] px-4 py-2 rounded-[20px] font-bold text-[1.2rem];
+    @media (max-width: 480px) {
+      @apply self-start;
+    }
   }
-}
-
-.progress-bar {
-  @apply h-[12px] bg-white/10 rounded-[6px] overflow-hidden mb-6;
-}
-
-.progress-fill {
-  @apply h-full bg-[linear-gradient(90deg,#4caf50,#64b5f6)] rounded-[6px];
-  transition: width 0.3s ease;
-}
-
-.progress-steps {
-  @apply grid grid-cols-2 gap-4;
-  @media (max-width: 480px) {
-    @apply grid-cols-1;
+  .progress-bar {
+    @apply h-[12px] bg-white/10 rounded-[6px] overflow-hidden mb-6;
   }
-}
-
-.step-info {
-  @apply flex flex-col gap-2;
-}
-
-.step-label {
-  @apply text-white/60 text-[0.9rem];
-}
-
-.step-text {
-  @apply text-white font-medium;
+  .progress-fill {
+    @apply h-full bg-[linear-gradient(90deg,#4caf50,#64b5f6)] rounded-[6px];
+    transition: width 0.3s ease;
+  }
+  .progress-steps {
+    @apply grid grid-cols-2 gap-4;
+    @media (max-width: 480px) {
+      @apply grid-cols-1;
+    }
+  }
+  .step-info {
+    @apply flex flex-col gap-2;
+  }
+  .step-label {
+    @apply text-white/60 text-[0.9rem];
+  }
+  .step-text {
+    @apply text-white font-medium;
+  }
 }
 
 /* 错误状态样式 */
 .error-section {
   @apply text-center p-12;
-}
-
-.error-icon {
-  @apply text-[4rem] mb-4;
-}
-
-.error-section h3 {
-  @apply text-[#ff6b6b] mb-4;
-}
-
-.error-message {
-  @apply bg-[rgba(255,107,107,0.1)] p-4 rounded-[10px] my-6 border-l-[4px] border-[#ff6b6b];
-}
-
-.retry-button {
-  @apply bg-[#64b5f6] text-white border-none px-8 py-3 rounded-[25px] text-[1rem] font-semibold cursor-pointer mt-4;
-  transition: background 0.3s ease;
-}
-
-.retry-button {
-  &:hover {
-    @apply bg-[#42a5f5];
+  .error-icon {
+    @apply text-[4rem] mb-4;
+  }
+  h3 {
+    @apply text-[#ff6b6b] mb-4;
+  }
+  .error-message {
+    @apply bg-[rgba(255,107,107,0.1)] p-4 rounded-[10px] my-6 border-l-[4px] border-[#ff6b6b];
+  }
+  .retry-button {
+    @apply bg-[#64b5f6] text-white border-none px-8 py-3 rounded-[25px] text-[1rem] font-semibold cursor-pointer mt-4;
+    transition: background 0.3s ease;
+    &:hover {
+      @apply bg-[#42a5f5];
+    }
   }
 }
 
