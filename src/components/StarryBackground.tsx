@@ -1,5 +1,4 @@
 import { defineComponent, onMounted, onUnmounted, ref } from "vue";
-import "./StarryBackground.pcss";
 
 export default defineComponent({
   name: "StarryBackground",
@@ -113,6 +112,8 @@ export default defineComponent({
       });
     });
 
-    return () => <canvas ref={canvasRef} class="starry-background" />;
+    return () => (
+      <canvas ref={canvasRef} class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none" />
+    );
   },
 });

@@ -3,9 +3,7 @@ import StarryBackground from "../components/StarryBackground";
 import ChartsTableSection from "./BMSTable/ChartsTableSection";
 import LevelRefTable from "./BMSTable/LevelRefTable";
 import type { ChartData, DifficultyGroup } from "./BMSTable/ChartsTableSection";
-import "../styles/main.pcss";
 import QuickActions from "../components/QuickActions";
-import "./BMSTable.pcss";
 
 interface HeaderData {
   name?: string;
@@ -201,24 +199,40 @@ export default defineComponent({
     return () => (
       <>
         <StarryBackground />
-        <div class="bms-table-container">
-          <div class="page-header">
-            <h1 class="page-title">{pageTitle.value}</h1>
+        <div class="max-w-[1500px] my-8 mx-auto p-8 bg-white/5 backdrop-blur-[10px] rounded-[20px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]">
+          <div class="mb-8 text-center">
+            <h1
+              class="text-white text-[2.5rem] font-bold mb-2 bg-clip-text text-transparent"
+              style={{
+                background: "linear-gradient(135deg,#667eea_0%,#764ba2_100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              {pageTitle.value}
+            </h1>
             {headerData.value && headerData.value.symbol && (
-              <div class="page-subtitle">难度表符号: {headerData.value.symbol}</div>
+              <div class="text-white/70 text-[1.2rem] italic">
+                难度表符号: {headerData.value.symbol}
+              </div>
             )}
-            <div class="page-subtitle usage-subtitle">
+            <div class="text-white/70 text-[1.2rem] italic mt-2">
               使用方式：复制本网站链接（
-              <button class="copy-action" type="button" onClick={copySiteUrl}>
+              <button
+                class="text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium hover:text-[#42a5f5]"
+                type="button"
+                onClick={copySiteUrl}
+              >
                 点击复制
               </button>
               ），然后在BeMusicSeeker或beatoraja中，粘贴至对应选项处。
-              {copied.value && <span class="copy-feedback">已复制</span>}
+              {copied.value && <span class="ml-2 text-[#4caf50]">已复制</span>}
             </div>
-            <div class="page-subtitle origin-subtitle">
+            <div class="text-white/70 text-[1.2rem] italic mt-2">
               {originUrl.value && (
                 <a
-                  class="copy-action"
+                  class="text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium hover:text-[#42a5f5]"
                   href={originUrl.value}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -229,7 +243,7 @@ export default defineComponent({
               {originUrl.value && props.header && <span class="mx-2"> | </span>}
               {props.header && (
                 <a
-                  class="copy-action"
+                  class="text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium hover:text-[#42a5f5]"
                   href={props.header}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -242,7 +256,7 @@ export default defineComponent({
               )}
               {dataFetchUrl.value && (
                 <a
-                  class="copy-action"
+                  class="text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium hover:text-[#42a5f5]"
                   href={dataFetchUrl.value}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -252,72 +266,90 @@ export default defineComponent({
               )}
             </div>
           </div>
-          <div class="bms-table-content">
+          <div class="text-white/90 text-[1.1rem] leading-[1.6] w-full">
             {/* 加载状态 */}
             {loadingState.isLoading ? (
-              <div class="loading-section">
-                <div class="progress-container">
-                  <div class="progress-header">
-                    <h3>正在加载BMS难度表数据...</h3>
-                    <div class="progress-percentage">{Math.round(loadingState.progress)}%</div>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-fill" style={{ width: `${loadingState.progress}%` }} />
-                  </div>
-                  <div class="progress-steps">
-                    <div class="step-info">
-                      <span class="step-label">当前步骤:</span>
-                      <span class="step-text">{loadingState.currentStep}</span>
+              <div class="p-8">
+                <div class="bg-black/20 rounded-[15px] p-8 border border-white/10">
+                  <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-white m-0 text-[1.5rem]">正在加载BMS难度表数据...</h3>
+                    <div class="bg-[#64b5f6]/20 text-[#64b5f6] px-4 py-2 rounded-[20px] font-bold text-[1.2rem]">
+                      {Math.round(loadingState.progress)}%
                     </div>
-                    <div class="step-info">
-                      <span class="step-label">总步骤数:</span>
-                      <span class="step-text">{loadingState.totalSteps}</span>
+                  </div>
+                  <div class="h-[12px] bg-white/10 rounded-[6px] overflow-hidden mb-6">
+                    <div
+                      class="h-full rounded-[6px]"
+                      style={{
+                        width: `${loadingState.progress}%`,
+                        background: "linear-gradient(90deg,#4caf50,#64b5f6)",
+                        transition: "width 0.3s ease",
+                      }}
+                    />
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-2">
+                      <span class="text-white/60 text-[0.9rem]">当前步骤:</span>
+                      <span class="text-white font-medium">{loadingState.currentStep}</span>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                      <span class="text-white/60 text-[0.9rem]">总步骤数:</span>
+                      <span class="text-white font-medium">{loadingState.totalSteps}</span>
                     </div>
                   </div>
                 </div>
               </div>
             ) : error.value ? (
-              <div class="error-section">
-                <div class="error-icon">⚠️</div>
-                <h3>加载失败</h3>
-                <p class="error-message">{error.value}</p>
+              <div class="text-center p-12">
+                <div class="text-[4rem] mb-4">⚠️</div>
+                <h3 class="text-[#ff6b6b] mb-4">加载失败</h3>
+                <p class="bg-[rgba(255,107,107,0.1)] p-4 rounded-[10px] my-6 border-l-[4px] border-[#ff6b6b]">
+                  {error.value}
+                </p>
                 <p>请检查网络连接或稍后重试。</p>
-                <button class="retry-button" onClick={lazyLoadTableData}>
+                <button
+                  class="bg-[#64b5f6] text-white border-none px-8 py-3 rounded-[25px] text-[1rem] font-semibold cursor-pointer mt-4 transition-colors duration-300 ease-in-out hover:bg-[#42a5f5]"
+                  onClick={lazyLoadTableData}
+                >
                   重新加载
                 </button>
               </div>
             ) : (
-              <div class="data-section">
+              <div class="py-4">
                 {/* 表格信息 */}
-                <div class="table-header">
-                  <div class="header-info">
-                    <h2>难度表信息</h2>
-                    <div class="header-details">
+                <div class="grid grid-cols-2 gap-8 mb-8 p-6 bg-black/20 rounded-[15px]">
+                  <div>
+                    <h2 class="text-white mt-0 mb-4">难度表信息</h2>
+                    <div>
                       {headerData.value && (
-                        <p>
-                          <strong>难度表名称:</strong>
+                        <p class="my-2 text-white/80">
+                          <strong class="text-[#64b5f6]">难度表名称:</strong>
                           {headerData.value.name || "未命名"}
                         </p>
                       )}
                       {headerData.value && (
-                        <p>
-                          <strong>难度表符号:</strong>
+                        <p class="my-2 text-white/80">
+                          <strong class="text-[#64b5f6]">难度表符号:</strong>
                           {headerData.value.symbol || "未定义"}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div class="stats-summary">
-                    <h3>统计摘要</h3>
-                    <div class="stats-grid">
-                      <div class="stat-card">
-                        <div class="stat-value">{tableStats.value.totalCharts}</div>
-                        <div class="stat-label">总谱面数</div>
+                  <div>
+                    <h3 class="text-white mt-0 mb-4">统计摘要</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                      <div class="bg-white/5 rounded-[10px] p-4 text-center border border-white/10">
+                        <div class="text-[2rem] font-bold text-[#64b5f6] mb-2">
+                          {tableStats.value.totalCharts}
+                        </div>
+                        <div class="text-white/70 text-[0.9rem]">总谱面数</div>
                       </div>
-                      <div class="stat-card">
-                        <div class="stat-value">{tableStats.value.difficulties.length}</div>
-                        <div class="stat-label">难度等级数</div>
+                      <div class="bg-white/5 rounded-[10px] p-4 text-center border border-white/10">
+                        <div class="text-[2rem] font-bold text-[#64b5f6] mb-2">
+                          {tableStats.value.difficulties.length}
+                        </div>
+                        <div class="text-white/70 text-[0.9rem]">难度等级数</div>
                       </div>
                     </div>
                   </div>
@@ -334,10 +366,10 @@ export default defineComponent({
                     levelOrder={(headerData.value?.level_order as string[]) || []}
                   />
                 ) : (
-                  <div class="empty-state">
-                    <div class="empty-icon">📊</div>
-                    <h3>暂无谱面数据</h3>
-                    <p>难度表中没有找到谱面数据。</p>
+                  <div class="text-center p-12">
+                    <div class="text-[4rem] mb-4">📊</div>
+                    <h3 class="text-white mb-4">暂无谱面数据</h3>
+                    <p class="text-white/70">难度表中没有找到谱面数据。</p>
                   </div>
                 )}
               </div>

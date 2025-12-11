@@ -1,5 +1,4 @@
 import { defineComponent, ref, computed, onMounted, watch } from "vue";
-import "./LevelRefTable.pcss";
 
 interface LevelRefItem {
   level: string;
@@ -120,23 +119,27 @@ export default defineComponent({
       }
 
       return (
-        <div class="rank-reference-section">
-          <h3>难度对照表</h3>
-          <div class="rank-reference-tables">
+        <div class="mt-8 mb-8 p-6 bg-black/20 rounded-[15px] border border-white/10">
+          <h3 class="text-white mt-0 mb-6 text-[1.3rem] text-center">难度对照表</h3>
+          <div class="flex gap-8 justify-center">
             {/* 左边表格 */}
-            <div class="rank-reference-left">
-              <table>
+            <div class="flex-1 min-w-0">
+              <table class="w-full border-collapse bg-white/5 rounded-[10px] overflow-hidden">
                 <thead>
                   <tr>
-                    <th>难度等级</th>
-                    <th>对应难度</th>
+                    <th class="bg-[rgba(100,181,246,0.3)] text-white px-4 py-3 text-left font-semibold border-b-2 border-white/10">
+                      难度等级
+                    </th>
+                    <th class="bg-[rgba(100,181,246,0.3)] text-white px-4 py-3 text-left font-semibold border-b-2 border-white/10">
+                      对应难度
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {leftTableData.value.map((item) => (
-                    <tr key={item.level}>
-                      <td>{item.level}</td>
-                      <td>{item.ref}</td>
+                    <tr key={item.level} class="hover:bg-white/5 last:[&>td]:border-b-0">
+                      <td class="px-4 py-3 border-b border-white/5 text-white/90">{item.level}</td>
+                      <td class="px-4 py-3 border-b border-white/5 text-white/90">{item.ref}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -144,19 +147,23 @@ export default defineComponent({
             </div>
 
             {/* 右边表格 */}
-            <div class="rank-reference-right">
-              <table>
+            <div class="flex-1 min-w-0">
+              <table class="w-full border-collapse bg-white/5 rounded-[10px] overflow-hidden">
                 <thead>
                   <tr>
-                    <th>难度等级</th>
-                    <th>对应难度</th>
+                    <th class="bg-[rgba(100,181,246,0.3)] text-white px-4 py-3 text-left font-semibold border-b-2 border-white/10">
+                      难度等级
+                    </th>
+                    <th class="bg-[rgba(100,181,246,0.3)] text-white px-4 py-3 text-left font-semibold border-b-2 border-white/10">
+                      对应难度
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {rightTableData.value.map((item) => (
-                    <tr key={item.level}>
-                      <td>{item.level}</td>
-                      <td>{item.ref}</td>
+                    <tr key={item.level} class="hover:bg-white/5 last:[&>td]:border-b-0">
+                      <td class="px-4 py-3 border-b border-white/5 text-white/90">{item.level}</td>
+                      <td class="px-4 py-3 border-b border-white/5 text-white/90">{item.ref}</td>
                     </tr>
                   ))}
                 </tbody>
