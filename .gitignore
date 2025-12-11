@@ -78,3 +78,6 @@ target/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+
+# Claude Code config
+.claude/settings.local.json
