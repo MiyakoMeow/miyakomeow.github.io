@@ -1,6 +1,5 @@
 import { defineComponent, ref, type ComponentPublicInstance } from "vue";
 import ScrollSyncGroup from "@/components/ScrollSyncGroup";
-import "./GroupedTablesSection.pcss";
 
 interface MirrorTableItem {
   name: string;
@@ -134,16 +133,16 @@ export default defineComponent({
     return () => {
       if (props.groups.length === 0) {
         return (
-          <div class="empty-state">
-            <div class="empty-icon">📊</div>
-            <h3>暂无镜像数据</h3>
-            <p>未找到镜像列表。</p>
+          <div class="text-center p-12">
+            <div class="text-[4rem] mb-4">📊</div>
+            <h3 class="text-white mb-4">暂无镜像数据</h3>
+            <p class="text-white/70">未找到镜像列表。</p>
           </div>
         );
       }
 
       return (
-        <div class="grouped-tables-section">
+        <div class="mt-8">
           <ScrollSyncGroup watch-keys={props.groups}>
             {{
               default: ({
@@ -152,21 +151,26 @@ export default defineComponent({
                 setRef: (el: Element | ComponentPublicInstance | null) => void;
               }) => (
                 <>
-                  <div class="groups-nav">
+                  <div class="mb-8 mt-6">
                     {props.groups.map((g) => (
-                      <div key={g.tag1} class="group-row">
-                        <button class="tag1-button" onClick={() => scrollToTag1(g.tag1)}>
+                      <div key={g.tag1} class="mb-4">
+                        <button
+                          class="px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10 mr-3 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:-translate-y-0.5"
+                          onClick={() => scrollToTag1(g.tag1)}
+                        >
                           {g.tag1}
                         </button>
-                        <div class="group-row-tag2">
+                        <div class="flex flex-wrap gap-2 mt-2">
                           {g.subgroups.map((sg) => (
                             <button
                               key={sg.tag2}
-                              class="tag2-group-tab"
+                              class="px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:-translate-y-0.5"
                               onClick={() => scrollToTag2(g.tag1, sg.tag2)}
                             >
                               {sg.tag2}
-                              <span class="chart-count">({sg.items.length})</span>
+                              <span class="text-[0.9rem] opacity-90 bg-black/20 py-[0.1rem] px-2 rounded-[10px]">
+                                ({sg.items.length})
+                              </span>
                             </button>
                           ))}
                         </div>
@@ -178,13 +182,13 @@ export default defineComponent({
                     <div
                       key={g.tag1}
                       id={`tag1-group-${slugifyTag(g.tag1)}`}
-                      class="tag1-group-container"
+                      class="mb-12 scroll-mt-[20px]"
                     >
-                      <div class="tag1-group-header">
-                        <div class="tag1-group-title">
+                      <div class="mb-6 pb-4 border-b-2 border-white/10">
+                        <div class="flex items-center gap-4">
                           <input
                             type="checkbox"
-                            class="select-checkbox"
+                            style={{ width: "22px", height: "22px", transform: "scale(1.2)" }}
                             ref={(el) => {
                               if (el) {
                                 vIndeterminate.mounted(el, {
@@ -197,7 +201,9 @@ export default defineComponent({
                               onTag1Change((e.target as HTMLInputElement).checked, g)
                             }
                           />
-                          <span class="tag1-badge">分类 {g.tag1}</span>
+                          <span class="px-6 py-2 rounded-[20px] font-bold text-[1.2rem] text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)] bg-[rgba(100,181,246,0.3)]">
+                            分类 {g.tag1}
+                          </span>
                         </div>
                       </div>
 
@@ -205,12 +211,12 @@ export default defineComponent({
                         <div
                           key={sg.tag2}
                           id={`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`}
-                          class="tag2-section"
+                          class="mt-4"
                         >
-                          <h3 class="tag2-title">
+                          <h3 class="text-white mt-2 mb-2 text-[1.1rem] flex items-center gap-2">
                             <input
                               type="checkbox"
-                              class="select-checkbox"
+                              style={{ width: "22px", height: "22px", transform: "scale(1.2)" }}
                               ref={(el) => {
                                 if (el) {
                                   vIndeterminate.mounted(el, {
@@ -225,31 +231,51 @@ export default defineComponent({
                             />
                             {sg.tag2}
                           </h3>
-                          <div class="table-wrapper" ref={setRef}>
-                            <table class="tables-table">
+                          <div
+                            class="overflow-x-auto rounded-[10px] bg-black/20 border border-white/10"
+                            ref={setRef}
+                          >
+                            <table class="w-full border-collapse min-w-[800px] table-fixed">
                               <colgroup>
-                                <col class="col-select" />
-                                <col class="col-symbol" />
-                                <col class="col-name" />
-                                <col class="col-mirror" />
-                                <col class="col-origin" />
+                                <col style={{ width: "60px" }} />
+                                <col style={{ width: "120px" }} />
+                                <col style={{ width: "320px" }} />
+                                <col style={{ width: "160px" }} />
+                                <col style={{ width: "160px" }} />
                               </colgroup>
                               <thead>
                                 <tr>
-                                  <th>选择</th>
-                                  <th>符号</th>
-                                  <th>名称</th>
-                                  <th>镜像</th>
-                                  <th>原链接</th>
+                                  <th class="bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10">
+                                    选择
+                                  </th>
+                                  <th class="bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10">
+                                    符号
+                                  </th>
+                                  <th class="bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10">
+                                    名称
+                                  </th>
+                                  <th class="bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10">
+                                    镜像
+                                  </th>
+                                  <th class="bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10">
+                                    原链接
+                                  </th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {sg.items.map((item) => (
-                                  <tr key={item.url}>
-                                    <td class="select-cell">
+                                  <tr
+                                    key={item.url}
+                                    class="hover:bg-white/5 last:[&>td]:border-b-0"
+                                  >
+                                    <td class="p-4 border-b border-white/5 text-white/90 break-words">
                                       <input
                                         type="checkbox"
-                                        class="select-checkbox"
+                                        style={{
+                                          width: "22px",
+                                          height: "22px",
+                                          transform: "scale(1.2)",
+                                        }}
                                         checked={!!selectedMap.value[item.url]}
                                         onChange={(e) =>
                                           onRowChange(
@@ -259,13 +285,15 @@ export default defineComponent({
                                         }
                                       />
                                     </td>
-                                    <td>{item.symbol || ""}</td>
-                                    <td class="name-cell">
+                                    <td class="p-4 border-b border-white/5 text-white/90 break-words">
+                                      {item.symbol || ""}
+                                    </td>
+                                    <td class="p-4 border-b border-white/5 text-white/90 break-words min-w-[200px]">
                                       <strong>{item.name}</strong>
                                     </td>
-                                    <td class="mirror-cell">
+                                    <td class="p-4 border-b border-white/5 text-white/90 break-words min-w-[130px]">
                                       <a
-                                        class="link-button mirror-link"
+                                        class="px-[0.5rem] py-[0.35rem] border-none rounded-[6px] text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center gap-[0.2rem] min-w-[60px] no-underline text-inherit bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#42a5f5,#1976d2)]"
                                         href={item.url}
                                         title={item.url}
                                         target="_blank"
@@ -274,10 +302,10 @@ export default defineComponent({
                                         镜像
                                       </a>
                                     </td>
-                                    <td class="origin-cell">
+                                    <td class="p-4 border-b border-white/5 text-white/90 break-words min-w-[130px]">
                                       {item.url_ori ? (
                                         <a
-                                          class="link-button origin-link"
+                                          class="px-[0.5rem] py-[0.35rem] border-none rounded-[6px] text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center gap-[0.2rem] min-w-[60px] no-underline text-inherit bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#ffb74d,#ff9800)]"
                                           href={item.url_ori}
                                           title={item.url_ori}
                                           target="_blank"
@@ -286,7 +314,7 @@ export default defineComponent({
                                           原链接
                                         </a>
                                       ) : (
-                                        <span class="link-missing">无</span>
+                                        <span class="text-white/50">无</span>
                                       )}
                                     </td>
                                   </tr>

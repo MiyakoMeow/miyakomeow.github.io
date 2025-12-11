@@ -1,9 +1,7 @@
 import { defineComponent, onMounted, ref, computed } from "vue";
 import BlogLayout from "../layout/BlogLayout";
 import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection";
-import "../styles/main.pcss";
 import QuickActions from "../components/QuickActions";
-import "./BMSTableMirror.pcss";
 
 interface LinkItem {
   href: string;
@@ -190,39 +188,49 @@ export default defineComponent({
     return () => (
       <>
         <BlogLayout>
-          <section class="glass-container bms-index-container">
-            <h1 class="content-title">BMS 难度表镜像</h1>
+          <section class="bg-white/10 backdrop-blur-[10px] rounded-[20px] p-8 mt-8 border border-white/10 text-white w-full shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-fadeIn">
+            <h1 class="text-white text-center mb-8 text-[2.5rem] text-shadow-title">
+              BMS 难度表镜像
+            </h1>
 
-            <div class="page-subtitle usage-subtitle">
+            <div class="text-white/70 text-[1.1rem] italic mt-2">
               对于BeMusicSeeker用户，可以使用tables.json链接（
-              <button class="copy-action" type="button" onClick={copyTables}>
+              <button
+                class="text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium hover:text-[#42a5f5]"
+                type="button"
+                onClick={copyTables}
+              >
                 点击复制
               </button>
               ），导入难度表清单至BeMusicSeeker。
               <a
-                class="copy-action"
+                class="text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium hover:text-[#42a5f5]"
                 href="https://darksabun.club/table/tablelist.html"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 使用教程
               </a>
-              {copied.value && <span class="copy-feedback">已复制</span>}
+              {copied.value && <span class="ml-2 text-[#4caf50]">已复制</span>}
             </div>
 
-            <div class="links-grid">
+            <div class="grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4 mt-4">
               {links.map((link) => (
-                <a key={link.href} class="link-card" href={link.href}>
-                  <div class="link-title">{link.title}</div>
-                  <div class="link-desc">{link.desc}</div>
+                <a
+                  key={link.href}
+                  class="block p-[1.25rem] rounded-[14px] bg-black/20 border border-white/10 text-white no-underline transition-transform duration-150 ease-in-out transition-colors duration-300 ease-in-out hover:bg-white/6 hover:-translate-y-0.5"
+                  href={link.href}
+                >
+                  <div class="text-[1.2rem] font-bold mb-[0.5rem] text-[#64b5f6]">{link.title}</div>
+                  <div class="text-[0.95rem] text-white/80">{link.desc}</div>
                 </a>
               ))}
             </div>
 
             {loading.value ? (
-              <div class="loading-section">正在加载镜像列表...</div>
+              <div class="mt-6 text-white/80">正在加载镜像列表...</div>
             ) : error.value ? (
-              <div class="error-section">加载失败：{error.value}</div>
+              <div class="mt-6 text-red-300">加载失败：{error.value}</div>
             ) : (
               <GroupedTablesSection
                 groups={groupedByTags.value}
@@ -234,14 +242,15 @@ export default defineComponent({
           </section>
         </BlogLayout>
         {selectedCount.value > 0 && (
-          <div class="selection-float">
-            <div class="selection-content">
-              <div class="selection-summary">
+          <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[999]">
+            <div class="p-3 px-4 flex items-center gap-4 bg-white/10 border border-white/20 rounded-[12px] shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px]">
+              <div class="text-white font-semibold">
                 已选中 {selectedCount.value} / {totalCount.value}
               </div>
-              <div class="selection-actions">
+              <div class="flex gap-3">
                 <button
-                  class="copy-button mirror-copy"
+                  class="px-[0.8rem] py-[0.5rem] border-none rounded-[8px] text-[0.9rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out text-white"
+                  style={{ background: "linear-gradient(135deg,#2196f3,#1565c0)" }}
                   type="button"
                   title={tooltipMirror.value}
                   onClick={() => copySelected(JSON.stringify(selectedMirrorArray.value, null, 2))}
@@ -249,7 +258,8 @@ export default defineComponent({
                   复制镜像链接
                 </button>
                 <button
-                  class="copy-button origin-copy"
+                  class="px-[0.8rem] py-[0.5rem] border-none rounded-[8px] text-[0.9rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out text-white"
+                  style={{ background: "linear-gradient(135deg,#ff9800,#f57c00)" }}
                   type="button"
                   title={tooltipOrigin.value}
                   onClick={() => copySelected(JSON.stringify(selectedOriginArray.value, null, 2))}
