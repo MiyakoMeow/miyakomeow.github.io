@@ -11,6 +11,12 @@
   }
 }
 
+/* 链接标题样式 */
+.link-title {
+  @apply text-white text-center mb-8 text-[2.5rem];
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
 .link-list {
   @apply flex flex-col gap-4 items-center;
 }
@@ -21,4 +27,9 @@
 
 .link-list-horizontal {
   @apply flex flex-row gap-4 justify-center items-center flex-wrap;
+}
+
+/* 通用玻璃态效果容器 */
+.glass-container {
+  @apply bg-white/10 backdrop-blur-[10px] rounded-[20px] p-8 mt-8 border border-white/10 text-white w-full shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-[fadeIn_0.8s_ease-out];
 }

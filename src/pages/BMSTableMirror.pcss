@@ -1,10 +1,12 @@
 @reference "tailwindcss";
 
+/* 通用玻璃态效果容器 */
+.glass-container {
+  @apply bg-white/10 backdrop-blur-[10px] rounded-[20px] p-8 mt-8 border border-white/10 text-white w-full shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-[fadeIn_0.8s_ease-out];
+}
+
 .links-grid {
   @apply grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4 mt-4;
-  @media (max-width: 768px) {
-    @apply grid-cols-1;
-  }
   .link-card {
     @apply block p-[1.25rem] rounded-[14px] bg-black/20 border border-white/10 text-white no-underline;
     transition:
