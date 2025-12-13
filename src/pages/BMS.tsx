@@ -1,6 +1,5 @@
 import { defineComponent } from "vue";
 import BlogLayout from "../layout/BlogLayout";
-import "../styles/main.css";
 import QuickActions from "../components/QuickActions";
 import "./BMS.css";
 
