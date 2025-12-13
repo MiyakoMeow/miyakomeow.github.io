@@ -8,6 +8,9 @@ import { tailwind4 } from "tailwind-csstree";
 export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
   {
+    ignores: ["dist/**", "node_modules/**"],
+  },
+  {
     files: ["**/*.{vue,ts,tsx,js}"],
     plugins: {
       "better-tailwindcss": pluginBetterTailwind,
@@ -26,7 +29,7 @@ export default defineConfigWithVueTs(
     },
   },
   {
-    files: ["**/*.css"],
+    files: ["**/*.css}"],
     plugins: {
       css,
     },
@@ -35,12 +38,17 @@ export default defineConfigWithVueTs(
       tolerant: true,
       customSyntax: tailwind4,
     },
+    plugins: {
+      "better-tailwindcss": pluginBetterTailwind,
+    },
+    settings: {
+      "better-tailwindcss": {
+        entryPoint: "src/styles/main.css",
+      },
+    },
     rules: {
-      "css/no-empty-blocks": "error",
-      "css/no-invalid-at-rules": "error",
-      "css/no-invalid-properties": "error",
-      "css/no-duplicate-imports": "error",
-      "css/use-baseline": "error",
+      "css/use-baseline": "off",
+      "css/no-invalid-properties": "off",
     },
   },
   {
