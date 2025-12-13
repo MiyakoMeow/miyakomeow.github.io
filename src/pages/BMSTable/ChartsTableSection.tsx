@@ -1,6 +1,6 @@
 import { defineComponent, computed, type ComponentPublicInstance } from "vue";
 import ScrollSyncGroup from "@/components/ScrollSyncGroup";
-import "./ChartsTableSection.pcss";
+import "./ChartsTableSection.css";
 
 export interface ChartData {
   title?: string;

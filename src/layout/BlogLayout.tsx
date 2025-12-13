@@ -1,7 +1,7 @@
 import { defineComponent } from "vue";
 import StarryBackground from "../components/StarryBackground";
 import ProfileCard from "../components/ProfileCard";
-import "./BlogLayout.pcss";
+import "./BlogLayout.css";
 
 export default defineComponent({
   name: "BlogLayout",

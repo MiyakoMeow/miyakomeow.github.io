@@ -1,6 +1,6 @@
 import { defineComponent, ref, type ComponentPublicInstance } from "vue";
 import ScrollSyncGroup from "@/components/ScrollSyncGroup";
-import "./GroupedTablesSection.pcss";
+import "./GroupedTablesSection.css";
 
 interface MirrorTableItem {
   name: string;

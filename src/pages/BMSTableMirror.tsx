@@ -1,9 +1,9 @@
 import { defineComponent, onMounted, ref, computed } from "vue";
 import BlogLayout from "../layout/BlogLayout";
 import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection";
-import "../styles/main.pcss";
+import "../styles/main.css";
 import QuickActions from "../components/QuickActions";
-import "./BMSTableMirror.pcss";
+import "./BMSTableMirror.css";
 
 interface LinkItem {
   href: string;

@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, onMounted, watch } from "vue";
-import "./LevelRefTable.pcss";
+import "./LevelRefTable.css";
 
 interface LevelRefItem {
   level: string;
