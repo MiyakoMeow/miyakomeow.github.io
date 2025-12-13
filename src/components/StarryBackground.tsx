@@ -1,5 +1,5 @@
 import { defineComponent, onMounted, onUnmounted, ref } from "vue";
-import "./StarryBackground.pcss";
+import "./StarryBackground.css";
 
 export default defineComponent({
   name: "StarryBackground",

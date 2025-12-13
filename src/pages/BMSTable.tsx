@@ -3,9 +3,9 @@ import StarryBackground from "../components/StarryBackground";
 import ChartsTableSection from "./BMSTable/ChartsTableSection";
 import LevelRefTable from "./BMSTable/LevelRefTable";
 import type { ChartData, DifficultyGroup } from "./BMSTable/ChartsTableSection";
-import "../styles/main.pcss";
+import "../styles/main.css";
 import QuickActions from "../components/QuickActions";
-import "./BMSTable.pcss";
+import "./BMSTable.css";
 
 interface HeaderData {
   name?: string;

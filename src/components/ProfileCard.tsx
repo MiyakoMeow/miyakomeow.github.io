@@ -1,5 +1,5 @@
 import { defineComponent } from "vue";
-import "./ProfileCard.pcss";
+import "./ProfileCard.css";
 
 export default defineComponent({
   name: "ProfileCard",

@@ -4,39 +4,27 @@ import pluginBetterTailwind from "eslint-plugin-better-tailwindcss";
 import globals from "globals";
 import css from "@eslint/css";
 import { tailwind4 } from "tailwind-csstree";
-import vueScopedCss from "eslint-plugin-vue-scoped-css";
 
 export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
   {
-    files: ["**/*.vue"],
-    plugins: {
-      "vue-scoped-css": vueScopedCss,
-    },
-    rules: {
-      "vue-scoped-css/no-parsing-error": "error",
-      "vue-scoped-css/enforce-style-type": "off",
-      "vue-scoped-css/no-unused-selector": "off",
-      "vue-scoped-css/no-unused-keyframes": "off",
-    },
+    ignores: ["dist/**", "node_modules/**"],
   },
   {
-    ignores: ["dist/**", "node_modules/**", "bun.lockb"],
-  },
-  {
-    files: ["**/*.vue"],
-    rules: {
-      "vue/multi-word-component-names": "off",
-    },
-  },
-  {
-    files: ["**/*.{vue,ts,tsx,js}"],
+    files: ["**/*.{ts,tsx,js}"],
     plugins: {
       "better-tailwindcss": pluginBetterTailwind,
     },
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
     settings: {
       "better-tailwindcss": {
-        entryPoint: "src/styles/main.pcss",
+        entryPoint: "src/styles/main.css",
       },
     },
     rules: {
@@ -48,37 +36,25 @@ export default defineConfigWithVueTs(
     },
   },
   {
-    files: ["**/*.css"],
+    files: ["**/*.{css,pcss}"],
     plugins: {
       css,
-    },
-    language: "css/css",
-    languageOptions: {
-      tolerant: true,
-    },
-    rules: {
-      "css/no-empty-blocks": "error",
-      "css/no-invalid-at-rules": "error",
-      "css/no-invalid-properties": "error",
-      "css/no-duplicate-imports": "error",
-      "css/use-baseline": "error",
-    },
-  },
-  {
-    files: ["**/*.pcss"],
-    plugins: {
-      css,
+      "better-tailwindcss": pluginBetterTailwind,
     },
     language: "css/css",
     languageOptions: {
       tolerant: true,
       customSyntax: tailwind4,
     },
+    settings: {
+      "better-tailwindcss": {
+        entryPoint: "src/styles/main.css",
+      },
+    },
     rules: {
-      "css/no-empty-blocks": "error",
-      "css/no-invalid-at-rules": "off",
-      "css/no-invalid-properties": "off",
       "css/no-duplicate-imports": "error",
+      "css/no-invalid-properties": "warn",
+      "css/use-baseline": ["warn", { available: "newly" }],
     },
   },
   {

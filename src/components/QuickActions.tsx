@@ -1,5 +1,5 @@
 import { defineComponent } from "vue";
-import "./QuickActions.pcss";
+import "./QuickActions.css";
 
 export default defineComponent({
   name: "QuickActions",

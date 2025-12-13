@@ -1,8 +1,8 @@
 import { defineComponent } from "vue";
 import BlogLayout from "../layout/BlogLayout";
-import "../styles/main.pcss";
+import "../styles/main.css";
 import QuickActions from "../components/QuickActions";
-import "./BMS.pcss";
+import "./BMS.css";
 
 interface LinkItem {
   href: string;
