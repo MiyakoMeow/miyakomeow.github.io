@@ -52,8 +52,9 @@ export default defineConfigWithVueTs(
       },
     },
     rules: {
-      "css/use-baseline": "off",
-      "css/no-invalid-properties": "off",
+      "css/no-duplicate-imports": "error",
+      "css/no-invalid-properties": "warn",
+      "css/use-baseline": "warn",
     },
   },
   {
