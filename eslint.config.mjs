@@ -11,9 +11,16 @@ export default defineConfigWithVueTs(
     ignores: ["dist/**", "node_modules/**"],
   },
   {
-    files: ["**/*.{vue,ts,tsx,js}"],
+    files: ["**/*.{ts,tsx,js}"],
     plugins: {
       "better-tailwindcss": pluginBetterTailwind,
+    },
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
     settings: {
       "better-tailwindcss": {
@@ -29,17 +36,15 @@ export default defineConfigWithVueTs(
     },
   },
   {
-    files: ["**/*.css}"],
+    files: ["**/*.{css,pcss}"],
     plugins: {
       css,
+      "better-tailwindcss": pluginBetterTailwind,
     },
     language: "css/css",
     languageOptions: {
       tolerant: true,
       customSyntax: tailwind4,
-    },
-    plugins: {
-      "better-tailwindcss": pluginBetterTailwind,
     },
     settings: {
       "better-tailwindcss": {

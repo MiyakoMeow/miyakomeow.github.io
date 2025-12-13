@@ -8,9 +8,9 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
-    "type-check:watch": "vue-tsc --noEmit --watch",
-    "lint": "eslint . --ext .js,.ts,.tsx,.vue,.css,.pcss",
-    "lint:fix": "eslint . --ext .js,.ts,.tsx,.vue,.css,.pcss --fix",
+    "type-check:watch": "vue-tsc --NoEmit --watch",
+    "lint": "eslint . --ext .js,.ts,.tsx,.css",
+    "lint:fix": "eslint . --ext .js,.ts,.tsx,.css --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check"
   },
