@@ -1,15 +1,29 @@
-import { defineConfig } from "vite";
+import {
+  defineConfig,
+  type Plugin,
+  type ViteDevServer,
+  type IndexHtmlTransformContext,
+  type Connect,
+} from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import tailwindcss from "@tailwindcss/vite";
 import { resolve, relative, join } from "path";
 import { readdirSync, readFileSync, existsSync } from "fs";
+import type { ServerResponse } from "node:http";
 
 // Load tables_proxy.json
 const projectRoot = resolve(__dirname);
 const publicDir = resolve(projectRoot, "public");
 const tablesProxyPath = resolve(publicDir, "bms/table-mirror/tables_proxy.json");
-let tableMirrorItems: any[] = [];
+
+interface TableMirrorItem {
+  dir_name: string;
+  url: string;
+  url_ori?: string | null;
+}
+
+let tableMirrorItems: TableMirrorItem[] = [];
 if (existsSync(tablesProxyPath)) {
   try {
     tableMirrorItems = JSON.parse(readFileSync(tablesProxyPath, "utf-8"));
@@ -73,7 +87,7 @@ tableMirrorItems.forEach((item) => {
 });
 
 // Plugin to intercept the fake absolute paths
-const virtualMirrorPlugin = () => {
+const virtualMirrorPlugin = (): Plugin => {
   function getMirrorPageContent(dirName: string): string | undefined {
     const item = tableMirrorItems.find((i) => i.dir_name === dirName);
     if (!item || !mirrorTemplate) return undefined;
@@ -99,59 +113,61 @@ const virtualMirrorPlugin = () => {
   return {
     name: "virtual-bms-mirror-pages",
     enforce: "pre", // Run before Vite's core plugins to intercept the file access
-    configureServer(server) {
-      server.middlewares.use(async (req, res, next) => {
-        const url = decodeURI(req.url || "").split("?")[0];
-        // Only handle requests that might map to our virtual pages
-        // We expect URLs starting with /bms/table-mirror/
-        // And we handle implicit index.html or trailing slash
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use(
+        async (req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
+          const url = decodeURI(req.url || "").split("?")[0];
+          // Only handle requests that might map to our virtual pages
+          // We expect URLs starting with /bms/table-mirror/
+          // And we handle implicit index.html or trailing slash
 
-        let targetPath = url;
-        if (targetPath.endsWith("/")) {
-          targetPath += "index.html";
-        } else if (!targetPath.endsWith(".html")) {
-          // If it looks like a directory but no slash, usually we redirect,
-          // but here let's just check if adding /index.html matches a virtual page.
-          // Or strictly require trailing slash. Let's try adding /index.html
-          targetPath += "/index.html";
-        }
+          let targetPath = url;
+          if (targetPath.endsWith("/")) {
+            targetPath += "index.html";
+          } else if (!targetPath.endsWith(".html")) {
+            // If it looks like a directory but no slash, usually we redirect,
+            // but here let's just check if adding /index.html matches a virtual page.
+            // Or strictly require trailing slash. Let's try adding /index.html
+            targetPath += "/index.html";
+          }
 
-        // Map URL to absolute path structure
-        // root is "entry", so absolute path is join(entryRoot, targetPath.replace(/^\//, ''))
-        const absolutePath = resolve(entryRoot, targetPath.replace(/^\//, ""));
-        const normalizedAbsPath = normalizePath(absolutePath);
+          // Map URL to absolute path structure
+          // root is "entry", so absolute path is join(entryRoot, targetPath.replace(/^\//, ''))
+          const absolutePath = resolve(entryRoot, targetPath.replace(/^\//, ""));
+          const normalizedAbsPath = normalizePath(absolutePath);
 
-        if (
-          normalizedAbsPath.startsWith(mirrorBaseDirNormalized) &&
-          normalizedAbsPath.endsWith("index.html")
-        ) {
-          const isVirtual =
-            Object.values(dynamicInputs).includes(normalizedAbsPath) && !existsSync(absolutePath);
-          if (isVirtual) {
-            // Extract dirName
-            const rel = normalizedAbsPath.slice(mirrorBaseDirNormalized.length + 1);
-            const dirName = rel.split("/")[0];
+          if (
+            normalizedAbsPath.startsWith(mirrorBaseDirNormalized) &&
+            normalizedAbsPath.endsWith("index.html")
+          ) {
+            const isVirtual =
+              Object.values(dynamicInputs).includes(normalizedAbsPath) && !existsSync(absolutePath);
+            if (isVirtual) {
+              // Extract dirName
+              const rel = normalizedAbsPath.slice(mirrorBaseDirNormalized.length + 1);
+              const dirName = rel.split("/")[0];
 
-            const content = getMirrorPageContent(dirName);
-            if (content) {
-              try {
-                const transformedHtml = await server.transformIndexHtml(req.url || "/", content);
-                res.setHeader("Content-Type", "text/html");
-                res.end(transformedHtml);
-                return;
-              } catch (e) {
-                const err = e as Error;
-                server.ssrFixStacktrace(err);
-                console.error(err);
-                res.statusCode = 500;
-                res.end(err.message);
-                return;
+              const content = getMirrorPageContent(dirName);
+              if (content) {
+                try {
+                  const transformedHtml = await server.transformIndexHtml(req.url || "/", content);
+                  res.setHeader("Content-Type", "text/html");
+                  res.end(transformedHtml);
+                  return;
+                } catch (e) {
+                  const err = e as Error;
+                  server.ssrFixStacktrace(err);
+                  console.error(err);
+                  res.statusCode = 500;
+                  res.end(err.message);
+                  return;
+                }
               }
             }
           }
+          next();
         }
-        next();
-      });
+      );
     },
     resolveId(id: string) {
       // Check if this ID corresponds to one of our virtual mirror pages
@@ -197,7 +213,7 @@ export default defineConfig({
     tailwindcss(),
     {
       name: "inject-global-css",
-      transformIndexHtml(html, ctx) {
+      transformIndexHtml(html: string, ctx: IndexHtmlTransformContext) {
         const cssAbs = resolve(__dirname, "src/styles/main.css").split("\\").join("/");
         const href = ctx?.server ? `/@fs/${cssAbs}` : "@/styles/main.css";
         return [
