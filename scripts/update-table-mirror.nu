@@ -109,10 +109,14 @@ $items | each { |it|
 }
 
 let site_base = "https://miyakomeow.github.io/bms/table-mirror/"
-let tables_out = ($json_dir | path join "tables.json")
 def encode-component [s: string] { $s | url encode --all }
 
+let tables_out = ($json_dir | path join "tables.json")
 $items | each { |it|
   let encoded_dir = (encode-component $it.dir_name)
   ($it | upsert url $"($site_base)($encoded_dir)/")
 } | to json | save -f $tables_out
+let tables_proxy_out = ($json_dir | path join "tables_proxy.json")
+$items | each { |it|
+  ($it | upsert url $"($result.best_proxy)($it.url)")
+} | to json | save -f $tables_proxy_out
