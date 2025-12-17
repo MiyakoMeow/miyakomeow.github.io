@@ -30,26 +30,7 @@ for (const file of collectHtmlFiles(entryRoot)) {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueJsx(),
-    tailwindcss(),
-    {
-      name: "inject-global-css",
-      transformIndexHtml(html, ctx) {
-        const cssAbs = resolve(__dirname, "src/styles/main.css").split("\\").join("/");
-        const href = ctx?.server ? `/@fs/${cssAbs}` : "@/styles/main.css";
-        return [
-          {
-            tag: "script",
-            attrs: { type: "module" },
-            children: `import "${href}";`,
-            injectTo: "head",
-          },
-        ];
-      },
-    },
-  ],
+  plugins: [vue(), vueJsx(), tailwindcss()],
   root: resolve(__dirname, "entry"),
   publicDir: resolve(__dirname, "public"),
   base: "./",
