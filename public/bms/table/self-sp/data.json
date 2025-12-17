@@ -111,23 +111,23 @@
   },
   {
     "level": "1",
-    "sha256": "0a66e78f850b3c04ba85d018705d6a5f1b047d28c66f441e96e2535d0d1245b1",
-    "md5": "f38a208f9aa210a234e274b32ba33cdd",
-    "title": "告白/告別 (BMS edit.) [Lost]",
-    "artist": "Greetea feat.ninnikuu BG rapha & Liuyanzhi",
-    "url": "https://manbow.nothing.sh/event/event.cgi?action=More_def&num=1&event=133",
-    "url_diff": "https://stellabms.xyz/upload/5636",
-    "comment": "BOFXVII差分"
-  },
-  {
-    "level": "1",
     "sha256": "f3289e647b37960498058f99309967e3d05045e7b8f9029ea3105063ad8c256c",
     "md5": "42182365870627c1a0647e6706067c77",
     "title": "the diary of starfall [Slightly]",
     "artist": "Synzak feat. MIKI BGA: TanakaToiku",
     "url": "https://manbow.nothing.sh/event/event.cgi?action=More_def&num=462&event=146",
     "url_diff": "https://stellabms.xyz/upload/5558",
-    "comment": "BOFTT差分"
+    "comment": "BOFTT差分 sl0sub 个人首作"
+  },
+  {
+    "level": "1",
+    "sha256": "0a66e78f850b3c04ba85d018705d6a5f1b047d28c66f441e96e2535d0d1245b1",
+    "md5": "f38a208f9aa210a234e274b32ba33cdd",
+    "title": "告白/告別 (BMS edit.) [Lost]",
+    "artist": "Greetea feat.ninnikuu BG rapha & Liuyanzhi",
+    "url": "https://manbow.nothing.sh/event/event.cgi?action=More_def&num=1&event=133",
+    "url_diff": "https://stellabms.xyz/upload/5636",
+    "comment": "BOFXVII差分 sl1"
   },
   {
     "level": "1",
@@ -137,7 +137,7 @@
     "artist": "litmus* ft. ななひら",
     "url": "https://manbow.nothing.sh/event/event.cgi?action=More_def&num=324&event=146",
     "url_diff": "https://stellabms.xyz/upload/5684",
-    "comment": "BOFTT差分"
+    "comment": "BOFTT差分 sl1sub"
   },
   {
     "level": "1",
@@ -150,6 +150,16 @@
     "comment": "BOF2011差分"
   },
   {
+    "level": "1",
+    "sha256": "e1c50fd0a4d5c2dbdc216a42c90cb1d4eb54c12a183d5926287711ad75ff3035",
+    "md5": "70bed34277dcece85fa6152324a0be90",
+    "title": "シンフォニックライツ [Glow]",
+    "artist": "Est feat.雪歌ユフ",
+    "url": "https://event.yaruki0.net/VSevent/impression/61",
+    "url_diff": "https://stellabms.xyz/upload/6843",
+    "comment": ""
+  },
+  {
     "level": "2",
     "sha256": "0f0fe19bae18053eff7c8dbd14faedc105419e2fdb111d59b2529e05d7f37f8a",
     "md5": "6e1bae413743ba910ab66fedd8d61925",
@@ -157,7 +167,7 @@
     "artist": "Yu^ta feat. みずにんじん",
     "url": "https://www.dropbox.com/s/qxf8j53t87cw6ac/yuta_smcpack_s_flyup.zip?dl=1",
     "url_diff": "https://stellabms.xyz/upload/5603",
-    "comment": "修改自[Another]"
+    "comment": "修改自[Another] sl2sub"
   },
   {
     "level": "2",
