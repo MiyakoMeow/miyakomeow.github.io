@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
+import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "path";
 import { readdirSync } from "fs";
@@ -29,7 +29,7 @@ for (const file of collectHtmlFiles(entryRoot)) {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [svelte({ preprocess: vitePreprocess({ script: true }) }), tailwindcss()],
   root: resolve(__dirname, "entry"),
   publicDir: resolve(__dirname, "public"),
   base: "./",

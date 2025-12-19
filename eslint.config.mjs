@@ -1,17 +1,56 @@
-import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript";
-import eslintConfigPrettier from "eslint-config-prettier";
-import pluginBetterTailwind from "eslint-plugin-better-tailwindcss";
-import globals from "globals";
 import css from "@eslint/css";
+import { includeIgnoreFile } from "@eslint/compat";
+import js from "@eslint/js";
+import prettier from "eslint-config-prettier";
+import pluginBetterTailwind from "eslint-plugin-better-tailwindcss";
+import svelte from "eslint-plugin-svelte";
+import { defineConfig } from "eslint/config";
+import { fileURLToPath } from "node:url";
+import globals from "globals";
 import { tailwind4 } from "tailwind-csstree";
+import ts from "typescript-eslint";
 
-export default defineConfigWithVueTs(
-  vueTsConfigs.recommended,
+const gitignorePath = fileURLToPath(new URL("./.gitignore", import.meta.url));
+const jsTsFiles = ["**/*.{js,ts,tsx}"];
+const jsTsSvelteFiles = ["**/*.{js,ts,tsx,svelte}"];
+const svelteFiles = ["**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"];
+
+export default defineConfig(
+  includeIgnoreFile(gitignorePath),
   {
-    ignores: ["dist/**", "node_modules/**"],
+    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+    rules: { "no-undef": "off" },
+  },
+  { ...js.configs.recommended, files: jsTsSvelteFiles },
+  ...ts.configs.recommended.map((config) => ({ ...config, files: jsTsSvelteFiles })),
+  ...svelte.configs.recommended.map((config) => ({
+    ...config,
+    files: config.files ?? svelteFiles,
+  })),
+  prettier,
+  ...svelte.configs.prettier.map((config) => ({
+    ...config,
+    files: config.files ?? svelteFiles,
+  })),
+  {
+    files: svelteFiles,
+    rules: {
+      "svelte/prefer-svelte-reactivity": "off",
+      "no-empty": "off",
+    },
   },
   {
-    files: ["**/*.{ts,tsx,js}"],
+    files: svelteFiles,
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        extraFileExtensions: [".svelte"],
+        parser: ts.parser,
+      },
+    },
+  },
+  {
+    files: jsTsFiles,
     plugins: {
       "better-tailwindcss": pluginBetterTailwind,
     },
@@ -56,12 +95,5 @@ export default defineConfigWithVueTs(
       "css/no-invalid-properties": "warn",
       "css/use-baseline": ["warn", { available: "newly" }],
     },
-  },
-  {
-    files: ["vite.config.ts", "postcss.config.*"],
-    languageOptions: {
-      globals: globals.node,
-    },
-  },
-  eslintConfigPrettier
+  }
 );

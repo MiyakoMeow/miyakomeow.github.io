@@ -4,17 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="bmstable" content="https://gh.llkk.cc/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bbms.hexlataia.xyz%5D%20AI%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8lite/header.json" />
+    <meta name="bmstable" content="https://proxy.pipers.cn/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bbms.hexlataia.xyz%5D%20AI%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8lite/header.json" />
     <title>难度表加载中</title>
   </head>
   <body>
     <div id="app"></div>
     <script type="module">
-      import { createApp } from "vue";
-      import BMSTable from "../../../../src/pages/BMSTable.vue";
+      import { mount } from "svelte";
+      import BMSTable from "../../../../src/pages/BMSTable.svelte";
 
-      const app = createApp(BMSTable, { header: "https://gh.llkk.cc/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bbms.hexlataia.xyz%5D%20AI%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8lite/header.json", origin_url: "https://bms.hexlataia.xyz/tables/ai-lite.html" });
-      app.mount("#app");
+      const target = document.getElementById("app");
+      if (!target) {
+        throw new Error("#app not found");
+      }
+
+      mount(BMSTable, { target, props: { header: "https://proxy.pipers.cn/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bbms.hexlataia.xyz%5D%20AI%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8lite/header.json", origin_url: "https://bms.hexlataia.xyz/tables/ai-lite.html" } });
     </script>
   </body>
 </html>

@@ -4,17 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="bmstable" content="https://gh.llkk.cc/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5B35353.wa-sanbon.com%5D%20%E3%82%B5%E3%83%B3%E3%82%B4%E4%B8%89%E5%8F%B7%E3%81%95%E3%82%93%E3%81%AEPMS%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8/header.json" />
+    <meta name="bmstable" content="https://proxy.pipers.cn/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5B35353.wa-sanbon.com%5D%20%E3%82%B5%E3%83%B3%E3%82%B4%E4%B8%89%E5%8F%B7%E3%81%95%E3%82%93%E3%81%AEPMS%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8/header.json" />
     <title>难度表加载中</title>
   </head>
   <body>
     <div id="app"></div>
     <script type="module">
-      import { createApp } from "vue";
-      import BMSTable from "../../../../src/pages/BMSTable.vue";
+      import { mount } from "svelte";
+      import BMSTable from "../../../../src/pages/BMSTable.svelte";
 
-      const app = createApp(BMSTable, { header: "https://gh.llkk.cc/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5B35353.wa-sanbon.com%5D%20%E3%82%B5%E3%83%B3%E3%82%B4%E4%B8%89%E5%8F%B7%E3%81%95%E3%82%93%E3%81%AEPMS%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8/header.json", origin_url: "https://35353.wa-sanbon.com/table.html" });
-      app.mount("#app");
+      const target = document.getElementById("app");
+      if (!target) {
+        throw new Error("#app not found");
+      }
+
+      mount(BMSTable, { target, props: { header: "https://proxy.pipers.cn/https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5B35353.wa-sanbon.com%5D%20%E3%82%B5%E3%83%B3%E3%82%B4%E4%B8%89%E5%8F%B7%E3%81%95%E3%82%93%E3%81%AEPMS%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8/header.json", origin_url: "https://35353.wa-sanbon.com/table.html" } });
     </script>
   </body>
 </html>

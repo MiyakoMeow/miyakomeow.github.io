@@ -16,7 +16,7 @@
 }
 
 body {
-  @apply m-0 min-w-[320px] min-h-screen;
+  @apply m-0 min-h-screen min-w-[320px];
 }
 
 a {
@@ -31,7 +31,7 @@ h1 {
 }
 
 button {
-  @apply rounded-[8px] border border-transparent px-[1.2em] py-[0.6em] text-base font-medium bg-[#1a1a1a] cursor-pointer;
+  @apply cursor-pointer rounded-[8px] border border-transparent bg-[#1a1a1a] px-[1.2em] py-[0.6em] text-base font-medium;
   font-family: inherit;
   transition: border-color 0.25s;
   &:hover {

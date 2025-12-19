@@ -9,10 +9,14 @@
   <body>
     <div id="app"></div>
     <script type="module">
-      import { createApp } from "vue";
-      import App from "../src/App.vue";
+      import { mount } from "svelte";
+      import App from "../src/App.svelte";
 
-      createApp(App).mount("#app");
+      const target = document.getElementById("app");
+      if (!target) {
+        throw new Error("#app not found");
+      }
+      mount(App, { target });
     </script>
   </body>
 </html>
