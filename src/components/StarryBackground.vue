@@ -119,6 +119,6 @@ onMounted(() => {
 @reference "tailwindcss";
 
 .starry-background {
-  @apply fixed top-0 left-0 w-full h-full z-[-1] pointer-events-none;
+  @apply fixed top-0 left-0 w-full h-full z-0 pointer-events-none;
 }
 </style>
