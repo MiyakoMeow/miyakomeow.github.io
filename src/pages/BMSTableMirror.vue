@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import BlogLayout from "@/layout/BlogLayout.vue";
 import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.vue";
 import QuickActions from "@/components/QuickActions.vue";
+import "@/styles/main.css";
 import type {
   MirrorTableItem,
   Tag1Group,
