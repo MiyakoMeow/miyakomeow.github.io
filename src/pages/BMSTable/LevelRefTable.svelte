@@ -34,8 +34,7 @@
 
   let requestToken = 0;
 
-  async function loadLevelRefData(): Promise<void> {
-    const header = headerUrl;
+  async function loadLevelRefData(header: string | undefined): Promise<void> {
     if (!header) {
       shouldShow = false;
       return;
@@ -73,13 +72,10 @@
     } catch (err) {
       console.error("加载难度对照表数据失败:", err);
       shouldShow = false;
-    } finally {
-      if (token === requestToken) {
-      }
     }
   }
 
-  $: headerUrl, void loadLevelRefData();
+  $: void loadLevelRefData(headerUrl);
 </script>
 
 {#if shouldShow && levelRefData.length > 0}
@@ -127,45 +123,45 @@
 {/if}
 
 <style>
-@reference "tailwindcss";
+  @reference "tailwindcss";
 
-.rank-reference-section {
-  @apply mt-8 mb-8 p-6 bg-black/20 rounded-[15px] border border-white/10;
-}
-
-.rank-reference-section {
-  h3 {
-    @apply text-white mt-0 mb-6 text-[1.3rem] text-center;
-  }
-}
-
-.rank-reference-tables {
-  @apply flex gap-8 justify-center;
-}
-
-.rank-reference-left,
-.rank-reference-right {
-  @apply flex-1 min-w-0;
-
-  table {
-    @apply w-full border-collapse bg-white/5 rounded-[10px] overflow-hidden;
+  .rank-reference-section {
+    @apply mt-8 mb-8 rounded-[15px] border border-white/10 bg-black/20 p-6;
   }
 
-  th {
-    @apply bg-[rgba(100,181,246,0.3)] text-white px-4 py-3 text-left font-semibold border-b-2 border-white/10;
-  }
-
-  td {
-    @apply px-4 py-3 border-b border-white/5 text-white/90;
-  }
-
-  tbody tr {
-    &:hover {
-      @apply bg-white/5;
-    }
-    &:last-child td {
-      @apply border-b-0;
+  .rank-reference-section {
+    h3 {
+      @apply mt-0 mb-6 text-center text-[1.3rem] text-white;
     }
   }
-}
+
+  .rank-reference-tables {
+    @apply flex justify-center gap-8;
+  }
+
+  .rank-reference-left,
+  .rank-reference-right {
+    @apply min-w-0 flex-1;
+
+    table {
+      @apply w-full border-collapse overflow-hidden rounded-[10px] bg-white/5;
+    }
+
+    th {
+      @apply border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white;
+    }
+
+    td {
+      @apply border-b border-white/5 px-4 py-3 text-white/90;
+    }
+
+    tbody tr {
+      &:hover {
+        @apply bg-white/5;
+      }
+      &:last-child td {
+        @apply border-b-0;
+      }
+    }
+  }
 </style>

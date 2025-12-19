@@ -1,7 +1,7 @@
 <script lang="ts">
-import BlogLayout from "@/layout/BlogLayout.svelte";
-import QuickActions from "@/components/QuickActions.svelte";
-import "@/styles/main.css";
+  import BlogLayout from "@/layout/BlogLayout.svelte";
+  import QuickActions from "@/components/QuickActions.svelte";
+  import "@/styles/main.css";
 </script>
 
 <BlogLayout>
@@ -22,36 +22,36 @@ import "@/styles/main.css";
 <QuickActions />
 
 <style>
-@reference "tailwindcss";
+  @reference "tailwindcss";
 
-.link-item {
-  @apply inline-block px-[1.5rem] py-[0.8rem] bg-white/10 border border-white/20 rounded-[12px] text-white no-underline;
-  transition: all 0.2s ease;
+  .link-item {
+    @apply inline-block rounded-[12px] border border-white/20 bg-white/10 px-[1.5rem] py-[0.8rem] text-white no-underline;
+    transition: all 0.2s ease;
 
-  &:hover {
-    @apply bg-white/20;
-    transform: translateY(-2px);
+    &:hover {
+      @apply bg-white/20;
+      transform: translateY(-2px);
+    }
   }
-}
 
-.link-title {
-  @apply text-white text-center mb-8 text-[2.5rem];
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
+  .link-title {
+    @apply mb-8 text-center text-[2.5rem] text-white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
 
-.link-list {
-  @apply flex flex-col gap-4 items-center;
-}
+  .link-list {
+    @apply flex flex-col items-center gap-4;
+  }
 
-.bms-main-link {
-  @apply mb-8;
-}
+  .bms-main-link {
+    @apply mb-8;
+  }
 
-.link-list-horizontal {
-  @apply flex flex-row gap-4 justify-center items-center flex-wrap;
-}
+  .link-list-horizontal {
+    @apply flex flex-row flex-wrap items-center justify-center gap-4;
+  }
 
-.glass-container {
-  @apply bg-white/10 backdrop-blur-[10px] rounded-[20px] p-8 mt-8 border border-white/10 text-white w-full shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-[fadeIn_0.8s_ease-out];
-}
+  .glass-container {
+    @apply mt-8 w-full animate-[fadeIn_0.8s_ease-out] rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px];
+  }
 </style>

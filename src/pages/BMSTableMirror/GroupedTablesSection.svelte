@@ -1,154 +1,154 @@
 <script lang="ts">
-interface MirrorTableItem {
-  name: string;
-  symbol?: string;
-  url: string;
-  url_ori?: string;
-  comment?: string;
-  tag1?: string;
-  tag2?: string;
-  tag_order?: string | number;
-  dir_name?: string;
-}
-
-interface Tag2Group {
-  tag2: string;
-  items: MirrorTableItem[];
-}
-
-interface Tag1Group {
-  tag1: string;
-  order: number;
-  subgroups: Tag2Group[];
-}
-
-enum CheckboxState {
-  Unchecked,
-  Indeterminate,
-  Checked,
-}
-
-export let groups: Tag1Group[] = [];
-export let selectedMap: Record<string, boolean> = {};
-
-function slugifyTag(tag: string): string {
-  return tag
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9\-]/g, "-");
-}
-
-function scrollToTag1(tag1: string): void {
-  const id = `tag1-group-${slugifyTag(tag1)}`;
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  interface MirrorTableItem {
+    name: string;
+    symbol?: string;
+    url: string;
+    url_ori?: string;
+    comment?: string;
+    tag1?: string;
+    tag2?: string;
+    tag_order?: string | number;
+    dir_name?: string;
   }
-}
 
-function scrollToTag2(tag1: string, tag2: string): void {
-  const id = `tag2-group-${slugifyTag(tag1)}-${slugifyTag(tag2)}`;
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  interface Tag2Group {
+    tag2: string;
+    items: MirrorTableItem[];
   }
-}
 
-function getTag1Urls(g: Tag1Group): string[] {
-  const urls: string[] = [];
-  for (const sg of g.subgroups) {
-    for (const item of sg.items) {
-      urls.push(item.url);
+  interface Tag1Group {
+    tag1: string;
+    order: number;
+    subgroups: Tag2Group[];
+  }
+
+  enum CheckboxState {
+    Unchecked,
+    Indeterminate,
+    Checked,
+  }
+
+  export let groups: Tag1Group[] = [];
+  export let selectedMap: Record<string, boolean> = {};
+
+  function slugifyTag(tag: string): string {
+    return tag
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "-");
+  }
+
+  function scrollToTag1(tag1: string): void {
+    const id = `tag1-group-${slugifyTag(tag1)}`;
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
-  return urls;
-}
 
-function getTag2Urls(sg: Tag2Group): string[] {
-  return sg.items.map((item) => item.url);
-}
-
-function aggregateCheckboxState(urls: string[]): CheckboxState {
-  if (urls.length === 0) return CheckboxState.Unchecked;
-  let selected = 0;
-  for (const u of urls) if (selectedMap[u]) selected++;
-  if (selected === 0) return CheckboxState.Unchecked;
-  if (selected === urls.length) return CheckboxState.Checked;
-  return CheckboxState.Indeterminate;
-}
-
-function tag1State(g: Tag1Group): CheckboxState {
-  return aggregateCheckboxState(getTag1Urls(g));
-}
-
-function tag2State(sg: Tag2Group): CheckboxState {
-  return aggregateCheckboxState(getTag2Urls(sg));
-}
-
-function onTag1Change(checked: boolean, g: Tag1Group): void {
-  const next = { ...selectedMap };
-  for (const url of getTag1Urls(g)) {
-    next[url] = checked;
-  }
-  selectedMap = next;
-}
-
-function onTag2Change(checked: boolean, sg: Tag2Group): void {
-  const next = { ...selectedMap };
-  for (const url of getTag2Urls(sg)) {
-    next[url] = checked;
-  }
-  selectedMap = next;
-}
-
-function onRowChange(checked: boolean, url: string): void {
-  selectedMap = { ...selectedMap, [url]: checked };
-}
-
-let isSyncing = false;
-let rafId: number | null = null;
-const scrollContainers = new Set<HTMLDivElement>();
-
-function handleScroll(e: Event): void {
-  if (isSyncing) return;
-  const target = e.currentTarget;
-  if (!(target instanceof HTMLDivElement)) return;
-
-  const left = target.scrollLeft;
-  isSyncing = true;
-  for (const el of scrollContainers) {
-    if (el !== target) {
-      el.scrollLeft = left;
+  function scrollToTag2(tag1: string, tag2: string): void {
+    const id = `tag2-group-${slugifyTag(tag1)}-${slugifyTag(tag2)}`;
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
-  if (rafId !== null) {
-    cancelAnimationFrame(rafId);
+
+  function getTag1Urls(g: Tag1Group): string[] {
+    const urls: string[] = [];
+    for (const sg of g.subgroups) {
+      for (const item of sg.items) {
+        urls.push(item.url);
+      }
+    }
+    return urls;
   }
-  rafId = requestAnimationFrame(() => {
-    isSyncing = false;
-  });
-}
 
-function scrollSync(node: HTMLDivElement) {
-  scrollContainers.add(node);
-  node.addEventListener("scroll", handleScroll, { passive: true });
-  return {
-    destroy() {
-      scrollContainers.delete(node);
-      node.removeEventListener("scroll", handleScroll);
-    },
-  };
-}
+  function getTag2Urls(sg: Tag2Group): string[] {
+    return sg.items.map((item) => item.url);
+  }
 
-function indeterminate(node: HTMLInputElement, value: boolean) {
-  node.indeterminate = !!value;
-  return {
-    update(v: boolean) {
-      node.indeterminate = !!v;
-    },
-  };
-}
+  function aggregateCheckboxState(urls: string[]): CheckboxState {
+    if (urls.length === 0) return CheckboxState.Unchecked;
+    let selected = 0;
+    for (const u of urls) if (selectedMap[u]) selected++;
+    if (selected === 0) return CheckboxState.Unchecked;
+    if (selected === urls.length) return CheckboxState.Checked;
+    return CheckboxState.Indeterminate;
+  }
+
+  function tag1State(g: Tag1Group): CheckboxState {
+    return aggregateCheckboxState(getTag1Urls(g));
+  }
+
+  function tag2State(sg: Tag2Group): CheckboxState {
+    return aggregateCheckboxState(getTag2Urls(sg));
+  }
+
+  function onTag1Change(checked: boolean, g: Tag1Group): void {
+    const next = { ...selectedMap };
+    for (const url of getTag1Urls(g)) {
+      next[url] = checked;
+    }
+    selectedMap = next;
+  }
+
+  function onTag2Change(checked: boolean, sg: Tag2Group): void {
+    const next = { ...selectedMap };
+    for (const url of getTag2Urls(sg)) {
+      next[url] = checked;
+    }
+    selectedMap = next;
+  }
+
+  function onRowChange(checked: boolean, url: string): void {
+    selectedMap = { ...selectedMap, [url]: checked };
+  }
+
+  let isSyncing = false;
+  let rafId: number | null = null;
+  const scrollContainers = new Set<HTMLDivElement>();
+
+  function handleScroll(e: Event): void {
+    if (isSyncing) return;
+    const target = e.currentTarget;
+    if (!(target instanceof HTMLDivElement)) return;
+
+    const left = target.scrollLeft;
+    isSyncing = true;
+    for (const el of scrollContainers) {
+      if (el !== target) {
+        el.scrollLeft = left;
+      }
+    }
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+    }
+    rafId = requestAnimationFrame(() => {
+      isSyncing = false;
+    });
+  }
+
+  function scrollSync(node: HTMLDivElement) {
+    scrollContainers.add(node);
+    node.addEventListener("scroll", handleScroll, { passive: true });
+    return {
+      destroy() {
+        scrollContainers.delete(node);
+        node.removeEventListener("scroll", handleScroll);
+      },
+    };
+  }
+
+  function indeterminate(node: HTMLInputElement, value: boolean) {
+    node.indeterminate = !!value;
+    return {
+      update(v: boolean) {
+        node.indeterminate = !!v;
+      },
+    };
+  }
 </script>
 
 {#if groups.length === 0}
@@ -281,161 +281,161 @@ function indeterminate(node: HTMLInputElement, value: boolean) {
 {/if}
 
 <style>
-@reference "tailwindcss";
+  @reference "tailwindcss";
 
-.grouped-tables-section {
-  @apply mt-8;
-}
-
-.groups-nav {
-  @apply mb-8 mt-6;
-}
-.group-row {
-  @apply mb-4;
-}
-.tag1-button {
-  @apply px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10 mr-3;
-  &:hover {
-    @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
-    transform: translateY(-2px);
+  .grouped-tables-section {
+    @apply mt-8;
   }
-}
-.group-row-tag2 {
-  @apply flex flex-wrap gap-2 mt-2;
-}
-.tag2-group-tab {
-  @apply px-4 py-2 rounded-[18px] font-bold text-white cursor-pointer transition-all duration-300 ease-in-out opacity-80 bg-white/10;
-  &:hover {
-    @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
-    transform: translateY(-2px);
+
+  .groups-nav {
+    @apply mt-6 mb-8;
   }
-}
-
-.tag1-group-container {
-  @apply mb-12 scroll-mt-[20px];
-}
-
-.tag1-group-header {
-  @apply mb-6 pb-4 border-b-2 border-white/10;
-}
-
-.tag1-group-title {
-  @apply flex items-center gap-4;
-}
-
-.tag1-badge {
-  @apply px-6 py-2 rounded-[20px] font-bold text-[1.2rem] text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)] bg-[rgba(100,181,246,0.3)];
-}
-
-.chart-count {
-  @apply text-[0.9rem] opacity-90 bg-black/20 py-[0.1rem] px-2 rounded-[10px];
-}
-
-.tag2-section {
-  @apply mt-4;
-}
-
-.tag2-title {
-  @apply text-white mt-2 mb-2 text-[1.1rem] flex items-center gap-2;
-}
-
-.table-wrapper {
-  @apply overflow-x-auto rounded-[10px] bg-black/20 border border-white/10;
-}
-
-.tables-table {
-  @apply w-full border-collapse min-w-[800px] table-fixed;
-  th {
-    @apply bg-[rgba(100,181,246,0.2)] text-white p-4 text-left font-semibold border-b-2 border-white/10;
+  .group-row {
+    @apply mb-4;
   }
-  td {
-    @apply p-4 border-b border-white/5 text-white/90 break-words;
-  }
-  col {
-    &.col-select {
-      width: 60px;
-    }
-    &.col-symbol {
-      width: 120px;
-    }
-    &.col-name {
-      width: 320px;
-    }
-    &.col-mirror {
-      width: 160px;
-    }
-    &.col-origin {
-      width: 160px;
-    }
-  }
-  tbody tr {
+  .tag1-button {
+    @apply mr-3 cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out;
     &:hover {
-      @apply bg-white/5;
-    }
-    &:last-child td {
-      @apply border-b-0;
+      @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
+      transform: translateY(-2px);
     }
   }
-}
-
-.name-cell {
-  @apply min-w-[200px];
-}
-.mirror-cell,
-.origin-cell {
-  @apply min-w-[130px];
-}
-
-.link-button {
-  @apply px-[0.5rem] py-[0.35rem] border-none rounded-[6px] text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 ease-in-out flex items-center justify-center gap-[0.2rem] min-w-[60px] no-underline text-inherit;
-  &:hover {
-    @apply shadow-[0_4px_8px_rgba(0,0,0,0.2)];
-    transform: translateY(-2px);
+  .group-row-tag2 {
+    @apply mt-2 flex flex-wrap gap-2;
   }
-}
-
-.mirror-link {
-  @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white;
-  &:hover {
-    @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
+  .tag2-group-tab {
+    @apply cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out;
+    &:hover {
+      @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
+      transform: translateY(-2px);
+    }
   }
-}
 
-.origin-link {
-  @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white;
-  &:hover {
-    @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
+  .tag1-group-container {
+    @apply mb-12 scroll-mt-[20px];
   }
-}
 
-.link-missing {
-  @apply text-white/50;
-}
+  .tag1-group-header {
+    @apply mb-6 border-b-2 border-white/10 pb-4;
+  }
 
-.empty-state {
-  @apply text-center p-12;
-  h3 {
-    @apply text-white mb-4;
+  .tag1-group-title {
+    @apply flex items-center gap-4;
   }
-  p {
-    @apply text-white/70;
-  }
-  .empty-icon {
-    @apply text-[4rem] mb-4;
-  }
-}
 
-.select-cell {
+  .tag1-badge {
+    @apply rounded-[20px] bg-[rgba(100,181,246,0.3)] px-6 py-2 text-[1.2rem] font-bold text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)];
+  }
+
+  .chart-count {
+    @apply rounded-[10px] bg-black/20 px-2 py-[0.1rem] text-[0.9rem] opacity-90;
+  }
+
+  .tag2-section {
+    @apply mt-4;
+  }
+
+  .tag2-title {
+    @apply mt-2 mb-2 flex items-center gap-2 text-[1.1rem] text-white;
+  }
+
+  .table-wrapper {
+    @apply overflow-x-auto rounded-[10px] border border-white/10 bg-black/20;
+  }
+
+  .tables-table {
+    @apply w-full min-w-[800px] table-fixed border-collapse;
+    th {
+      @apply border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white;
+    }
+    td {
+      @apply border-b border-white/5 p-4 break-words text-white/90;
+    }
+    col {
+      &.col-select {
+        width: 60px;
+      }
+      &.col-symbol {
+        width: 120px;
+      }
+      &.col-name {
+        width: 320px;
+      }
+      &.col-mirror {
+        width: 160px;
+      }
+      &.col-origin {
+        width: 160px;
+      }
+    }
+    tbody tr {
+      &:hover {
+        @apply bg-white/5;
+      }
+      &:last-child td {
+        @apply border-b-0;
+      }
+    }
+  }
+
+  .name-cell {
+    @apply min-w-[200px];
+  }
+  .mirror-cell,
+  .origin-cell {
+    @apply min-w-[130px];
+  }
+
+  .link-button {
+    @apply flex min-w-[60px] cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-inherit no-underline transition-all duration-200 ease-in-out;
+    &:hover {
+      @apply shadow-[0_4px_8px_rgba(0,0,0,0.2)];
+      transform: translateY(-2px);
+    }
+  }
+
+  .mirror-link {
+    @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white;
+    &:hover {
+      @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
+    }
+  }
+
+  .origin-link {
+    @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white;
+    &:hover {
+      @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
+    }
+  }
+
+  .link-missing {
+    @apply text-white/50;
+  }
+
+  .empty-state {
+    @apply p-12 text-center;
+    h3 {
+      @apply mb-4 text-white;
+    }
+    p {
+      @apply text-white/70;
+    }
+    .empty-icon {
+      @apply mb-4 text-[4rem];
+    }
+  }
+
+  .select-cell {
+    .select-checkbox {
+      width: 22px;
+      height: 22px;
+      transform: scale(1.2);
+    }
+  }
+
   .select-checkbox {
     width: 22px;
     height: 22px;
     transform: scale(1.2);
   }
-}
-
-.select-checkbox {
-  width: 22px;
-  height: 22px;
-  transform: scale(1.2);
-}
 </style>

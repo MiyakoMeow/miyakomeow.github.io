@@ -1,6 +1,6 @@
 <script lang="ts">
-import StarryBackground from "../components/StarryBackground.svelte";
-import ProfileCard from "../components/ProfileCard.svelte";
+  import StarryBackground from "../components/StarryBackground.svelte";
+  import ProfileCard from "../components/ProfileCard.svelte";
 </script>
 
 <StarryBackground />
@@ -16,32 +16,32 @@ import ProfileCard from "../components/ProfileCard.svelte";
 </main>
 
 <style>
-@reference "tailwindcss";
+  @reference "tailwindcss";
 
-.blog-container {
-  @apply grid grid-cols-[380px_1fr] gap-8 items-start max-w-[1400px] m-0 mx-auto p-8 w-full box-border;
-}
-
-.sidebar {
-  @apply flex justify-center w-full mt-8;
-}
-
-.profile-card {
-  @apply max-w-[360px] w-full animate-[fadeIn_0.8s_ease-out] m-0 mx-auto block;
-}
-
-.content {
-  @apply w-full;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  .blog-container {
+    @apply m-0 mx-auto box-border grid w-full max-w-[1400px] grid-cols-[380px_1fr] items-start gap-8 p-8;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .sidebar {
+    @apply mt-8 flex w-full justify-center;
   }
-}
+
+  .profile-card {
+    @apply m-0 mx-auto block w-full max-w-[360px] animate-[fadeIn_0.8s_ease-out];
+  }
+
+  .content {
+    @apply w-full;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>

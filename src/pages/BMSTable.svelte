@@ -102,7 +102,12 @@
       headerData = null;
       dataFetchUrl = null;
 
-      loadingState = { ...loadingState, isLoading: true, progress: 0, currentStep: "正在初始化..." };
+      loadingState = {
+        ...loadingState,
+        isLoading: true,
+        progress: 0,
+        currentStep: "正在初始化...",
+      };
 
       pageTitle = "加载难度表header中";
       document.title = pageTitle;
@@ -324,165 +329,165 @@
 <QuickActions />
 
 <style>
-@reference "tailwindcss";
+  @reference "tailwindcss";
 
-.bms-table-container {
-  @apply max-w-[1500px] my-8 mx-auto p-8 bg-white/5 backdrop-blur-[10px] rounded-[20px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)];
-}
+  .bms-table-container {
+    @apply mx-auto my-8 max-w-[1500px] rounded-[20px] border border-white/10 bg-white/5 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[10px];
+  }
 
-.page-header {
-  @apply mb-8 text-center;
-}
+  .page-header {
+    @apply mb-8 text-center;
+  }
 
-.page-title {
-  @apply text-white text-[2.5rem] font-bold mb-2 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] bg-clip-text text-transparent;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
+  .page-title {
+    @apply mb-2 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] bg-clip-text text-[2.5rem] font-bold text-transparent text-white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
 
-.page-subtitle {
-  @apply text-white/70 text-[1.2rem] italic;
-}
+  .page-subtitle {
+    @apply text-[1.2rem] text-white/70 italic;
+  }
 
-.usage-subtitle {
-  @apply mt-2;
-}
+  .usage-subtitle {
+    @apply mt-2;
+  }
 
-.origin-subtitle {
-  @apply mt-2;
-}
+  .origin-subtitle {
+    @apply mt-2;
+  }
 
-.copy-action {
-  @apply text-[#64b5f6] underline cursor-pointer bg-transparent border-0 p-0 m-0 font-medium;
-}
+  .copy-action {
+    @apply m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline;
+  }
 
-.copy-action {
-  &:hover {
-    @apply text-[#42a5f5];
-  }
-}
-
-.copy-feedback {
-  @apply ml-2 text-[#4caf50];
-}
-
-.bms-table-content {
-  @apply text-white/90 text-[1.1rem] leading-[1.6] w-full;
-}
-
-.loading-section {
-  @apply p-8;
-  .progress-container {
-    @apply bg-black/20 rounded-[15px] p-8 border border-white/10;
-  }
-  .progress-header {
-    @apply flex justify-between items-center mb-6;
-    h3 {
-      @apply text-white m-0 text-[1.5rem];
-    }
-  }
-  .progress-percentage {
-    @apply bg-[#64b5f6]/20 text-[#64b5f6] px-4 py-2 rounded-[20px] font-bold text-[1.2rem];
-  }
-  .progress-bar {
-    @apply h-[12px] bg-white/10 rounded-[6px] overflow-hidden mb-6;
-  }
-  .progress-fill {
-    @apply h-full bg-[linear-gradient(90deg,#4caf50,#64b5f6)] rounded-[6px];
-    transition: width 0.3s ease;
-  }
-  .progress-steps {
-    @apply grid grid-cols-2 gap-4;
-  }
-  .step-info {
-    @apply flex flex-col gap-2;
-  }
-  .step-label {
-    @apply text-white/60 text-[0.9rem];
-  }
-  .step-text {
-    @apply text-white font-medium;
-  }
-}
-
-.error-section {
-  @apply text-center p-12;
-  .error-icon {
-    @apply text-[4rem] mb-4;
-  }
-  h3 {
-    @apply text-[#ff6b6b] mb-4;
-  }
-  .error-message {
-    @apply bg-[rgba(255,107,107,0.1)] p-4 rounded-[10px] my-6 border-l-[4px] border-[#ff6b6b];
-  }
-  .retry-button {
-    @apply bg-[#64b5f6] text-white border-none px-8 py-3 rounded-[25px] text-[1rem] font-semibold cursor-pointer mt-4;
-    transition: background 0.3s ease;
+  .copy-action {
     &:hover {
-      @apply bg-[#42a5f5];
+      @apply text-[#42a5f5];
     }
   }
-}
 
-.data-section {
-  @apply py-4;
-}
-
-.table-header {
-  @apply grid grid-cols-2 gap-8 mb-8 p-6 bg-black/20 rounded-[15px];
-}
-
-.header-info {
-  h2 {
-    @apply text-white mt-0 mb-4;
+  .copy-feedback {
+    @apply ml-2 text-[#4caf50];
   }
-}
 
-.header-details {
-  p {
-    @apply my-2 text-white/80;
+  .bms-table-content {
+    @apply w-full text-[1.1rem] leading-[1.6] text-white/90;
   }
-  strong {
-    @apply text-[#64b5f6];
+
+  .loading-section {
+    @apply p-8;
+    .progress-container {
+      @apply rounded-[15px] border border-white/10 bg-black/20 p-8;
+    }
+    .progress-header {
+      @apply mb-6 flex items-center justify-between;
+      h3 {
+        @apply m-0 text-[1.5rem] text-white;
+      }
+    }
+    .progress-percentage {
+      @apply rounded-[20px] bg-[#64b5f6]/20 px-4 py-2 text-[1.2rem] font-bold text-[#64b5f6];
+    }
+    .progress-bar {
+      @apply mb-6 h-[12px] overflow-hidden rounded-[6px] bg-white/10;
+    }
+    .progress-fill {
+      @apply h-full rounded-[6px] bg-[linear-gradient(90deg,#4caf50,#64b5f6)];
+      transition: width 0.3s ease;
+    }
+    .progress-steps {
+      @apply grid grid-cols-2 gap-4;
+    }
+    .step-info {
+      @apply flex flex-col gap-2;
+    }
+    .step-label {
+      @apply text-[0.9rem] text-white/60;
+    }
+    .step-text {
+      @apply font-medium text-white;
+    }
   }
-}
 
-.stats-summary {
-  h3 {
-    @apply text-white mt-0 mb-4;
+  .error-section {
+    @apply p-12 text-center;
+    .error-icon {
+      @apply mb-4 text-[4rem];
+    }
+    h3 {
+      @apply mb-4 text-[#ff6b6b];
+    }
+    .error-message {
+      @apply my-6 rounded-[10px] border-l-[4px] border-[#ff6b6b] bg-[rgba(255,107,107,0.1)] p-4;
+    }
+    .retry-button {
+      @apply mt-4 cursor-pointer rounded-[25px] border-none bg-[#64b5f6] px-8 py-3 text-[1rem] font-semibold text-white;
+      transition: background 0.3s ease;
+      &:hover {
+        @apply bg-[#42a5f5];
+      }
+    }
   }
-}
 
-.stats-grid {
-  @apply grid grid-cols-3 gap-4;
-}
-
-.stat-card {
-  @apply bg-white/5 rounded-[10px] p-4 text-center border border-white/10;
-}
-
-.stat-value {
-  @apply text-[2rem] font-bold text-[#64b5f6] mb-2;
-}
-
-.stat-label {
-  @apply text-white/70 text-[0.9rem];
-}
-
-.empty-state {
-  @apply text-center p-12;
-}
-
-.empty-state {
-  h3 {
-    @apply text-white mb-4;
+  .data-section {
+    @apply py-4;
   }
-  p {
-    @apply text-white/70;
-  }
-}
 
-.empty-icon {
-  @apply text-[4rem] mb-4;
-}
+  .table-header {
+    @apply mb-8 grid grid-cols-2 gap-8 rounded-[15px] bg-black/20 p-6;
+  }
+
+  .header-info {
+    h2 {
+      @apply mt-0 mb-4 text-white;
+    }
+  }
+
+  .header-details {
+    p {
+      @apply my-2 text-white/80;
+    }
+    strong {
+      @apply text-[#64b5f6];
+    }
+  }
+
+  .stats-summary {
+    h3 {
+      @apply mt-0 mb-4 text-white;
+    }
+  }
+
+  .stats-grid {
+    @apply grid grid-cols-3 gap-4;
+  }
+
+  .stat-card {
+    @apply rounded-[10px] border border-white/10 bg-white/5 p-4 text-center;
+  }
+
+  .stat-value {
+    @apply mb-2 text-[2rem] font-bold text-[#64b5f6];
+  }
+
+  .stat-label {
+    @apply text-[0.9rem] text-white/70;
+  }
+
+  .empty-state {
+    @apply p-12 text-center;
+  }
+
+  .empty-state {
+    h3 {
+      @apply mb-4 text-white;
+    }
+    p {
+      @apply text-white/70;
+    }
+  }
+
+  .empty-icon {
+    @apply mb-4 text-[4rem];
+  }
 </style>

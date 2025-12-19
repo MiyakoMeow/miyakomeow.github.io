@@ -19,43 +19,43 @@
 </div>
 
 <style>
-@reference "tailwindcss";
+  @reference "tailwindcss";
 
-.glass-card {
-  @apply bg-white/10 backdrop-blur-[10px] border border-white/20 rounded-[16px] p-8 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)];
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.glass-card .avatar img {
-  @apply w-[120px] h-[120px] rounded-full border-[4px] border-white/30 mb-4 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-300;
-  transition: transform 0.3s ease;
-  &:hover {
-    @apply scale-105 rotate-[5deg];
+  .glass-card {
+    @apply rounded-[16px] border border-white/20 bg-white/10 p-8 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px];
+    -webkit-backdrop-filter: blur(10px);
   }
-}
 
-.glass-card h1 {
-  @apply my-2 text-[2.5rem] bg-[linear-gradient(90deg,#a78bfa,#f472b6,#60a5fa)] bg-clip-text text-transparent;
-}
-
-.glass-card .subtitle {
-  @apply text-[#a5b4fc] text-[1.1rem] mb-8;
-}
-
-.glass-card .bio {
-  @apply mb-10 leading-[1.6] text-white/90;
-}
-
-.glass-card .links {
-  @apply flex gap-4 justify-center flex-wrap;
-}
-
-.glass-card .link-btn {
-  @apply px-[1.5rem] py-[0.8rem] bg-white/10 border border-white/20 rounded-[50px] text-white no-underline font-medium;
-  transition: all 0.3s ease;
-  &:hover {
-    @apply bg-white/20 shadow-[0_5px_15px_rgba(0,0,0,0.2)];
-    transform: translateY(-2px);
+  .glass-card .avatar img {
+    @apply mb-4 h-[120px] w-[120px] rounded-full border-[4px] border-white/30 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-300;
+    transition: transform 0.3s ease;
+    &:hover {
+      @apply scale-105 rotate-[5deg];
+    }
   }
-}
+
+  .glass-card h1 {
+    @apply my-2 bg-[linear-gradient(90deg,#a78bfa,#f472b6,#60a5fa)] bg-clip-text text-[2.5rem] text-transparent;
+  }
+
+  .glass-card .subtitle {
+    @apply mb-8 text-[1.1rem] text-[#a5b4fc];
+  }
+
+  .glass-card .bio {
+    @apply mb-10 leading-[1.6] text-white/90;
+  }
+
+  .glass-card .links {
+    @apply flex flex-wrap justify-center gap-4;
+  }
+
+  .glass-card .link-btn {
+    @apply rounded-[50px] border border-white/20 bg-white/10 px-[1.5rem] py-[0.8rem] font-medium text-white no-underline;
+    transition: all 0.3s ease;
+    &:hover {
+      @apply bg-white/20 shadow-[0_5px_15px_rgba(0,0,0,0.2)];
+      transform: translateY(-2px);
+    }
+  }
 </style>
