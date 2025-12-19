@@ -1,3 +1,28 @@
+<script setup lang="ts"></script>
+
+<template>
+  <div class="glass-card">
+    <div class="profile-header">
+      <div class="avatar">
+        <img src="https://github.com/MiyakoMeow.png" alt="Miyako Meow" />
+      </div>
+      <h1>MiyakoMeow</h1>
+      <p class="subtitle">一个天天摸鱼的大学生。</p>
+    </div>
+
+    <div class="bio">
+      <p>欢迎来到我的个人主页！</p>
+    </div>
+
+    <div class="links">
+      <a href="https://github.com/MiyakoMeow" target="_blank" class="link-btn"> GitHub </a>
+      <a href="https://space.bilibili.com/215242890" class="link-btn"> Bilibili </a>
+      <a href="https://x.com/MiyakoWoW" class="link-btn"> X </a>
+    </div>
+  </div>
+</template>
+
+<style scoped>
 @reference "tailwindcss";
 
 /* 通用玻璃态卡片（用于ProfileCard等组件） */
@@ -38,3 +63,4 @@
     transform: translateY(-2px);
   }
 }
+</style>

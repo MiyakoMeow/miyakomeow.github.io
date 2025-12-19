@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import StarryBackground from "../components/StarryBackground.vue";
+import ProfileCard from "../components/ProfileCard.vue";
+</script>
+
+<template>
+  <StarryBackground />
+  <main class="blog-container">
+    <aside class="sidebar">
+      <ProfileCard class="profile-card" />
+    </aside>
+    <section class="content">
+      <slot />
+    </section>
+  </main>
+</template>
+
+<style scoped>
 @reference "tailwindcss";
 
 .blog-container {
@@ -26,3 +44,4 @@
     transform: translateY(0);
   }
 }
+</style>
