@@ -9,11 +9,14 @@
   <body>
     <div id="app"></div>
     <script type="module">
-      import { createApp } from "vue";
-      import BMSTableMirror from "../../../src/pages/BMSTableMirror.vue";
+      import { mount } from "svelte";
+      import BMSTableMirror from "../../../src/pages/BMSTableMirror.svelte";
 
-      const app = createApp(BMSTableMirror);
-      app.mount("#app");
+      const target = document.getElementById("app");
+      if (!target) {
+        throw new Error("#app not found");
+      }
+      mount(BMSTableMirror, { target });
     </script>
   </body>
 </html>

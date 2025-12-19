@@ -1,8 +1,5 @@
-<script setup lang="ts">
-import { ref } from "vue";
-import ScrollSyncGroup from "@/components/ScrollSyncGroup.vue";
-
-export interface MirrorTableItem {
+<script lang="ts">
+interface MirrorTableItem {
   name: string;
   symbol?: string;
   url: string;
@@ -14,12 +11,12 @@ export interface MirrorTableItem {
   dir_name?: string;
 }
 
-export interface Tag2Group {
+interface Tag2Group {
   tag2: string;
   items: MirrorTableItem[];
 }
 
-export interface Tag1Group {
+interface Tag1Group {
   tag1: string;
   order: number;
   subgroups: Tag2Group[];
@@ -31,12 +28,8 @@ enum CheckboxState {
   Checked,
 }
 
-const props = defineProps<{
-  groups: Tag1Group[];
-  selectedMap?: Record<string, boolean>;
-}>();
-
-const selectedMap = ref<Record<string, boolean>>(props.selectedMap || {});
+export let groups: Tag1Group[] = [];
+export let selectedMap: Record<string, boolean> = {};
 
 function slugifyTag(tag: string): string {
   return tag
@@ -62,14 +55,6 @@ function scrollToTag2(tag1: string, tag2: string): void {
   }
 }
 
-const emit = defineEmits<{
-  (e: "update:selectedMap", value: Record<string, boolean>): void;
-}>();
-
-function emitSelected(): void {
-  emit("update:selectedMap", selectedMap.value);
-}
-
 function getTag1Urls(g: Tag1Group): string[] {
   const urls: string[] = [];
   for (const sg of g.subgroups) {
@@ -87,7 +72,7 @@ function getTag2Urls(sg: Tag2Group): string[] {
 function aggregateCheckboxState(urls: string[]): CheckboxState {
   if (urls.length === 0) return CheckboxState.Unchecked;
   let selected = 0;
-  for (const u of urls) if (selectedMap.value[u]) selected++;
+  for (const u of urls) if (selectedMap[u]) selected++;
   if (selected === 0) return CheckboxState.Unchecked;
   if (selected === urls.length) return CheckboxState.Checked;
   return CheckboxState.Indeterminate;
@@ -102,104 +87,128 @@ function tag2State(sg: Tag2Group): CheckboxState {
 }
 
 function onTag1Change(checked: boolean, g: Tag1Group): void {
+  const next = { ...selectedMap };
   for (const url of getTag1Urls(g)) {
-    selectedMap.value[url] = checked;
+    next[url] = checked;
   }
-  emitSelected();
+  selectedMap = next;
 }
 
 function onTag2Change(checked: boolean, sg: Tag2Group): void {
+  const next = { ...selectedMap };
   for (const url of getTag2Urls(sg)) {
-    selectedMap.value[url] = checked;
+    next[url] = checked;
   }
-  emitSelected();
+  selectedMap = next;
 }
 
 function onRowChange(checked: boolean, url: string): void {
-  selectedMap.value[url] = checked;
-  emitSelected();
+  selectedMap = { ...selectedMap, [url]: checked };
 }
 
-// Custom directive: v-indeterminate
-const vIndeterminate = {
-  mounted(el: Element, binding: { value: boolean }): void {
-    if (el instanceof HTMLInputElement) {
-      el.indeterminate = !!binding.value;
+let isSyncing = false;
+let rafId: number | null = null;
+const scrollContainers = new Set<HTMLDivElement>();
+
+function handleScroll(e: Event): void {
+  if (isSyncing) return;
+  const target = e.currentTarget;
+  if (!(target instanceof HTMLDivElement)) return;
+
+  const left = target.scrollLeft;
+  isSyncing = true;
+  for (const el of scrollContainers) {
+    if (el !== target) {
+      el.scrollLeft = left;
     }
-  },
-  updated(el: Element, binding: { value: boolean }): void {
-    if (el instanceof HTMLInputElement) {
-      el.indeterminate = !!binding.value;
-    }
-  },
-};
+  }
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId);
+  }
+  rafId = requestAnimationFrame(() => {
+    isSyncing = false;
+  });
+}
+
+function scrollSync(node: HTMLDivElement) {
+  scrollContainers.add(node);
+  node.addEventListener("scroll", handleScroll, { passive: true });
+  return {
+    destroy() {
+      scrollContainers.delete(node);
+      node.removeEventListener("scroll", handleScroll);
+    },
+  };
+}
+
+function indeterminate(node: HTMLInputElement, value: boolean) {
+  node.indeterminate = !!value;
+  return {
+    update(v: boolean) {
+      node.indeterminate = !!v;
+    },
+  };
+}
 </script>
 
-<template>
-  <div v-if="groups.length === 0" class="empty-state">
+{#if groups.length === 0}
+  <div class="empty-state">
     <div class="empty-icon">📊</div>
     <h3>暂无镜像数据</h3>
     <p>未找到镜像列表。</p>
   </div>
-
-  <div v-else class="grouped-tables-section">
-    <ScrollSyncGroup :watch-keys="groups">
-      <template #default="{ setRef }">
-        <div class="groups-nav">
-          <div v-for="g in groups" :key="g.tag1" class="group-row">
-            <button class="tag1-button" @click="scrollToTag1(g.tag1)">
-              {{ g.tag1 }}
-            </button>
-            <div class="group-row-tag2">
+{:else}
+  <div class="grouped-tables-section">
+    <div class="groups-nav">
+      {#each groups as g (g.tag1)}
+        <div class="group-row">
+          <button class="tag1-button" type="button" on:click={() => scrollToTag1(g.tag1)}>
+            {g.tag1}
+          </button>
+          <div class="group-row-tag2">
+            {#each g.subgroups as sg (sg.tag2)}
               <button
-                v-for="sg in g.subgroups"
-                :key="sg.tag2"
                 class="tag2-group-tab"
-                @click="scrollToTag2(g.tag1, sg.tag2)"
+                type="button"
+                on:click={() => scrollToTag2(g.tag1, sg.tag2)}
               >
-                {{ sg.tag2 }}
-                <span class="chart-count">({{ sg.items.length }})</span>
+                {sg.tag2}
+                <span class="chart-count">({sg.items.length})</span>
               </button>
-            </div>
+            {/each}
+          </div>
+        </div>
+      {/each}
+    </div>
+
+    {#each groups as g (g.tag1)}
+      <div id={`tag1-group-${slugifyTag(g.tag1)}`} class="tag1-group-container">
+        <div class="tag1-group-header">
+          <div class="tag1-group-title">
+            <input
+              type="checkbox"
+              class="select-checkbox"
+              use:indeterminate={tag1State(g) === CheckboxState.Indeterminate}
+              checked={tag1State(g) === CheckboxState.Checked}
+              on:change={(e) => onTag1Change((e.currentTarget as HTMLInputElement).checked, g)}
+            />
+            <span class="tag1-badge">分类 {g.tag1}</span>
           </div>
         </div>
 
-        <div
-          v-for="g in groups"
-          :key="g.tag1"
-          :id="`tag1-group-${slugifyTag(g.tag1)}`"
-          class="tag1-group-container"
-        >
-          <div class="tag1-group-header">
-            <div class="tag1-group-title">
-              <input
-                type="checkbox"
-                class="select-checkbox"
-                v-indeterminate="tag1State(g) === CheckboxState.Indeterminate"
-                :checked="tag1State(g) === CheckboxState.Checked"
-                @change="(e) => onTag1Change((e.target as HTMLInputElement).checked, g)"
-              />
-              <span class="tag1-badge">分类 {{ g.tag1 }}</span>
-            </div>
-          </div>
-
-          <div
-            v-for="sg in g.subgroups"
-            :key="sg.tag2"
-            :id="`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`"
-            class="tag2-section"
-          >
+        {#each g.subgroups as sg (sg.tag2)}
+          <div id={`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`} class="tag2-section">
             <h3 class="tag2-title">
               <input
                 type="checkbox"
                 class="select-checkbox"
-                v-indeterminate="tag2State(sg) === CheckboxState.Indeterminate"
-                :checked="tag2State(sg) === CheckboxState.Checked"
-                @change="(e) => onTag2Change((e.target as HTMLInputElement).checked, sg)"
+                use:indeterminate={tag2State(sg) === CheckboxState.Indeterminate}
+                checked={tag2State(sg) === CheckboxState.Checked}
+                on:change={(e) => onTag2Change((e.currentTarget as HTMLInputElement).checked, sg)}
               />
-              {{ sg.tag2 }}
+              {sg.tag2}
             </h3>
-            <div class="table-wrapper" :ref="setRef">
+            <div class="table-wrapper" use:scrollSync>
               <table class="tables-table">
                 <colgroup>
                   <col class="col-select" />
@@ -218,57 +227,60 @@ const vIndeterminate = {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in sg.items" :key="item.url">
-                    <td class="select-cell">
-                      <input
-                        type="checkbox"
-                        class="select-checkbox"
-                        :checked="!!selectedMap[item.url]"
-                        @change="
-                          (e) => onRowChange((e.target as HTMLInputElement).checked, item.url)
-                        "
-                      />
-                    </td>
-                    <td>{{ item.symbol || "" }}</td>
-                    <td class="name-cell">
-                      <strong>{{ item.name }}</strong>
-                    </td>
-                    <td class="mirror-cell">
-                      <a
-                        class="link-button mirror-link"
-                        :href="item.url"
-                        :title="item.url"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        镜像
-                      </a>
-                    </td>
-                    <td class="origin-cell">
-                      <a
-                        v-if="item.url_ori"
-                        class="link-button origin-link"
-                        :href="item.url_ori"
-                        :title="item.url_ori"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        原链接
-                      </a>
-                      <span v-else class="link-missing">无</span>
-                    </td>
-                  </tr>
+                  {#each sg.items as item (item.url)}
+                    <tr>
+                      <td class="select-cell">
+                        <input
+                          type="checkbox"
+                          class="select-checkbox"
+                          checked={!!selectedMap[item.url]}
+                          on:change={(e) =>
+                            onRowChange((e.currentTarget as HTMLInputElement).checked, item.url)}
+                        />
+                      </td>
+                      <td>{item.symbol || ""}</td>
+                      <td class="name-cell">
+                        <strong>{item.name}</strong>
+                      </td>
+                      <td class="mirror-cell">
+                        <a
+                          class="link-button mirror-link"
+                          href={item.url}
+                          title={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          镜像
+                        </a>
+                      </td>
+                      <td class="origin-cell">
+                        {#if item.url_ori}
+                          <a
+                            class="link-button origin-link"
+                            href={item.url_ori}
+                            title={item.url_ori}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            原链接
+                          </a>
+                        {:else}
+                          <span class="link-missing">无</span>
+                        {/if}
+                      </td>
+                    </tr>
+                  {/each}
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
-      </template>
-    </ScrollSyncGroup>
+        {/each}
+      </div>
+    {/each}
   </div>
-</template>
+{/if}
 
-<style scoped>
+<style>
 @reference "tailwindcss";
 
 .grouped-tables-section {
@@ -313,14 +325,6 @@ const vIndeterminate = {
 
 .tag1-badge {
   @apply px-6 py-2 rounded-[20px] font-bold text-[1.2rem] text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)] bg-[rgba(100,181,246,0.3)];
-}
-
-.tag2-groups-nav {
-  @apply mt-4;
-}
-
-.tag2-groups-tabs {
-  @apply flex flex-wrap gap-3 mb-6;
 }
 
 .chart-count {

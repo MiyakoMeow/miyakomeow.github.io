@@ -1,21 +1,21 @@
-<script setup lang="ts">
-import StarryBackground from "../components/StarryBackground.vue";
-import ProfileCard from "../components/ProfileCard.vue";
+<script lang="ts">
+import StarryBackground from "../components/StarryBackground.svelte";
+import ProfileCard from "../components/ProfileCard.svelte";
 </script>
 
-<template>
-  <StarryBackground />
-  <main class="blog-container">
-    <aside class="sidebar">
-      <ProfileCard class="profile-card" />
-    </aside>
-    <section class="content">
-      <slot />
-    </section>
-  </main>
-</template>
+<StarryBackground />
+<main class="blog-container">
+  <aside class="sidebar">
+    <div class="profile-card">
+      <ProfileCard />
+    </div>
+  </aside>
+  <section class="content">
+    <slot />
+  </section>
+</main>
 
-<style scoped>
+<style>
 @reference "tailwindcss";
 
 .blog-container {

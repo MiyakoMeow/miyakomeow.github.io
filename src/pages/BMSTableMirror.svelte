@@ -1,14 +1,32 @@
-<script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import BlogLayout from "@/layout/BlogLayout.vue";
-import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.vue";
-import QuickActions from "@/components/QuickActions.vue";
+<script lang="ts">
+import { onMount } from "svelte";
+import BlogLayout from "@/layout/BlogLayout.svelte";
+import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.svelte";
+import QuickActions from "@/components/QuickActions.svelte";
 import "@/styles/main.css";
-import type {
-  MirrorTableItem,
-  Tag1Group,
-  Tag2Group,
-} from "./BMSTableMirror/GroupedTablesSection.vue";
+
+interface MirrorTableItem {
+  name: string;
+  symbol?: string;
+  url: string;
+  url_ori?: string;
+  comment?: string;
+  tag1?: string;
+  tag2?: string;
+  tag_order?: string | number;
+  dir_name?: string;
+}
+
+interface Tag2Group {
+  tag2: string;
+  items: MirrorTableItem[];
+}
+
+interface Tag1Group {
+  tag1: string;
+  order: number;
+  subgroups: Tag2Group[];
+}
 
 interface LinkItem {
   href: string;
@@ -16,14 +34,14 @@ interface LinkItem {
   desc: string;
 }
 
-const loading = ref(true);
-const error = ref<string | null>(null);
+let loading = true;
+let error: string | null = null;
 
-const copied = ref(false);
+let copied = false;
 const tablesJsonPath = new URL("/bms/table-mirror/tables.json", window.location.origin).toString();
 
-const tables = ref<MirrorTableItem[]>([]);
-const selectedMap = ref<Record<string, boolean>>({});
+let tables: MirrorTableItem[] = [];
+let selectedMap: Record<string, boolean> = {};
 
 const links: LinkItem[] = [
   { href: "/bms", title: "返回 BMS", desc: "返回 BMS 页面" },
@@ -54,42 +72,40 @@ async function copySelected(data: string): Promise<void> {
 
 async function copyTables(): Promise<void> {
   await copySelected(tablesJsonPath);
-  copied.value = true;
+  copied = true;
   setTimeout(() => {
-    copied.value = false;
+    copied = false;
   }, 1500);
 }
 
-const selectedCount = computed(() => Object.values(selectedMap.value).filter(Boolean).length);
-const totalCount = computed(() => tables.value.length);
+$: selectedCount = Object.values(selectedMap).filter(Boolean).length;
+$: totalCount = tables.length;
 
-const selectedMirrorArray = computed<string[]>(() =>
-  Object.entries(selectedMap.value)
-    .filter(([, v]) => !!v)
-    .map(([url]) => url)
-);
+$: selectedMirrorArray = Object.entries(selectedMap)
+  .filter(([, v]) => !!v)
+  .map(([url]) => url);
 
-const urlToOrigin = computed<Map<string, string>>(() => {
+$: urlToOrigin = (() => {
   const m = new Map<string, string>();
-  tables.value.forEach((t) => {
+  tables.forEach((t) => {
     if (t.url) {
       m.set(t.url, t.url_ori || "");
     }
   });
   return m;
-});
+})();
 
-const selectedOriginArray = computed<string[]>(() =>
-  selectedMirrorArray.value.map((u) => urlToOrigin.value.get(u) || "").filter((v) => v.length > 0)
-);
+$: selectedOriginArray = selectedMirrorArray
+  .map((u) => urlToOrigin.get(u) || "")
+  .filter((v) => v.length > 0);
 
-const tooltipMirror = computed(() => JSON.stringify(selectedMirrorArray.value, null, 2));
-const tooltipOrigin = computed(() => JSON.stringify(selectedOriginArray.value, null, 2));
+$: tooltipMirror = JSON.stringify(selectedMirrorArray, null, 2);
+$: tooltipOrigin = JSON.stringify(selectedOriginArray, null, 2);
 
-const groupedByTags = computed<Tag1Group[]>(() => {
+$: groupedByTags = (() => {
   const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>();
 
-  tables.value.forEach((item) => {
+  tables.forEach((item) => {
     const tag1 = item.tag1 || "未分类";
     const tag2 = item.tag2 || "其它";
     const orderRaw = item.tag_order;
@@ -105,11 +121,6 @@ const groupedByTags = computed<Tag1Group[]>(() => {
     const tag2Map = groupsMap.get(tag1)!.tag2Map;
     if (!tag2Map.has(tag2)) {
       tag2Map.set(tag2, []);
-    }
-
-    const dir = String(item.dir_name || "").replace(/^\/+|\/+$/g, "");
-    if (dir) {
-      item.url = `/bms/table-mirror/${dir}/`;
     }
 
     tag2Map.get(tag2)!.push(item);
@@ -129,7 +140,7 @@ const groupedByTags = computed<Tag1Group[]>(() => {
 
   tag1Groups.sort((a, b) => a.order - b.order || a.tag1.localeCompare(b.tag1));
   return tag1Groups;
-});
+})();
 
 async function loadTablesJson(): Promise<void> {
   try {
@@ -142,93 +153,97 @@ async function loadTablesJson(): Promise<void> {
     if (!Array.isArray(data)) {
       throw new Error("tables.json 格式错误：不是数组");
     }
-    tables.value = data as MirrorTableItem[];
-    error.value = null;
+
+    tables = (data as MirrorTableItem[]).map((item) => {
+      const dir = String(item.dir_name || "").replace(/^\/+|\/+$/g, "");
+      if (!dir) return item;
+      return { ...item, url: `/bms/table-mirror/${dir}/` };
+    });
+    error = null;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : "未知错误";
+    error = e instanceof Error ? e.message : "未知错误";
   } finally {
-    loading.value = false;
+    loading = false;
   }
 }
 
-onMounted(() => {
+onMount(() => {
   setTimeout(() => {
     loadTablesJson();
   }, 250);
 });
 </script>
 
-<template>
-  <BlogLayout>
-    <section class="glass-container bms-index-container">
-      <h1 class="content-title">BMS 难度表镜像</h1>
+<BlogLayout>
+  <section class="glass-container bms-index-container">
+    <h1 class="content-title">BMS 难度表镜像</h1>
 
-      <div class="page-subtitle usage-subtitle">
-        对于BeMusicSeeker用户，可以使用tables.json链接（
-        <button class="copy-action" type="button" @click="copyTables">点击复制</button>
-        ），导入难度表清单至BeMusicSeeker。
-        <a
-          class="copy-action"
-          href="https://darksabun.club/table/tablelist.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          使用教程
+    <div class="page-subtitle usage-subtitle">
+      对于BeMusicSeeker用户，可以使用tables.json链接（
+      <button class="copy-action" type="button" on:click={copyTables}>点击复制</button>
+      ），导入难度表清单至BeMusicSeeker。
+      <a
+        class="copy-action"
+        href="https://darksabun.club/table/tablelist.html"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        使用教程
+      </a>
+      {#if copied}
+        <span class="copy-feedback">已复制</span>
+      {/if}
+    </div>
+
+    <div class="links-grid">
+      {#each links as link (link.href)}
+        <a class="link-card" href={link.href}>
+          <div class="link-title">{link.title}</div>
+          <div class="link-desc">{link.desc}</div>
         </a>
-        <span v-if="copied" class="copy-feedback">已复制</span>
-      </div>
+      {/each}
+    </div>
 
-      <div class="links-grid">
-        <a v-for="link in links" :key="link.href" class="link-card" :href="link.href">
-          <div class="link-title">{{ link.title }}</div>
-          <div class="link-desc">{{ link.desc }}</div>
-        </a>
-      </div>
+    {#if loading}
+      <div class="loading-section">正在加载镜像列表...</div>
+    {:else if error}
+      <div class="error-section">加载失败：{error}</div>
+    {:else}
+      <GroupedTablesSection bind:selectedMap groups={groupedByTags} />
+    {/if}
+  </section>
+</BlogLayout>
 
-      <div v-if="loading" class="loading-section">正在加载镜像列表...</div>
-      <div v-else-if="error" class="error-section">加载失败：{{ error }}</div>
-      <GroupedTablesSection
-        v-else
-        :groups="groupedByTags"
-        @update:selectedMap="
-          (newMap) => {
-            selectedMap = { ...newMap };
-          }
-        "
-      />
-    </section>
-  </BlogLayout>
-
-  <div v-if="selectedCount > 0" class="selection-float">
+{#if selectedCount > 0}
+  <div class="selection-float">
     <div class="selection-content">
-      <div class="selection-summary">已选中 {{ selectedCount }} / {{ totalCount }}</div>
+      <div class="selection-summary">已选中 {selectedCount} / {totalCount}</div>
       <div class="selection-actions">
         <button
           class="copy-button mirror-copy"
           type="button"
-          :title="tooltipMirror"
-          @click="copySelected(JSON.stringify(selectedMirrorArray, null, 2))"
+          title={tooltipMirror}
+          on:click={() => copySelected(JSON.stringify(selectedMirrorArray, null, 2))}
         >
           复制镜像链接
         </button>
         <button
           class="copy-button origin-copy"
           type="button"
-          :title="tooltipOrigin"
-          @click="copySelected(JSON.stringify(selectedOriginArray, null, 2))"
+          title={tooltipOrigin}
+          on:click={() => copySelected(JSON.stringify(selectedOriginArray, null, 2))}
         >
           复制原链接
         </button>
       </div>
     </div>
   </div>
-  <QuickActions />
-</template>
+{/if}
+<QuickActions />
 
-<style scoped>
+<style>
 @reference "tailwindcss";
 
-/* 通用玻璃态效果容器 */
 .glass-container {
   @apply bg-white/10 backdrop-blur-[10px] rounded-[20px] p-8 mt-8 border border-white/10 text-white w-full shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-[fadeIn_0.8s_ease-out];
 }
@@ -275,10 +290,6 @@ onMounted(() => {
 }
 
 .usage-subtitle {
-  @apply mt-2;
-}
-
-.origin-subtitle {
   @apply mt-2;
 }
 

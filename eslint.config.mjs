@@ -1,17 +1,21 @@
-import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript";
+import js from "@eslint/js";
+import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
 import pluginBetterTailwind from "eslint-plugin-better-tailwindcss";
 import globals from "globals";
 import css from "@eslint/css";
 import { tailwind4 } from "tailwind-csstree";
 
-export default defineConfigWithVueTs(
-  vueTsConfigs.recommended,
+const jsTsFiles = ["**/*.{js,ts,tsx}"];
+
+export default [
   {
     ignores: ["dist/**", "node_modules/**"],
   },
+  { ...js.configs.recommended, files: jsTsFiles },
+  ...tseslint.configs.recommended.map((config) => ({ ...config, files: jsTsFiles })),
   {
-    files: ["**/*.{ts,tsx,js}"],
+    files: jsTsFiles,
     plugins: {
       "better-tailwindcss": pluginBetterTailwind,
     },
@@ -63,5 +67,5 @@ export default defineConfigWithVueTs(
       globals: globals.node,
     },
   },
-  eslintConfigPrettier
-);
+  eslintConfigPrettier,
+];

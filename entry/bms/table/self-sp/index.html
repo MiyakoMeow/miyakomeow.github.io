@@ -10,11 +10,15 @@
   <body>
     <div id="app"></div>
     <script type="module">
-      import { createApp } from "vue";
-      import BMSTable from "../../../../src/pages/BMSTable.vue";
+      import { mount } from "svelte";
+      import BMSTable from "../../../../src/pages/BMSTable.svelte";
 
-      const app = createApp(BMSTable, { header: "./header.json", origin_url: null });
-      app.mount("#app");
+      const target = document.getElementById("app");
+      if (!target) {
+        throw new Error("#app not found");
+      }
+
+      mount(BMSTable, { target, props: { header: "./header.json", origin_url: null } });
     </script>
   </body>
 </html>

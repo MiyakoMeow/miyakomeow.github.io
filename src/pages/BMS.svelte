@@ -1,6 +1,6 @@
-<script setup lang="ts">
-import BlogLayout from "../layout/BlogLayout.vue";
-import QuickActions from "../components/QuickActions.vue";
+<script lang="ts">
+import BlogLayout from "../layout/BlogLayout.svelte";
+import QuickActions from "../components/QuickActions.svelte";
 import "../styles/main.css";
 
 interface LinkItem {
@@ -16,25 +16,24 @@ const links: LinkItem[] = [
 ];
 </script>
 
-<template>
-  <BlogLayout>
-    <div class="glass-container bms-index-container">
-      <h1 class="content-title">BMS</h1>
-      <div class="links-grid">
-        <a v-for="link in links" :key="link.href" class="link-card" :href="link.href">
-          <div class="link-title">{{ link.title }}</div>
-          <div class="link-desc">{{ link.desc }}</div>
+<BlogLayout>
+  <div class="glass-container bms-index-container">
+    <h1 class="content-title">BMS</h1>
+    <div class="links-grid">
+      {#each links as link (link.href)}
+        <a class="link-card" href={link.href}>
+          <div class="link-title">{link.title}</div>
+          <div class="link-desc">{link.desc}</div>
         </a>
-      </div>
+      {/each}
     </div>
-  </BlogLayout>
-  <QuickActions />
-</template>
+  </div>
+</BlogLayout>
+<QuickActions />
 
-<style scoped>
+<style>
 @reference "tailwindcss";
 
-/* 通用玻璃态效果容器 */
 .glass-container {
   @apply bg-white/10 backdrop-blur-[10px] rounded-[20px] p-8 mt-8 border border-white/10 text-white w-full shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-[fadeIn_0.8s_ease-out];
 }

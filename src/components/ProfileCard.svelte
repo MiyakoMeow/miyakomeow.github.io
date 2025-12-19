@@ -1,31 +1,26 @@
-<script setup lang="ts"></script>
-
-<template>
-  <div class="glass-card">
-    <div class="profile-header">
-      <div class="avatar">
-        <img src="https://github.com/MiyakoMeow.png" alt="Miyako Meow" />
-      </div>
-      <h1>MiyakoMeow</h1>
-      <p class="subtitle">一个天天摸鱼的大学生。</p>
+<div class="glass-card">
+  <div class="profile-header">
+    <div class="avatar">
+      <img src="https://github.com/MiyakoMeow.png" alt="Miyako Meow" />
     </div>
-
-    <div class="bio">
-      <p>欢迎来到我的个人主页！</p>
-    </div>
-
-    <div class="links">
-      <a href="https://github.com/MiyakoMeow" target="_blank" class="link-btn"> GitHub </a>
-      <a href="https://space.bilibili.com/215242890" class="link-btn"> Bilibili </a>
-      <a href="https://x.com/MiyakoWoW" class="link-btn"> X </a>
-    </div>
+    <h1>MiyakoMeow</h1>
+    <p class="subtitle">一个天天摸鱼的大学生。</p>
   </div>
-</template>
 
-<style scoped>
+  <div class="bio">
+    <p>欢迎来到我的个人主页！</p>
+  </div>
+
+  <div class="links">
+    <a href="https://github.com/MiyakoMeow" target="_blank" class="link-btn"> GitHub </a>
+    <a href="https://space.bilibili.com/215242890" class="link-btn"> Bilibili </a>
+    <a href="https://x.com/MiyakoWoW" class="link-btn"> X </a>
+  </div>
+</div>
+
+<style>
 @reference "tailwindcss";
 
-/* 通用玻璃态卡片（用于ProfileCard等组件） */
 .glass-card {
   @apply bg-white/10 backdrop-blur-[10px] border border-white/20 rounded-[16px] p-8 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)];
   -webkit-backdrop-filter: blur(10px);
