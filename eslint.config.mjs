@@ -17,11 +17,11 @@ const svelteFiles = ["**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"];
 const betterTailwindPlugins = { "better-tailwindcss": pluginBetterTailwind };
 const betterTailwindSettings = { "better-tailwindcss": { entryPoint: "src/styles/main.css" } };
 const betterTailwindRules = {
-  "better-tailwindcss/enforce-consistent-class-order": "warn",
-  "better-tailwindcss/enforce-shorthand-classes": "warn",
-  "better-tailwindcss/enforce-consistent-line-wrapping": "off",
-  "better-tailwindcss/no-duplicate-classes": "warn",
-  "better-tailwindcss/no-unnecessary-whitespace": "warn",
+  ...pluginBetterTailwind.configs["stylistic-error"].rules,
+  "better-tailwindcss/enforce-shorthand-classes": "error",
+  "better-tailwindcss/enforce-consistent-variable-syntax": "error",
+  "better-tailwindcss/enforce-consistent-important-position": "error",
+  "better-tailwindcss/no-deprecated-classes": "error",
 };
 
 export default defineConfig(
