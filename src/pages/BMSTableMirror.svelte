@@ -246,10 +246,11 @@
 <QuickActions />
 
 <style>
+  @config "../../tailwind.config.mjs";
   @reference "tailwindcss";
 
   .glass-container {
-    @apply mt-8 w-full animate-[fadeIn_0.8s_ease-out] rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px];
+    @apply mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px];
   }
 
   .links-grid {

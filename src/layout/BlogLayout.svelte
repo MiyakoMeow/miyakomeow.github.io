@@ -16,6 +16,7 @@
 </main>
 
 <style>
+  @config "../../tailwind.config.mjs";
   @reference "tailwindcss";
 
   .blog-container {
@@ -27,21 +28,11 @@
   }
 
   .profile-card {
-    @apply m-0 mx-auto block w-full max-w-[360px] animate-[fadeIn_0.8s_ease-out];
+    @apply m-0 mx-auto block w-full max-w-[360px] animate-fadeIn;
   }
 
   .content {
     @apply w-full;
   }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 </style>
