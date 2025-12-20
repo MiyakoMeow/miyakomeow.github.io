@@ -14,6 +14,15 @@ const gitignorePath = fileURLToPath(new URL("./.gitignore", import.meta.url));
 const jsTsFiles = ["**/*.{js,ts,tsx}"];
 const jsTsSvelteFiles = ["**/*.{js,ts,tsx,svelte}"];
 const svelteFiles = ["**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"];
+const betterTailwindPlugins = { "better-tailwindcss": pluginBetterTailwind };
+const betterTailwindSettings = { "better-tailwindcss": { entryPoint: "src/styles/main.css" } };
+const betterTailwindRules = {
+  "better-tailwindcss/enforce-consistent-class-order": "warn",
+  "better-tailwindcss/enforce-shorthand-classes": "warn",
+  "better-tailwindcss/enforce-consistent-line-wrapping": "off",
+  "better-tailwindcss/no-duplicate-classes": "warn",
+  "better-tailwindcss/no-unnecessary-whitespace": "warn",
+};
 
 export default defineConfig(
   includeIgnoreFile(gitignorePath),
@@ -51,9 +60,7 @@ export default defineConfig(
   },
   {
     files: jsTsFiles,
-    plugins: {
-      "better-tailwindcss": pluginBetterTailwind,
-    },
+    plugins: betterTailwindPlugins,
     languageOptions: {
       parserOptions: {
         ecmaFeatures: {
@@ -62,23 +69,23 @@ export default defineConfig(
       },
     },
     settings: {
-      "better-tailwindcss": {
-        entryPoint: "src/styles/main.css",
-      },
+      ...betterTailwindSettings,
     },
-    rules: {
-      "better-tailwindcss/enforce-consistent-class-order": "warn",
-      "better-tailwindcss/enforce-shorthand-classes": "warn",
-      "better-tailwindcss/enforce-consistent-line-wrapping": "off",
-      "better-tailwindcss/no-duplicate-classes": "warn",
-      "better-tailwindcss/no-unnecessary-whitespace": "warn",
+    rules: betterTailwindRules,
+  },
+  {
+    files: svelteFiles,
+    plugins: betterTailwindPlugins,
+    settings: {
+      ...betterTailwindSettings,
     },
+    rules: betterTailwindRules,
   },
   {
     files: ["**/*.{css,pcss}"],
     plugins: {
       css,
-      "better-tailwindcss": pluginBetterTailwind,
+      ...betterTailwindPlugins,
     },
     language: "css/css",
     languageOptions: {
@@ -86,11 +93,10 @@ export default defineConfig(
       customSyntax: tailwind4,
     },
     settings: {
-      "better-tailwindcss": {
-        entryPoint: "src/styles/main.css",
-      },
+      ...betterTailwindSettings,
     },
     rules: {
+      ...betterTailwindRules,
       "css/no-duplicate-imports": "error",
       "css/no-invalid-properties": "warn",
       "css/use-baseline": ["warn", { available: "newly" }],
