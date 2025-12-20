@@ -305,9 +305,7 @@
       <div class="p-12 text-center">
         <div class="mb-4 text-[4rem]">⚠️</div>
         <h3 class="mb-4 text-[#ff6b6b]">加载失败</h3>
-        <p
-          class="my-6 rounded-[10px] border-l-4 border-[#ff6b6b] bg-[rgba(255,107,107,0.1)] p-4"
-        >
+        <p class="my-6 rounded-[10px] border-l-4 border-[#ff6b6b] bg-[rgba(255,107,107,0.1)] p-4">
           {error}
         </p>
         <p>请检查网络连接或稍后重试。</p>
