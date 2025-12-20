@@ -179,15 +179,23 @@
 </script>
 
 <BlogLayout>
-  <section class="glass-container bms-index-container">
+  <section
+    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+  >
     <h1 class="content-title">BMS 难度表镜像</h1>
 
-    <div class="page-subtitle usage-subtitle">
+    <div class="mt-2 text-[1.1rem] text-white/70 italic">
       对于BeMusicSeeker用户，可以使用tables.json链接（
-      <button class="copy-action" type="button" on:click={copyTables}>点击复制</button>
+      <button
+        class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
+        type="button"
+        on:click={copyTables}
+      >
+        点击复制
+      </button>
       ），导入难度表清单至BeMusicSeeker。
       <a
-        class="copy-action"
+        class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
         href="https://darksabun.club/table/tablelist.html"
         target="_blank"
         rel="noopener noreferrer"
@@ -195,23 +203,26 @@
         使用教程
       </a>
       {#if copied}
-        <span class="copy-feedback">已复制</span>
+        <span class="ml-2 text-[#4caf50]">已复制</span>
       {/if}
     </div>
 
-    <div class="links-grid">
+    <div class="mt-4 grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4">
       {#each links as link (link.href)}
-        <a class="link-card" href={link.href}>
-          <div class="link-title">{link.title}</div>
-          <div class="link-desc">{link.desc}</div>
+        <a
+          class="block rounded-[14px] border border-white/10 bg-black/20 p-[1.25rem] text-white no-underline transition-[transform,background] duration-300 ease-out hover:-translate-y-0.5 hover:bg-[rgba(255,255,255,0.06)]"
+          href={link.href}
+        >
+          <div class="mb-[0.5rem] text-[1.2rem] font-bold text-[#64b5f6]">{link.title}</div>
+          <div class="text-[0.95rem] text-white/80">{link.desc}</div>
         </a>
       {/each}
     </div>
 
     {#if loading}
-      <div class="loading-section">正在加载镜像列表...</div>
+      <div class="mt-6 text-white/80">正在加载镜像列表...</div>
     {:else if error}
-      <div class="error-section">加载失败：{error}</div>
+      <div class="mt-6 text-red-300">加载失败：{error}</div>
     {:else}
       <GroupedTablesSection bind:selectedMap groups={groupedByTags} />
     {/if}
@@ -219,12 +230,14 @@
 </BlogLayout>
 
 {#if selectedCount > 0}
-  <div class="selection-float">
-    <div class="selection-content">
-      <div class="selection-summary">已选中 {selectedCount} / {totalCount}</div>
-      <div class="selection-actions">
+  <div class="fixed bottom-4 left-1/2 z-[999] translate-x-[-50%]">
+    <div
+      class="flex items-center gap-4 rounded-[12px] border border-white/20 bg-white/10 p-3 px-4 shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px]"
+    >
+      <div class="font-semibold text-white">已选中 {selectedCount} / {totalCount}</div>
+      <div class="flex gap-3">
         <button
-          class="copy-button mirror-copy"
+          class="cursor-pointer rounded-[8px] border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.8rem] py-[0.5rem] text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
           title={tooltipMirror}
           on:click={() => copySelected(JSON.stringify(selectedMirrorArray, null, 2))}
@@ -232,7 +245,7 @@
           复制镜像链接
         </button>
         <button
-          class="copy-button origin-copy"
+          class="cursor-pointer rounded-[8px] border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.8rem] py-[0.5rem] text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
           title={tooltipOrigin}
           on:click={() => copySelected(JSON.stringify(selectedOriginArray, null, 2))}
@@ -244,79 +257,3 @@
   </div>
 {/if}
 <QuickActions />
-
-<style>
-  @config "../../tailwind.config.mjs";
-  @reference "tailwindcss";
-
-  .glass-container {
-    @apply mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px];
-  }
-
-  .links-grid {
-    @apply mt-4 grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4;
-    .link-card {
-      @apply block rounded-[14px] border border-white/10 bg-black/20 p-[1.25rem] text-white no-underline;
-      transition:
-        transform 0.15s ease,
-        background 0.3s ease;
-      &:hover {
-        @apply bg-[rgba(255,255,255,0.06)];
-        transform: translateY(-2px);
-      }
-    }
-    .link-title {
-      @apply mb-[0.5rem] text-[1.2rem] font-bold text-[#64b5f6];
-    }
-    .link-desc {
-      @apply text-[0.95rem] text-white/80;
-    }
-  }
-
-  .loading-section {
-    @apply mt-6 text-white/80;
-  }
-
-  .error-section {
-    @apply mt-6 text-red-300;
-  }
-
-  .page-subtitle {
-    @apply text-[1.1rem] text-white/70 italic;
-    .copy-action {
-      @apply m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline;
-      &:hover {
-        @apply text-[#42a5f5];
-      }
-    }
-    .copy-feedback {
-      @apply ml-2 text-[#4caf50];
-    }
-  }
-
-  .usage-subtitle {
-    @apply mt-2;
-  }
-
-  .selection-float {
-    @apply fixed bottom-4 left-1/2 z-[999] translate-x-[-50%];
-    .selection-content {
-      @apply flex items-center gap-4 rounded-[12px] border border-white/20 bg-white/10 p-3 px-4 shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px];
-      .selection-summary {
-        @apply font-semibold text-white;
-      }
-      .selection-actions {
-        @apply flex gap-3;
-        .copy-button {
-          @apply cursor-pointer rounded-[8px] border-none px-[0.8rem] py-[0.5rem] text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out;
-        }
-        .mirror-copy {
-          @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)];
-        }
-        .origin-copy {
-          @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)];
-        }
-      }
-    }
-  }
-</style>

@@ -111,12 +111,5 @@
   });
 </script>
 
-<canvas bind:this={canvasRef} class="starry-background"></canvas>
-
-<style>
-  @reference "tailwindcss";
-
-  .starry-background {
-    @apply pointer-events-none fixed top-0 left-0 z-0 h-full w-full;
-  }
-</style>
+<canvas bind:this={canvasRef} class="pointer-events-none fixed top-0 left-0 z-0 h-full w-full">
+</canvas>

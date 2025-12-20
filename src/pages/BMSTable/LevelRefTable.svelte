@@ -79,40 +79,64 @@
 </script>
 
 {#if shouldShow && levelRefData.length > 0}
-  <div class="rank-reference-section">
-    <h3>难度对照表</h3>
-    <div class="rank-reference-tables">
-      <div class="rank-reference-left">
-        <table>
+  <div class="mt-8 mb-8 rounded-[15px] border border-white/10 bg-black/20 p-6">
+    <h3 class="mt-0 mb-6 text-center text-[1.3rem] text-white">难度对照表</h3>
+    <div class="flex justify-center gap-8">
+      <div class="min-w-0 flex-1">
+        <table class="w-full border-collapse overflow-hidden rounded-[10px] bg-white/5">
           <thead>
             <tr>
-              <th>难度等级</th>
-              <th>对应难度</th>
+              <th
+                class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
+              >
+                难度等级
+              </th>
+              <th
+                class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
+              >
+                对应难度
+              </th>
             </tr>
           </thead>
           <tbody>
             {#each leftTableData as item (item.level)}
-              <tr>
-                <td>{item.level}</td>
-                <td>{item.ref}</td>
+              <tr class="hover:bg-white/5 last:[&>td]:border-b-0">
+                <td class="border-b border-white/5 px-4 py-3 text-white/90">
+                  {item.level}
+                </td>
+                <td class="border-b border-white/5 px-4 py-3 text-white/90">
+                  {item.ref}
+                </td>
               </tr>
             {/each}
           </tbody>
         </table>
       </div>
-      <div class="rank-reference-right">
-        <table>
+      <div class="min-w-0 flex-1">
+        <table class="w-full border-collapse overflow-hidden rounded-[10px] bg-white/5">
           <thead>
             <tr>
-              <th>难度等级</th>
-              <th>对应难度</th>
+              <th
+                class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
+              >
+                难度等级
+              </th>
+              <th
+                class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
+              >
+                对应难度
+              </th>
             </tr>
           </thead>
           <tbody>
             {#each rightTableData as item (item.level)}
-              <tr>
-                <td>{item.level}</td>
-                <td>{item.ref}</td>
+              <tr class="hover:bg-white/5 last:[&>td]:border-b-0">
+                <td class="border-b border-white/5 px-4 py-3 text-white/90">
+                  {item.level}
+                </td>
+                <td class="border-b border-white/5 px-4 py-3 text-white/90">
+                  {item.ref}
+                </td>
               </tr>
             {/each}
           </tbody>
@@ -121,47 +145,3 @@
     </div>
   </div>
 {/if}
-
-<style>
-  @reference "tailwindcss";
-
-  .rank-reference-section {
-    @apply mt-8 mb-8 rounded-[15px] border border-white/10 bg-black/20 p-6;
-  }
-
-  .rank-reference-section {
-    h3 {
-      @apply mt-0 mb-6 text-center text-[1.3rem] text-white;
-    }
-  }
-
-  .rank-reference-tables {
-    @apply flex justify-center gap-8;
-  }
-
-  .rank-reference-left,
-  .rank-reference-right {
-    @apply min-w-0 flex-1;
-
-    table {
-      @apply w-full border-collapse overflow-hidden rounded-[10px] bg-white/5;
-    }
-
-    th {
-      @apply border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white;
-    }
-
-    td {
-      @apply border-b border-white/5 px-4 py-3 text-white/90;
-    }
-
-    tbody tr {
-      &:hover {
-        @apply bg-white/5;
-      }
-      &:last-child td {
-        @apply border-b-0;
-      }
-    }
-  }
-</style>

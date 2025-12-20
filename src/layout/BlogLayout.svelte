@@ -4,35 +4,15 @@
 </script>
 
 <StarryBackground />
-<main class="blog-container">
-  <aside class="sidebar">
-    <div class="profile-card">
+<main
+  class="m-0 mx-auto box-border grid w-full max-w-[1400px] grid-cols-[380px_1fr] items-start gap-8 p-8"
+>
+  <aside class="mt-8 flex w-full justify-center">
+    <div class="m-0 mx-auto block w-full max-w-[360px] animate-fadeIn">
       <ProfileCard />
     </div>
   </aside>
-  <section class="content">
+  <section class="w-full">
     <slot />
   </section>
 </main>
-
-<style>
-  @config "../../tailwind.config.mjs";
-  @reference "tailwindcss";
-
-  .blog-container {
-    @apply m-0 mx-auto box-border grid w-full max-w-[1400px] grid-cols-[380px_1fr] items-start gap-8 p-8;
-  }
-
-  .sidebar {
-    @apply mt-8 flex w-full justify-center;
-  }
-
-  .profile-card {
-    @apply m-0 mx-auto block w-full max-w-[360px] animate-fadeIn;
-  }
-
-  .content {
-    @apply w-full;
-  }
-
-</style>

@@ -114,28 +114,30 @@
 </script>
 
 {#if groups.length === 0}
-  <div class="empty-state">
-    <div class="empty-icon">📊</div>
-    <h3>暂无谱面数据</h3>
-    <p>难度表中没有找到谱面数据。</p>
+  <div class="p-12 text-center">
+    <div class="mb-4 text-[4rem]">📊</div>
+    <h3 class="mb-4 text-white">暂无谱面数据</h3>
+    <p class="text-white/70">难度表中没有找到谱面数据。</p>
   </div>
 {:else}
-  <div class="charts-table-section">
-    <h3>谱面列表 ({totalCharts} 个)</h3>
+  <div class="mt-8">
+    <h3 class="mb-4 text-white">谱面列表 ({totalCharts} 个)</h3>
 
     <ScrollSyncGroup watchKeys={groups} let:setRef>
       {#if groups.length > 1}
-        <div class="difficulty-groups-nav">
-          <div class="difficulty-groups-tabs">
+        <div class="mb-8">
+          <div class="mb-6 flex flex-wrap gap-3">
             {#each displayGroups as group, idx (group.level)}
               <button
-                class="difficulty-group-tab"
+                class="flex cursor-pointer items-center justify-center gap-2 rounded-[25px] border-2 border-transparent px-6 py-3 text-[1.1rem] font-bold text-white opacity-70 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] active:-translate-y-[1px] active:opacity-90"
                 type="button"
                 on:click={() => scrollToDifficultyGroup(group.level)}
                 style={`background-color:${segmentColor(idx, displayGroups.length)};border-color:${segmentColor(idx, displayGroups.length)};`}
               >
                 {group.level}
-                <span class="chart-count">({group.charts.length})</span>
+                <span class="rounded-[10px] bg-black/20 px-2 py-[0.1rem] text-[0.9rem] opacity-90">
+                  ({group.charts.length})
+                </span>
               </button>
             {/each}
           </div>
@@ -144,34 +146,61 @@
 
       {#each displayGroups as group, gIndex (group.level)}
         {@const groupColor = segmentColor(gIndex, displayGroups.length)}
-        <div id={`difficulty-group-${group.level}`} class="difficulty-group-container">
-          <div class="difficulty-group-header">
-            <div class="difficulty-group-title">
-              <span class="difficulty-group-badge" style={`background-color:${groupColor};`}>
+        <div id={`difficulty-group-${group.level}`} class="mb-12 scroll-mt-[20px]">
+          <div class="mb-6 border-b-2 border-white/10 pb-4">
+            <div class="flex items-center gap-4">
+              <span
+                class="rounded-[20px] px-6 py-2 text-[1.2rem] font-bold text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
+                style={`background-color:${groupColor};`}
+              >
                 难度 {group.level}
               </span>
-              <span class="difficulty-group-count"> {group.charts.length} 个谱面 </span>
+              <span class="text-[1.1rem] text-white/80"> {group.charts.length} 个谱面 </span>
             </div>
           </div>
 
-          <div class="table-wrapper" use:setRef>
-            <table class="charts-table">
+          <div class="overflow-x-auto rounded-[10px] border border-white/10 bg-black/20" use:setRef>
+            <table class="w-full min-w-[900px] table-fixed border-collapse">
               <colgroup>
-                <col class="col-level" />
-                <col class="col-download" />
-                <col class="col-bmslinks" />
-                <col class="col-title" />
-                <col class="col-artist" />
-                <col class="col-comment" />
+                <col class="w-[50px]" />
+                <col class="w-[140px]" />
+                <col class="w-[140px]" />
+                <col class="w-[260px]" />
+                <col class="w-[200px]" />
+                <col class="w-[260px]" />
               </colgroup>
               <thead>
                 <tr>
-                  <th>等级</th>
-                  <th>下载</th>
-                  <th>BMS网站</th>
-                  <th>标题</th>
-                  <th>艺术家</th>
-                  <th class="comment-header">备注</th>
+                  <th
+                    class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                  >
+                    等级
+                  </th>
+                  <th
+                    class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                  >
+                    下载
+                  </th>
+                  <th
+                    class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                  >
+                    BMS网站
+                  </th>
+                  <th
+                    class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                  >
+                    标题
+                  </th>
+                  <th
+                    class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                  >
+                    艺术家
+                  </th>
+                  <th
+                    class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                  >
+                    备注
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -179,17 +208,22 @@
                   {@const bundleUrl = resolvedBundleUrl(chart)}
                   {@const diffUrl = resolvedDiffUrl(chart)}
                   {@const bmsLinks = getBmsLinks(chart)}
-                  <tr>
-                    <td>
-                      <span class="level-badge" style={`background-color:${groupColor};`}>
+                  <tr class="hover:bg-white/5">
+                    <td class="border-b border-white/5 p-4 break-words text-white/90">
+                      <span
+                        class="inline-block min-w-[30px] rounded-[12px] px-2 py-1 text-center text-[0.85rem] font-semibold text-white"
+                        style={`background-color:${groupColor};`}
+                      >
                         {group.level}
                       </span>
                     </td>
-                    <td class="download-cell">
-                      <div class="download-buttons">
+                    <td
+                      class="max-w-[180px] min-w-[130px] border-b border-white/5 p-4 break-words text-white/90"
+                    >
+                      <div class="flex flex-row flex-wrap gap-[0.3rem]">
                         {#if bundleUrl}
                           <a
-                            class="download-button download-bundle"
+                            class="flex min-w-[60px] flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none bg-[linear-gradient(135deg,#4caf50,#2e7d32)] px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#66bb6a,#388e3c)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
                             href={bundleUrl}
                             title={bundleUrl}
                             target="_blank"
@@ -200,7 +234,7 @@
                         {/if}
                         {#if diffUrl}
                           <a
-                            class="download-button download-diff"
+                            class="flex min-w-[60px] flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#42a5f5,#1976d2)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
                             href={diffUrl}
                             title={diffUrl}
                             target="_blank"
@@ -211,11 +245,13 @@
                         {/if}
                       </div>
                     </td>
-                    <td class="bms-links-cell">
-                      <div class="bms-links">
+                    <td
+                      class="max-w-[180px] min-w-[140px] border-b border-white/5 p-4 break-words text-white/90"
+                    >
+                      <div class="flex flex-wrap justify-center gap-[0.4rem]">
                         {#if hasMd5(chart)}
                           <a
-                            class="bms-link-button bms-score-viewer"
+                            class="flex h-[36px] w-[36px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] p-0 text-[1.2rem] text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#ffb74d,#ff9800)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
                             href={bmsLinks.bmsScoreViewer}
                             title={bmsLinks.bmsScoreViewer}
                             target="_blank"
@@ -224,7 +260,7 @@
                             📊
                           </a>
                           <a
-                            class="bms-link-button lr2ir"
+                            class="flex h-[36px] w-[36px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#9c27b0,#7b1fa2)] p-0 text-[0.85rem] font-bold text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#ba68c8,#9c27b0)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
                             href={bmsLinks.lr2ir}
                             title={bmsLinks.lr2ir}
                             target="_blank"
@@ -235,31 +271,45 @@
                         {/if}
                         {#if hasSha256(chart)}
                           <a
-                            class="bms-link-button mocha"
+                            class="flex h-[36px] w-[36px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#795548,#5d4037)] p-0 text-[1.2rem] text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#a1887f,#795548)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
                             href={bmsLinks.mocha}
                             title={bmsLinks.mocha}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <img src="/assets/logo/mocha_logo.gif" alt="Mocha" class="bms-icon" />
+                            <img
+                              src="/assets/logo/mocha_logo.gif"
+                              alt="Mocha"
+                              class="h-6 w-6 object-contain"
+                            />
                           </a>
                           <a
-                            class="bms-link-button minir"
+                            class="flex h-[36px] w-[36px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#00bcd4,#0097a7)] p-0 text-[1.2rem] text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#4dd0e1,#00bcd4)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
                             href={bmsLinks.minir}
                             title={bmsLinks.minir}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <img src="/assets/logo/minir_logo.gif" alt="Minir" class="bms-icon" />
+                            <img
+                              src="/assets/logo/minir_logo.gif"
+                              alt="Minir"
+                              class="h-6 w-6 object-contain"
+                            />
                           </a>
                         {/if}
                       </div>
                     </td>
-                    <td class="chart-title">
+                    <td class="min-w-[200px] border-b border-white/5 p-4 break-words text-white/90">
                       <strong>{chart.title || "未知标题"}</strong>
                     </td>
-                    <td>{chart.artist || "未知艺术家"}</td>
-                    <td class="comment-cell">{chart.comment || ""}</td>
+                    <td class="border-b border-white/5 p-4 break-words text-white/90">
+                      {chart.artist || "未知艺术家"}
+                    </td>
+                    <td
+                      class="max-w-[300px] min-w-[150px] border-b border-white/5 p-4 break-words text-white/90"
+                    >
+                      {chart.comment || ""}
+                    </td>
                   </tr>
                 {/each}
               </tbody>
@@ -270,240 +320,3 @@
     </ScrollSyncGroup>
   </div>
 {/if}
-
-<style>
-  @reference "tailwindcss";
-
-  .charts-table-section {
-    @apply mt-8;
-  }
-
-  .charts-table-section {
-    h3 {
-      @apply mb-4 text-white;
-    }
-  }
-
-  .table-wrapper {
-    @apply overflow-x-auto rounded-[10px] border border-white/10 bg-black/20;
-  }
-
-  .charts-table {
-    @apply w-full min-w-[900px] table-fixed border-collapse;
-    th {
-      @apply border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white;
-    }
-    td {
-      @apply border-b border-white/5 p-4 break-words text-white/90;
-    }
-    col {
-      &.col-level {
-        width: 50px;
-      }
-      &.col-download {
-        width: 140px;
-      }
-      &.col-bmslinks {
-        width: 140px;
-      }
-      &.col-title {
-        width: 260px;
-      }
-      &.col-artist {
-        width: 200px;
-      }
-      &.col-comment {
-        width: 260px;
-      }
-    }
-    tbody tr {
-      &:hover {
-        @apply bg-white/5;
-      }
-    }
-  }
-
-  .chart-title {
-    @apply min-w-[200px];
-  }
-
-  .comment-cell {
-    @apply max-w-[300px] min-w-[150px];
-  }
-
-  .level-badge {
-    @apply inline-block min-w-[30px] rounded-[12px] px-2 py-1 text-center text-[0.85rem] font-semibold text-white;
-  }
-
-  .download-cell {
-    @apply max-w-[180px] min-w-[130px];
-  }
-
-  .download-buttons {
-    @apply flex flex-row flex-wrap gap-[0.3rem];
-  }
-
-  .download-button {
-    @apply flex min-w-[60px] flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-inherit no-underline transition-all duration-200 ease-in-out;
-  }
-
-  .download-button {
-    &:hover {
-      @apply shadow-[0_4px_8px_rgba(0,0,0,0.2)];
-      transform: translateY(-2px);
-    }
-    &:active {
-      transform: translateY(0);
-    }
-  }
-
-  .download-bundle {
-    @apply bg-[linear-gradient(135deg,#4caf50,#2e7d32)] text-white;
-  }
-
-  .download-bundle {
-    &:hover {
-      @apply bg-[linear-gradient(135deg,#66bb6a,#388e3c)];
-    }
-  }
-
-  .download-diff {
-    @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white;
-  }
-
-  .download-diff {
-    &:hover {
-      @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
-    }
-  }
-
-  .bms-links-cell {
-    @apply max-w-[180px] min-w-[140px];
-  }
-
-  .bms-links {
-    @apply flex flex-wrap justify-center gap-[0.4rem];
-  }
-
-  .bms-link-button {
-    @apply flex h-[36px] w-[36px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-none p-0 text-[1.2rem] text-inherit no-underline transition-all duration-200 ease-in-out;
-  }
-
-  .bms-link-button {
-    &:hover {
-      @apply shadow-[0_4px_8px_rgba(0,0,0,0.3)];
-      transform: scale(1.1);
-    }
-    &:active {
-      transform: scale(0.95);
-    }
-  }
-
-  .bms-icon {
-    @apply h-6 w-6 object-contain;
-  }
-
-  .bms-score-viewer {
-    @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white;
-  }
-
-  .bms-score-viewer {
-    &:hover {
-      @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
-    }
-  }
-
-  .lr2ir {
-    @apply bg-[linear-gradient(135deg,#9c27b0,#7b1fa2)] text-white;
-  }
-
-  .lr2ir {
-    &:hover {
-      @apply bg-[linear-gradient(135deg,#ba68c8,#9c27b0)];
-    }
-  }
-
-  .mocha {
-    @apply bg-[linear-gradient(135deg,#795548,#5d4037)] text-white;
-  }
-
-  .mocha {
-    &:hover {
-      @apply bg-[linear-gradient(135deg,#a1887f,#795548)];
-    }
-  }
-
-  .minir {
-    @apply bg-[linear-gradient(135deg,#00bcd4,#0097a7)] text-white;
-  }
-
-  .minir {
-    &:hover {
-      @apply bg-[linear-gradient(135deg,#4dd0e1,#00bcd4)];
-    }
-  }
-
-  .difficulty-groups-nav {
-    @apply mb-8;
-  }
-
-  .difficulty-groups-tabs {
-    @apply mb-6 flex flex-wrap gap-3;
-  }
-
-  .difficulty-group-tab {
-    @apply flex cursor-pointer items-center justify-center gap-2 rounded-[25px] border-2 border-transparent px-6 py-3 text-[1.1rem] font-bold text-white opacity-70 transition-all duration-300 ease-in-out;
-  }
-
-  .difficulty-group-tab {
-    &:hover {
-      @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
-      transform: translateY(-2px);
-    }
-    &:active {
-      @apply opacity-90;
-      transform: translateY(-1px);
-    }
-  }
-
-  .chart-count {
-    @apply rounded-[10px] bg-black/20 px-2 py-[0.1rem] text-[0.9rem] opacity-90;
-  }
-
-  .difficulty-group-container {
-    @apply mb-12 scroll-mt-[20px];
-  }
-
-  .difficulty-group-header {
-    @apply mb-6 border-b-2 border-white/10 pb-4;
-  }
-
-  .difficulty-group-title {
-    @apply flex items-center gap-4;
-  }
-
-  .difficulty-group-badge {
-    @apply rounded-[20px] px-6 py-2 text-[1.2rem] font-bold text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)];
-  }
-
-  .difficulty-group-count {
-    @apply text-[1.1rem] text-white/80;
-  }
-
-  .empty-state {
-    @apply p-12 text-center;
-  }
-
-  .empty-state {
-    h3 {
-      @apply mb-4 text-white;
-    }
-    p {
-      @apply text-white/70;
-    }
-  }
-
-  .empty-icon {
-    @apply mb-4 text-[4rem];
-  }
-</style>

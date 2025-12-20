@@ -206,29 +206,53 @@
 </script>
 
 <StarryBackground />
-<div class="bms-table-container">
-  <div class="page-header">
-    <h1 class="page-title">{pageTitle}</h1>
+<div
+  class="mx-auto my-8 max-w-[1500px] rounded-[20px] border border-white/10 bg-white/5 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[10px]"
+>
+  <div class="mb-8 text-center">
+    <h1
+      class="mb-2 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] bg-clip-text text-[2.5rem] font-bold text-transparent [text-shadow:0_2px_4px_rgba(0,0,0,0.3)]"
+    >
+      {pageTitle}
+    </h1>
     {#if headerData?.symbol}
-      <div class="page-subtitle">难度表符号: {headerData.symbol}</div>
+      <div class="text-[1.2rem] text-white/70 italic">难度表符号: {headerData.symbol}</div>
     {/if}
-    <div class="page-subtitle usage-subtitle">
+    <div class="mt-2 text-[1.2rem] text-white/70 italic">
       使用方式：复制本网站链接（
-      <button class="copy-action" type="button" on:click={copySiteUrl}>点击复制</button>
+      <button
+        class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
+        type="button"
+        on:click={copySiteUrl}
+      >
+        点击复制
+      </button>
       ），然后在BeMusicSeeker或beatoraja中，粘贴至对应选项处。
       {#if copied}
-        <span class="copy-feedback">已复制</span>
+        <span class="ml-2 text-[#4caf50]">已复制</span>
       {/if}
     </div>
-    <div class="page-subtitle origin-subtitle">
+    <div class="mt-2 text-[1.2rem] text-white/70 italic">
       {#if originUrl}
-        <a class="copy-action" href={originUrl} target="_blank" rel="noopener noreferrer">原链接</a>
+        <a
+          class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
+          href={originUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          原链接
+        </a>
       {/if}
       {#if originUrl && header}
         <span class="mx-2"> | </span>
       {/if}
       {#if header}
-        <a class="copy-action" href={header} target="_blank" rel="noopener noreferrer">
+        <a
+          class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
+          href={header}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           查看header.json
         </a>
       {/if}
@@ -236,72 +260,98 @@
         <span class="mx-2">|</span>
       {/if}
       {#if dataFetchUrl}
-        <a class="copy-action" href={dataFetchUrl} target="_blank" rel="noopener noreferrer">
+        <a
+          class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
+          href={dataFetchUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           查看data.json
         </a>
       {/if}
     </div>
   </div>
-  <div class="bms-table-content">
+  <div class="w-full text-[1.1rem] leading-[1.6] text-white/90">
     {#if loadingState.isLoading}
-      <div class="loading-section">
-        <div class="progress-container">
-          <div class="progress-header">
-            <h3>正在加载BMS难度表数据...</h3>
-            <div class="progress-percentage">{Math.round(loadingState.progress)}%</div>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" style={`width:${loadingState.progress}%;`}></div>
-          </div>
-          <div class="progress-steps">
-            <div class="step-info">
-              <span class="step-label">当前步骤:</span>
-              <span class="step-text">{loadingState.currentStep}</span>
+      <div class="p-8">
+        <div class="rounded-[15px] border border-white/10 bg-black/20 p-8">
+          <div class="mb-6 flex items-center justify-between">
+            <h3 class="m-0 text-[1.5rem] text-white">正在加载BMS难度表数据...</h3>
+            <div
+              class="rounded-[20px] bg-[#64b5f6]/20 px-4 py-2 text-[1.2rem] font-bold text-[#64b5f6]"
+            >
+              {Math.round(loadingState.progress)}%
             </div>
-            <div class="step-info">
-              <span class="step-label">总步骤数:</span>
-              <span class="step-text">{loadingState.totalSteps}</span>
+          </div>
+          <div class="mb-6 h-[12px] overflow-hidden rounded-[6px] bg-white/10">
+            <div
+              class="h-full rounded-[6px] bg-[linear-gradient(90deg,#4caf50,#64b5f6)] transition-[width] duration-300 ease-out"
+              style={`width:${loadingState.progress}%;`}
+            ></div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+              <span class="text-[0.9rem] text-white/60">当前步骤:</span>
+              <span class="font-medium text-white">{loadingState.currentStep}</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <span class="text-[0.9rem] text-white/60">总步骤数:</span>
+              <span class="font-medium text-white">{loadingState.totalSteps}</span>
             </div>
           </div>
         </div>
       </div>
     {:else if error}
-      <div class="error-section">
-        <div class="error-icon">⚠️</div>
-        <h3>加载失败</h3>
-        <p class="error-message">{error}</p>
+      <div class="p-12 text-center">
+        <div class="mb-4 text-[4rem]">⚠️</div>
+        <h3 class="mb-4 text-[#ff6b6b]">加载失败</h3>
+        <p
+          class="my-6 rounded-[10px] border-l-[4px] border-[#ff6b6b] bg-[rgba(255,107,107,0.1)] p-4"
+        >
+          {error}
+        </p>
         <p>请检查网络连接或稍后重试。</p>
-        <button class="retry-button" type="button" on:click={lazyLoadTableData}>重新加载</button>
+        <button
+          class="mt-4 cursor-pointer rounded-[25px] border-none bg-[#64b5f6] px-8 py-3 text-[1rem] font-semibold text-white transition-colors duration-300 ease-out hover:bg-[#42a5f5]"
+          type="button"
+          on:click={lazyLoadTableData}
+        >
+          重新加载
+        </button>
       </div>
     {:else}
-      <div class="data-section">
-        <div class="table-header">
-          <div class="header-info">
-            <h2>难度表信息</h2>
-            <div class="header-details">
+      <div class="py-4">
+        <div class="mb-8 grid grid-cols-2 gap-8 rounded-[15px] bg-black/20 p-6">
+          <div>
+            <h2 class="mt-0 mb-4 text-white">难度表信息</h2>
+            <div>
               {#if headerData}
-                <p>
-                  <strong>难度表名称:</strong>
+                <p class="my-2 text-white/80">
+                  <strong class="text-[#64b5f6]">难度表名称:</strong>
                   {headerData.name || "未命名"}
                 </p>
-                <p>
-                  <strong>难度表符号:</strong>
+                <p class="my-2 text-white/80">
+                  <strong class="text-[#64b5f6]">难度表符号:</strong>
                   {headerData.symbol || "未定义"}
                 </p>
               {/if}
             </div>
           </div>
 
-          <div class="stats-summary">
-            <h3>统计摘要</h3>
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-value">{tableStats.totalCharts}</div>
-                <div class="stat-label">总谱面数</div>
+          <div>
+            <h3 class="mt-0 mb-4 text-white">统计摘要</h3>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="rounded-[10px] border border-white/10 bg-white/5 p-4 text-center">
+                <div class="mb-2 text-[2rem] font-bold text-[#64b5f6]">
+                  {tableStats.totalCharts}
+                </div>
+                <div class="text-[0.9rem] text-white/70">总谱面数</div>
               </div>
-              <div class="stat-card">
-                <div class="stat-value">{tableStats.difficulties.length}</div>
-                <div class="stat-label">难度等级数</div>
+              <div class="rounded-[10px] border border-white/10 bg-white/5 p-4 text-center">
+                <div class="mb-2 text-[2rem] font-bold text-[#64b5f6]">
+                  {tableStats.difficulties.length}
+                </div>
+                <div class="text-[0.9rem] text-white/70">难度等级数</div>
               </div>
             </div>
           </div>
@@ -316,10 +366,10 @@
             levelOrder={headerData?.level_order || []}
           />
         {:else}
-          <div class="empty-state">
-            <div class="empty-icon">📊</div>
-            <h3>暂无谱面数据</h3>
-            <p>难度表中没有找到谱面数据。</p>
+          <div class="p-12 text-center">
+            <div class="mb-4 text-[4rem]">📊</div>
+            <h3 class="mb-4 text-white">暂无谱面数据</h3>
+            <p class="text-white/70">难度表中没有找到谱面数据。</p>
           </div>
         {/if}
       </div>
@@ -327,167 +377,3 @@
   </div>
 </div>
 <QuickActions />
-
-<style>
-  @reference "tailwindcss";
-
-  .bms-table-container {
-    @apply mx-auto my-8 max-w-[1500px] rounded-[20px] border border-white/10 bg-white/5 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[10px];
-  }
-
-  .page-header {
-    @apply mb-8 text-center;
-  }
-
-  .page-title {
-    @apply mb-2 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] bg-clip-text text-[2.5rem] font-bold text-transparent text-white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  }
-
-  .page-subtitle {
-    @apply text-[1.2rem] text-white/70 italic;
-  }
-
-  .usage-subtitle {
-    @apply mt-2;
-  }
-
-  .origin-subtitle {
-    @apply mt-2;
-  }
-
-  .copy-action {
-    @apply m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline;
-  }
-
-  .copy-action {
-    &:hover {
-      @apply text-[#42a5f5];
-    }
-  }
-
-  .copy-feedback {
-    @apply ml-2 text-[#4caf50];
-  }
-
-  .bms-table-content {
-    @apply w-full text-[1.1rem] leading-[1.6] text-white/90;
-  }
-
-  .loading-section {
-    @apply p-8;
-    .progress-container {
-      @apply rounded-[15px] border border-white/10 bg-black/20 p-8;
-    }
-    .progress-header {
-      @apply mb-6 flex items-center justify-between;
-      h3 {
-        @apply m-0 text-[1.5rem] text-white;
-      }
-    }
-    .progress-percentage {
-      @apply rounded-[20px] bg-[#64b5f6]/20 px-4 py-2 text-[1.2rem] font-bold text-[#64b5f6];
-    }
-    .progress-bar {
-      @apply mb-6 h-[12px] overflow-hidden rounded-[6px] bg-white/10;
-    }
-    .progress-fill {
-      @apply h-full rounded-[6px] bg-[linear-gradient(90deg,#4caf50,#64b5f6)];
-      transition: width 0.3s ease;
-    }
-    .progress-steps {
-      @apply grid grid-cols-2 gap-4;
-    }
-    .step-info {
-      @apply flex flex-col gap-2;
-    }
-    .step-label {
-      @apply text-[0.9rem] text-white/60;
-    }
-    .step-text {
-      @apply font-medium text-white;
-    }
-  }
-
-  .error-section {
-    @apply p-12 text-center;
-    .error-icon {
-      @apply mb-4 text-[4rem];
-    }
-    h3 {
-      @apply mb-4 text-[#ff6b6b];
-    }
-    .error-message {
-      @apply my-6 rounded-[10px] border-l-[4px] border-[#ff6b6b] bg-[rgba(255,107,107,0.1)] p-4;
-    }
-    .retry-button {
-      @apply mt-4 cursor-pointer rounded-[25px] border-none bg-[#64b5f6] px-8 py-3 text-[1rem] font-semibold text-white;
-      transition: background 0.3s ease;
-      &:hover {
-        @apply bg-[#42a5f5];
-      }
-    }
-  }
-
-  .data-section {
-    @apply py-4;
-  }
-
-  .table-header {
-    @apply mb-8 grid grid-cols-2 gap-8 rounded-[15px] bg-black/20 p-6;
-  }
-
-  .header-info {
-    h2 {
-      @apply mt-0 mb-4 text-white;
-    }
-  }
-
-  .header-details {
-    p {
-      @apply my-2 text-white/80;
-    }
-    strong {
-      @apply text-[#64b5f6];
-    }
-  }
-
-  .stats-summary {
-    h3 {
-      @apply mt-0 mb-4 text-white;
-    }
-  }
-
-  .stats-grid {
-    @apply grid grid-cols-3 gap-4;
-  }
-
-  .stat-card {
-    @apply rounded-[10px] border border-white/10 bg-white/5 p-4 text-center;
-  }
-
-  .stat-value {
-    @apply mb-2 text-[2rem] font-bold text-[#64b5f6];
-  }
-
-  .stat-label {
-    @apply text-[0.9rem] text-white/70;
-  }
-
-  .empty-state {
-    @apply p-12 text-center;
-  }
-
-  .empty-state {
-    h3 {
-      @apply mb-4 text-white;
-    }
-    p {
-      @apply text-white/70;
-    }
-  }
-
-  .empty-icon {
-    @apply mb-4 text-[4rem];
-  }
-</style>
