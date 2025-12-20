@@ -10,9 +10,6 @@ let script_root = (
 let json_dir = ($script_root | path join "../public/bms/table-mirror")
 let dest = ($json_dir | path join "tables_github.json")
 
-# 页面生成目录（改为 entry/bms/table-mirror）
-let pages_dir = ($script_root | path join "../entry/bms/table-mirror")
-
 # 反代列表（按此列表进行测速与选择）
 let proxies = [
   "https://proxy.pipers.cn/",
@@ -83,30 +80,11 @@ if $count == 0 {
 if ($json_dir | path exists) { rm -r $json_dir }
 mkdir $json_dir
 
-if ($pages_dir | path exists) {
-  ls $pages_dir | where type == "dir" | get name | each { |n|
-    rm -r ($pages_dir | path join $n)
-  }
-} else {
-  mkdir $pages_dir
-}
-
 print $"best proxy: ($result.best_proxy)"
 print $"best url: ($result.best_url)"
 ^curl -sSL --fail -L $result.best_url -o $dest
 
 let items = (open --raw $dest | from json)
-let tpl_path = ($script_root | path join "../entry/bms/table/self-sp/index.html")
-let tpl = (open --raw $tpl_path | into string)
-
-print "generating index pages"
-$items | each { |it|
-  let dir = ($pages_dir | path join $it.dir_name)
-  mkdir $dir
-  let header_link = $"($result.best_proxy)($it.url)"
-  let out = ($tpl | str replace -a "./header.json" $header_link | str replace -a "null" $"\"($it.url_ori)\"")
-  $out | save -f ($dir | path join "index.html")
-}
 
 let site_base = "https://miyakomeow.github.io/bms/table-mirror/"
 def encode-component [s: string] { $s | url encode --all }
@@ -116,6 +94,7 @@ $items | each { |it|
   let encoded_dir = (encode-component $it.dir_name)
   ($it | upsert url $"($site_base)($encoded_dir)/")
 } | to json | save -f $tables_out
+
 let tables_proxy_out = ($json_dir | path join "tables_proxy.json")
 $items | each { |it|
   ($it | upsert url $"($result.best_proxy)($it.url)")
