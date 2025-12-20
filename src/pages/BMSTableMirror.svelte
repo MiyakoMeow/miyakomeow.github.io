@@ -210,10 +210,10 @@
     <div class="mt-4 grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4">
       {#each links as link (link.href)}
         <a
-          class="block rounded-[14px] border border-white/10 bg-black/20 p-[1.25rem] text-white no-underline transition-[transform,background] duration-300 ease-out hover:-translate-y-0.5 hover:bg-[rgba(255,255,255,0.06)]"
+          class="block rounded-[14px] border border-white/10 bg-black/20 p-5 text-white no-underline transition-[transform,background] duration-300 ease-out hover:-translate-y-0.5 hover:bg-[rgba(255,255,255,0.06)]"
           href={link.href}
         >
-          <div class="mb-[0.5rem] text-[1.2rem] font-bold text-[#64b5f6]">{link.title}</div>
+          <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]">{link.title}</div>
           <div class="text-[0.95rem] text-white/80">{link.desc}</div>
         </a>
       {/each}
@@ -230,14 +230,14 @@
 </BlogLayout>
 
 {#if selectedCount > 0}
-  <div class="fixed bottom-4 left-1/2 z-[999] translate-x-[-50%]">
+  <div class="fixed bottom-4 left-1/2 z-999 translate-x-[-50%]">
     <div
-      class="flex items-center gap-4 rounded-[12px] border border-white/20 bg-white/10 p-3 px-4 shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px]"
+      class="flex items-center gap-4 rounded-xl border border-white/20 bg-white/10 p-3 px-4 shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px]"
     >
       <div class="font-semibold text-white">已选中 {selectedCount} / {totalCount}</div>
       <div class="flex gap-3">
         <button
-          class="cursor-pointer rounded-[8px] border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.8rem] py-[0.5rem] text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
+          class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
           title={tooltipMirror}
           on:click={() => copySelected(JSON.stringify(selectedMirrorArray, null, 2))}
@@ -245,7 +245,7 @@
           复制镜像链接
         </button>
         <button
-          class="cursor-pointer rounded-[8px] border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.8rem] py-[0.5rem] text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
+          class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
           title={tooltipOrigin}
           on:click={() => copySelected(JSON.stringify(selectedOriginArray, null, 2))}
