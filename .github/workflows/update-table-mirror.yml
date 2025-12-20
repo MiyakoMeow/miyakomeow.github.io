@@ -33,8 +33,11 @@ jobs:
       - name: Install dependencies
         run: bun install --ci
 
-      - name: Run Nushell script
-        run: nu scripts/update-table-mirror.nu
+      - name: Run fetch script
+        run: nu scripts/fetch-table-data.nu
+
+      - name: Run generate script
+        run: nu scripts/generate-table-pages.nu
 
       - name: Format with Prettier
         run: bun run format
