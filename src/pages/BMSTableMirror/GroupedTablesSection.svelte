@@ -152,28 +152,34 @@
 </script>
 
 {#if groups.length === 0}
-  <div class="empty-state">
-    <div class="empty-icon">📊</div>
-    <h3>暂无镜像数据</h3>
-    <p>未找到镜像列表。</p>
+  <div class="p-12 text-center">
+    <div class="mb-4 text-[4rem]">📊</div>
+    <h3 class="mb-4 text-white">暂无镜像数据</h3>
+    <p class="text-white/70">未找到镜像列表。</p>
   </div>
 {:else}
-  <div class="grouped-tables-section">
-    <div class="groups-nav">
+  <div class="mt-8">
+    <div class="mt-6 mb-8">
       {#each groups as g (g.tag1)}
-        <div class="group-row">
-          <button class="tag1-button" type="button" on:click={() => scrollToTag1(g.tag1)}>
+        <div class="mb-4">
+          <button
+            class="mr-3 cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+            type="button"
+            on:click={() => scrollToTag1(g.tag1)}
+          >
             {g.tag1}
           </button>
-          <div class="group-row-tag2">
+          <div class="mt-2 flex flex-wrap gap-2">
             {#each g.subgroups as sg (sg.tag2)}
               <button
-                class="tag2-group-tab"
+                class="cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
                 type="button"
                 on:click={() => scrollToTag2(g.tag1, sg.tag2)}
               >
                 {sg.tag2}
-                <span class="chart-count">({sg.items.length})</span>
+                <span class="rounded-[10px] bg-black/20 px-2 py-[0.1rem] text-[0.9rem] opacity-90">
+                  ({sg.items.length})
+                </span>
               </button>
             {/each}
           </div>
@@ -182,69 +188,102 @@
     </div>
 
     {#each groups as g (g.tag1)}
-      <div id={`tag1-group-${slugifyTag(g.tag1)}`} class="tag1-group-container">
-        <div class="tag1-group-header">
-          <div class="tag1-group-title">
+      <div id={`tag1-group-${slugifyTag(g.tag1)}`} class="mb-12 scroll-mt-[20px]">
+        <div class="mb-6 border-b-2 border-white/10 pb-4">
+          <div class="flex items-center gap-4">
             <input
               type="checkbox"
-              class="select-checkbox"
+              class="h-[22px] w-[22px] scale-[1.2]"
               use:indeterminate={tag1State(g) === CheckboxState.Indeterminate}
               checked={tag1State(g) === CheckboxState.Checked}
               on:change={(e) => onTag1Change((e.currentTarget as HTMLInputElement).checked, g)}
             />
-            <span class="tag1-badge">分类 {g.tag1}</span>
+            <span
+              class="rounded-[20px] bg-[rgba(100,181,246,0.3)] px-6 py-2 text-[1.2rem] font-bold text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
+            >
+              分类 {g.tag1}
+            </span>
           </div>
         </div>
 
         {#each g.subgroups as sg (sg.tag2)}
-          <div id={`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`} class="tag2-section">
-            <h3 class="tag2-title">
+          <div id={`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`} class="mt-4">
+            <h3 class="mt-2 mb-2 flex items-center gap-2 text-[1.1rem] text-white">
               <input
                 type="checkbox"
-                class="select-checkbox"
+                class="h-[22px] w-[22px] scale-[1.2]"
                 use:indeterminate={tag2State(sg) === CheckboxState.Indeterminate}
                 checked={tag2State(sg) === CheckboxState.Checked}
                 on:change={(e) => onTag2Change((e.currentTarget as HTMLInputElement).checked, sg)}
               />
               {sg.tag2}
             </h3>
-            <div class="table-wrapper" use:scrollSync>
-              <table class="tables-table">
+            <div
+              class="overflow-x-auto rounded-[10px] border border-white/10 bg-black/20"
+              use:scrollSync
+            >
+              <table class="w-full min-w-[800px] table-fixed border-collapse">
                 <colgroup>
-                  <col class="col-select" />
-                  <col class="col-symbol" />
-                  <col class="col-name" />
-                  <col class="col-mirror" />
-                  <col class="col-origin" />
+                  <col class="w-[60px]" />
+                  <col class="w-[120px]" />
+                  <col class="w-[320px]" />
+                  <col class="w-[160px]" />
+                  <col class="w-[160px]" />
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>选择</th>
-                    <th>符号</th>
-                    <th>名称</th>
-                    <th>镜像</th>
-                    <th>原链接</th>
+                    <th
+                      class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                    >
+                      选择
+                    </th>
+                    <th
+                      class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                    >
+                      符号
+                    </th>
+                    <th
+                      class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                    >
+                      名称
+                    </th>
+                    <th
+                      class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                    >
+                      镜像
+                    </th>
+                    <th
+                      class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white"
+                    >
+                      原链接
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {#each sg.items as item (item.url)}
-                    <tr>
-                      <td class="select-cell">
+                    <tr class="hover:bg-white/5 last:[&>td]:border-b-0">
+                      <td class="border-b border-white/5 p-4 break-words text-white/90">
                         <input
                           type="checkbox"
-                          class="select-checkbox"
+                          class="h-[22px] w-[22px] scale-[1.2]"
                           checked={!!selectedMap[item.url]}
                           on:change={(e) =>
                             onRowChange((e.currentTarget as HTMLInputElement).checked, item.url)}
                         />
                       </td>
-                      <td>{item.symbol || ""}</td>
-                      <td class="name-cell">
+                      <td class="border-b border-white/5 p-4 break-words text-white/90">
+                        {item.symbol || ""}
+                      </td>
+                      <td
+                        class="min-w-[200px] border-b border-white/5 p-4 break-words text-white/90"
+                      >
                         <strong>{item.name}</strong>
                       </td>
-                      <td class="mirror-cell">
+                      <td
+                        class="min-w-[130px] border-b border-white/5 p-4 break-words text-white/90"
+                      >
                         <a
-                          class="link-button mirror-link"
+                          class="flex min-w-[60px] cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#42a5f5,#1976d2)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
                           href={item.url}
                           title={item.url}
                           target="_blank"
@@ -253,10 +292,12 @@
                           镜像
                         </a>
                       </td>
-                      <td class="origin-cell">
+                      <td
+                        class="min-w-[130px] border-b border-white/5 p-4 break-words text-white/90"
+                      >
                         {#if item.url_ori}
                           <a
-                            class="link-button origin-link"
+                            class="flex min-w-[60px] cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#ffb74d,#ff9800)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
                             href={item.url_ori}
                             title={item.url_ori}
                             target="_blank"
@@ -265,7 +306,7 @@
                             原链接
                           </a>
                         {:else}
-                          <span class="link-missing">无</span>
+                          <span class="text-white/50">无</span>
                         {/if}
                       </td>
                     </tr>
@@ -279,163 +320,3 @@
     {/each}
   </div>
 {/if}
-
-<style>
-  @reference "tailwindcss";
-
-  .grouped-tables-section {
-    @apply mt-8;
-  }
-
-  .groups-nav {
-    @apply mt-6 mb-8;
-  }
-  .group-row {
-    @apply mb-4;
-  }
-  .tag1-button {
-    @apply mr-3 cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out;
-    &:hover {
-      @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
-      transform: translateY(-2px);
-    }
-  }
-  .group-row-tag2 {
-    @apply mt-2 flex flex-wrap gap-2;
-  }
-  .tag2-group-tab {
-    @apply cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out;
-    &:hover {
-      @apply opacity-90 shadow-[0_4px_12px_rgba(0,0,0,0.2)];
-      transform: translateY(-2px);
-    }
-  }
-
-  .tag1-group-container {
-    @apply mb-12 scroll-mt-[20px];
-  }
-
-  .tag1-group-header {
-    @apply mb-6 border-b-2 border-white/10 pb-4;
-  }
-
-  .tag1-group-title {
-    @apply flex items-center gap-4;
-  }
-
-  .tag1-badge {
-    @apply rounded-[20px] bg-[rgba(100,181,246,0.3)] px-6 py-2 text-[1.2rem] font-bold text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)];
-  }
-
-  .chart-count {
-    @apply rounded-[10px] bg-black/20 px-2 py-[0.1rem] text-[0.9rem] opacity-90;
-  }
-
-  .tag2-section {
-    @apply mt-4;
-  }
-
-  .tag2-title {
-    @apply mt-2 mb-2 flex items-center gap-2 text-[1.1rem] text-white;
-  }
-
-  .table-wrapper {
-    @apply overflow-x-auto rounded-[10px] border border-white/10 bg-black/20;
-  }
-
-  .tables-table {
-    @apply w-full min-w-[800px] table-fixed border-collapse;
-    th {
-      @apply border-b-2 border-white/10 bg-[rgba(100,181,246,0.2)] p-4 text-left font-semibold text-white;
-    }
-    td {
-      @apply border-b border-white/5 p-4 break-words text-white/90;
-    }
-    col {
-      &.col-select {
-        width: 60px;
-      }
-      &.col-symbol {
-        width: 120px;
-      }
-      &.col-name {
-        width: 320px;
-      }
-      &.col-mirror {
-        width: 160px;
-      }
-      &.col-origin {
-        width: 160px;
-      }
-    }
-    tbody tr {
-      &:hover {
-        @apply bg-white/5;
-      }
-      &:last-child td {
-        @apply border-b-0;
-      }
-    }
-  }
-
-  .name-cell {
-    @apply min-w-[200px];
-  }
-  .mirror-cell,
-  .origin-cell {
-    @apply min-w-[130px];
-  }
-
-  .link-button {
-    @apply flex min-w-[60px] cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-inherit no-underline transition-all duration-200 ease-in-out;
-    &:hover {
-      @apply shadow-[0_4px_8px_rgba(0,0,0,0.2)];
-      transform: translateY(-2px);
-    }
-  }
-
-  .mirror-link {
-    @apply bg-[linear-gradient(135deg,#2196f3,#1565c0)] text-white;
-    &:hover {
-      @apply bg-[linear-gradient(135deg,#42a5f5,#1976d2)];
-    }
-  }
-
-  .origin-link {
-    @apply bg-[linear-gradient(135deg,#ff9800,#f57c00)] text-white;
-    &:hover {
-      @apply bg-[linear-gradient(135deg,#ffb74d,#ff9800)];
-    }
-  }
-
-  .link-missing {
-    @apply text-white/50;
-  }
-
-  .empty-state {
-    @apply p-12 text-center;
-    h3 {
-      @apply mb-4 text-white;
-    }
-    p {
-      @apply text-white/70;
-    }
-    .empty-icon {
-      @apply mb-4 text-[4rem];
-    }
-  }
-
-  .select-cell {
-    .select-checkbox {
-      width: 22px;
-      height: 22px;
-      transform: scale(1.2);
-    }
-  }
-
-  .select-checkbox {
-    width: 22px;
-    height: 22px;
-    transform: scale(1.2);
-  }
-</style>

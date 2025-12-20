@@ -3,13 +3,12 @@
     "oven.bun-vscode",
     "fill-labs.dependi",
     "dbaeumer.vscode-eslint",
-    "samatech.postcss-vue",
     "esbenp.prettier-vscode",
     "bradlc.vscode-tailwindcss",
     "antfu.vite",
     "csstools.postcss",
     "ecmel.vscode-html-css",
-    "vue.volar",
-    "thenuprojectcontributors.vscode-nushell-lang"
+    "thenuprojectcontributors.vscode-nushell-lang",
+    "svelte.svelte-vscode"
   ]
 }
