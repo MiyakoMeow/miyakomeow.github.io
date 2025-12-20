@@ -5,7 +5,6 @@ let script_root = (
 
 # JSON 存放目录
 let json_dir = ($script_root | path join "../public/bms/table-mirror")
-let dest = ($json_dir | path join "tables_github.json")
 
 # 页面生成目录（改为 entry/bms/table-mirror）
 let pages_dir = ($script_root | path join "../entry/bms/table-mirror")
@@ -15,11 +14,6 @@ let tables_proxy_out = ($json_dir | path join "tables_proxy.json")
 # 检查依赖文件是否存在
 if not ($tables_proxy_out | path exists) {
   print $"Error: ($tables_proxy_out) not found. Please run fetch-table-data.nu first."
-  exit 1
-}
-
-if not ($dest | path exists) {
-  print $"Error: ($dest) not found. Please run fetch-table-data.nu first."
   exit 1
 }
 
