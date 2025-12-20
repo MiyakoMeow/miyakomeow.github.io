@@ -197,7 +197,12 @@
         </div>
 
         {#each g.subgroups as sg (sg.tag2)}
-          <div id={`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`} class="tag2-section">
+          <div
+            id={`tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`}
+            class="
+            tag2-section
+          "
+          >
             <h3 class="tag2-title">
               <input
                 type="checkbox"

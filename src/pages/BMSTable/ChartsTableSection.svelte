@@ -144,7 +144,12 @@
 
       {#each displayGroups as group, gIndex (group.level)}
         {@const groupColor = segmentColor(gIndex, displayGroups.length)}
-        <div id={`difficulty-group-${group.level}`} class="difficulty-group-container">
+        <div
+          id={`difficulty-group-${group.level}`}
+          class="
+          difficulty-group-container
+        "
+        >
           <div class="difficulty-group-header">
             <div class="difficulty-group-title">
               <span class="difficulty-group-badge" style={`background-color:${groupColor};`}>
@@ -241,7 +246,13 @@
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <img src="/assets/logo/mocha_logo.gif" alt="Mocha" class="bms-icon" />
+                            <img
+                              src="/assets/logo/mocha_logo.gif"
+                              alt="Mocha"
+                              class="
+                              bms-icon
+                            "
+                            />
                           </a>
                           <a
                             class="bms-link-button minir"
@@ -250,7 +261,13 @@
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <img src="/assets/logo/minir_logo.gif" alt="Minir" class="bms-icon" />
+                            <img
+                              src="/assets/logo/minir_logo.gif"
+                              alt="Minir"
+                              class="
+                              bms-icon
+                            "
+                            />
                           </a>
                         {/if}
                       </div>
