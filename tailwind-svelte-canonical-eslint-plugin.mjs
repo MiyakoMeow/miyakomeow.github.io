@@ -156,10 +156,10 @@ const rule = {
         const fullRangeStart = node.range[0];
         const fullRangeEnd = node.range[1];
         const fullText = sourceText.slice(fullRangeStart, fullRangeEnd);
-        const doubleQuoteIndex = fullText.indexOf("\"");
+        const doubleQuoteIndex = fullText.indexOf('"');
         const singleQuoteIndex = fullText.indexOf("'");
         let quoteIndex = -1;
-        let quoteChar = "\"";
+        let quoteChar = '"';
         if (doubleQuoteIndex === -1 && singleQuoteIndex === -1) {
           return;
         } else if (doubleQuoteIndex === -1) {
@@ -167,7 +167,7 @@ const rule = {
           quoteChar = "'";
         } else if (singleQuoteIndex === -1 || doubleQuoteIndex < singleQuoteIndex) {
           quoteIndex = doubleQuoteIndex;
-          quoteChar = "\"";
+          quoteChar = '"';
         } else {
           quoteIndex = singleQuoteIndex;
           quoteChar = "'";
