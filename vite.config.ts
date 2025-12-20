@@ -32,6 +32,7 @@ export default defineConfig({
   plugins: [svelte({ preprocess: vitePreprocess({ script: true }) }), tailwindcss()],
   root: resolve(__dirname, "entry"),
   publicDir: resolve(__dirname, "public"),
+  appType: "mpa",
   base: "./",
   define: {
     "process.env": {},
