@@ -1,7 +1,22 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createSyncFn } from "synckit";
+import { createSyncFn, runAsWorker } from "synckit";
+import { __unstable__loadDesignSystem } from "@tailwindcss/node";
+
+const designSystemCache = new Map();
+
+async function canonicalizeInWorker(cssContent, basePath, candidates, options = {}) {
+  const cacheKey = basePath;
+  let designSystem = designSystemCache.get(cacheKey);
+  if (!designSystem) {
+    designSystem = await __unstable__loadDesignSystem(cssContent, { base: basePath });
+    designSystemCache.set(cacheKey, designSystem);
+  }
+  return designSystem.canonicalizeCandidates(candidates, options);
+}
+
+runAsWorker(canonicalizeInWorker);
 
 function splitClasses(className) {
   return className.trim().split(/\s+/).filter(Boolean);
@@ -25,9 +40,7 @@ function extractStaticClassValue(node) {
   return null;
 }
 
-const workerPath = fileURLToPath(
-  new URL("./tailwind-svelte-canonical-worker.mjs", import.meta.url),
-);
+const workerPath = fileURLToPath(import.meta.url);
 const canonicalizeSync = createSyncFn(workerPath);
 
 function canonicalizeClasses(cssPath, candidates, rootFontSize = 16) {
