@@ -4,6 +4,8 @@ import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
 import pluginBetterTailwind from "eslint-plugin-better-tailwindcss";
 import svelte from "eslint-plugin-svelte";
+import tailwindCanonicalClasses from "eslint-plugin-tailwind-canonical-classes";
+import svelteTailwindCanonicalRule from "./tailwind-svelte-canonical-eslint-plugin.mjs";
 import { defineConfig } from "eslint/config";
 import { fileURLToPath } from "node:url";
 import globals from "globals";
@@ -16,10 +18,30 @@ const jsTsSvelteFiles = ["**/*.{js,ts,tsx,svelte}"];
 const svelteFiles = ["**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"];
 const betterTailwindPlugins = { "better-tailwindcss": pluginBetterTailwind };
 const betterTailwindSettings = { "better-tailwindcss": { entryPoint: "src/styles/main.css" } };
+const tailwindCanonicalPlugins = { "tailwind-canonical-classes": tailwindCanonicalClasses };
+const svelteTailwindCanonicalPlugins = {
+  "svelte-tailwind-canonical": {
+    rules: {
+      "tailwind-canonical-classes-svelte": svelteTailwindCanonicalRule,
+    },
+  },
+};
 const betterTailwindRules = {
   ...pluginBetterTailwind.configs["recommended"].rules,
   "better-tailwindcss/enforce-consistent-line-wrapping": "off",
   "better-tailwindcss/no-unregistered-classes": "off",
+};
+const tailwindCanonicalRules = {
+  "tailwind-canonical-classes/tailwind-canonical-classes": [
+    "warn",
+    { cssPath: "./src/styles/main.css" },
+  ],
+};
+const svelteTailwindCanonicalRules = {
+  "svelte-tailwind-canonical/tailwind-canonical-classes-svelte": [
+    "warn",
+    { cssPath: "./src/styles/main.css" },
+  ],
 };
 
 export default defineConfig(
@@ -41,13 +63,11 @@ export default defineConfig(
   })),
   {
     files: svelteFiles,
-    rules: {
-      "svelte/prefer-svelte-reactivity": "off",
-      "no-empty": "off",
+    plugins: {
+      ...betterTailwindPlugins,
+      ...tailwindCanonicalPlugins,
+      ...svelteTailwindCanonicalPlugins,
     },
-  },
-  {
-    files: svelteFiles,
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -55,10 +75,20 @@ export default defineConfig(
         parser: ts.parser,
       },
     },
+    settings: {
+      ...betterTailwindSettings,
+    },
+    rules: {
+      ...betterTailwindRules,
+      ...tailwindCanonicalRules,
+      ...svelteTailwindCanonicalRules,
+      "svelte/prefer-svelte-reactivity": "off",
+      "no-empty": "off",
+    },
   },
   {
     files: jsTsFiles,
-    plugins: betterTailwindPlugins,
+    plugins: { ...betterTailwindPlugins, ...tailwindCanonicalPlugins },
     languageOptions: {
       parserOptions: {
         ecmaFeatures: {
@@ -69,15 +99,7 @@ export default defineConfig(
     settings: {
       ...betterTailwindSettings,
     },
-    rules: betterTailwindRules,
-  },
-  {
-    files: svelteFiles,
-    plugins: betterTailwindPlugins,
-    settings: {
-      ...betterTailwindSettings,
-    },
-    rules: betterTailwindRules,
+    rules: { ...betterTailwindRules, ...tailwindCanonicalRules },
   },
   {
     files: ["**/*.{css,pcss}"],

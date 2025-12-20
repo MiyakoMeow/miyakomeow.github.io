@@ -207,7 +207,7 @@
 
 <StarryBackground />
 <div
-  class="mx-auto my-8 max-w-[1500px] rounded-[20px] border border-white/10 bg-white/5 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[10px]"
+  class="mx-auto my-8 max-w-375 rounded-[20px] border border-white/10 bg-white/5 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[10px]"
 >
   <div class="mb-8 text-center">
     <h1
@@ -283,9 +283,9 @@
               {Math.round(loadingState.progress)}%
             </div>
           </div>
-          <div class="mb-6 h-[12px] overflow-hidden rounded-[6px] bg-white/10">
+          <div class="mb-6 h-3 overflow-hidden rounded-md bg-white/10">
             <div
-              class="h-full rounded-[6px] bg-[linear-gradient(90deg,#4caf50,#64b5f6)] transition-[width] duration-300 ease-out"
+              class="h-full rounded-md bg-[linear-gradient(90deg,#4caf50,#64b5f6)] transition-[width] duration-300 ease-out"
               style={`width:${loadingState.progress}%;`}
             ></div>
           </div>
@@ -306,7 +306,7 @@
         <div class="mb-4 text-[4rem]">⚠️</div>
         <h3 class="mb-4 text-[#ff6b6b]">加载失败</h3>
         <p
-          class="my-6 rounded-[10px] border-l-[4px] border-[#ff6b6b] bg-[rgba(255,107,107,0.1)] p-4"
+          class="my-6 rounded-[10px] border-l-4 border-[#ff6b6b] bg-[rgba(255,107,107,0.1)] p-4"
         >
           {error}
         </p>

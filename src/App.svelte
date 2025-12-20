@@ -13,7 +13,7 @@
     </h1>
     <div class="mb-8 flex flex-col items-center gap-4">
       <a
-        class="inline-block rounded-[12px] border border-white/20 bg-white/10 px-[1.5rem] py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
+        class="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
         href="/bms/index.html"
       >
         BMS 主页
@@ -25,19 +25,19 @@
     </h2>
     <div class="flex flex-row flex-wrap items-center justify-center gap-4">
       <a
-        class="inline-block rounded-[12px] border border-white/20 bg-white/10 px-[1.5rem] py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
+        class="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
         href="/bms/table/self-sp/index.html"
       >
         谱面合集（SP）
       </a>
       <a
-        class="inline-block rounded-[12px] border border-white/20 bg-white/10 px-[1.5rem] py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
+        class="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
         href="/bms/table/self-dp/index.html"
       >
         谱面合集（DP）
       </a>
       <a
-        class="inline-block rounded-[12px] border border-white/20 bg-white/10 px-[1.5rem] py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
+        class="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
         href="/bms/table-mirror/index.html"
       >
         表镜像

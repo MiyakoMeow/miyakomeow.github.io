@@ -129,7 +129,7 @@
           <div class="mb-6 flex flex-wrap gap-3">
             {#each displayGroups as group, idx (group.level)}
               <button
-                class="flex cursor-pointer items-center justify-center gap-2 rounded-[25px] border-2 border-transparent px-6 py-3 text-[1.1rem] font-bold text-white opacity-70 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] active:-translate-y-[1px] active:opacity-90"
+                class="flex cursor-pointer items-center justify-center gap-2 rounded-[25px] border-2 border-transparent px-6 py-3 text-[1.1rem] font-bold text-white opacity-70 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] active:-translate-y-px active:opacity-90"
                 type="button"
                 on:click={() => scrollToDifficultyGroup(group.level)}
                 style={`background-color:${segmentColor(idx, displayGroups.length)};border-color:${segmentColor(idx, displayGroups.length)};`}
@@ -146,7 +146,7 @@
 
       {#each displayGroups as group, gIndex (group.level)}
         {@const groupColor = segmentColor(gIndex, displayGroups.length)}
-        <div id={`difficulty-group-${group.level}`} class="mb-12 scroll-mt-[20px]">
+        <div id={`difficulty-group-${group.level}`} class="mb-12 scroll-mt-5">
           <div class="mb-6 border-b-2 border-white/10 pb-4">
             <div class="flex items-center gap-4">
               <span
@@ -160,14 +160,14 @@
           </div>
 
           <div class="overflow-x-auto rounded-[10px] border border-white/10 bg-black/20" use:setRef>
-            <table class="w-full min-w-[900px] table-fixed border-collapse">
+            <table class="w-full min-w-225 table-fixed border-collapse">
               <colgroup>
-                <col class="w-[50px]" />
-                <col class="w-[140px]" />
-                <col class="w-[140px]" />
-                <col class="w-[260px]" />
-                <col class="w-[200px]" />
-                <col class="w-[260px]" />
+                <col class="w-12.5" />
+                <col class="w-35" />
+                <col class="w-35" />
+                <col class="w-65" />
+                <col class="w-50" />
+                <col class="w-65" />
               </colgroup>
               <thead>
                 <tr>
@@ -209,21 +209,21 @@
                   {@const diffUrl = resolvedDiffUrl(chart)}
                   {@const bmsLinks = getBmsLinks(chart)}
                   <tr class="hover:bg-white/5">
-                    <td class="border-b border-white/5 p-4 break-words text-white/90">
+                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       <span
-                        class="inline-block min-w-[30px] rounded-[12px] px-2 py-1 text-center text-[0.85rem] font-semibold text-white"
+                        class="inline-block min-w-7.5 rounded-xl px-2 py-1 text-center text-[0.85rem] font-semibold text-white"
                         style={`background-color:${groupColor};`}
                       >
                         {group.level}
                       </span>
                     </td>
                     <td
-                      class="max-w-[180px] min-w-[130px] border-b border-white/5 p-4 break-words text-white/90"
+                      class="max-w-45 min-w-32.5 border-b border-white/5 p-4 wrap-break-word text-white/90"
                     >
                       <div class="flex flex-row flex-wrap gap-[0.3rem]">
                         {#if bundleUrl}
                           <a
-                            class="flex min-w-[60px] flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none bg-[linear-gradient(135deg,#4caf50,#2e7d32)] px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#66bb6a,#388e3c)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
+                            class="flex min-w-15 flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-md border-none bg-[linear-gradient(135deg,#4caf50,#2e7d32)] px-2 py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#66bb6a,#388e3c)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
                             href={bundleUrl}
                             title={bundleUrl}
                             target="_blank"
@@ -234,7 +234,7 @@
                         {/if}
                         {#if diffUrl}
                           <a
-                            class="flex min-w-[60px] flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#42a5f5,#1976d2)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
+                            class="flex min-w-15 flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-md border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-2 py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#42a5f5,#1976d2)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
                             href={diffUrl}
                             title={diffUrl}
                             target="_blank"
@@ -246,12 +246,12 @@
                       </div>
                     </td>
                     <td
-                      class="max-w-[180px] min-w-[140px] border-b border-white/5 p-4 break-words text-white/90"
+                      class="max-w-45 min-w-35 border-b border-white/5 p-4 wrap-break-word text-white/90"
                     >
                       <div class="flex flex-wrap justify-center gap-[0.4rem]">
                         {#if hasMd5(chart)}
                           <a
-                            class="flex h-[36px] w-[36px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] p-0 text-[1.2rem] text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#ffb74d,#ff9800)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
+                            class="flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] p-0 text-[1.2rem] text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#ffb74d,#ff9800)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
                             href={bmsLinks.bmsScoreViewer}
                             title={bmsLinks.bmsScoreViewer}
                             target="_blank"
@@ -260,7 +260,7 @@
                             📊
                           </a>
                           <a
-                            class="flex h-[36px] w-[36px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#9c27b0,#7b1fa2)] p-0 text-[0.85rem] font-bold text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#ba68c8,#9c27b0)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
+                            class="flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#9c27b0,#7b1fa2)] p-0 text-[0.85rem] font-bold text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#ba68c8,#9c27b0)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
                             href={bmsLinks.lr2ir}
                             title={bmsLinks.lr2ir}
                             target="_blank"
@@ -271,7 +271,7 @@
                         {/if}
                         {#if hasSha256(chart)}
                           <a
-                            class="flex h-[36px] w-[36px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#795548,#5d4037)] p-0 text-[1.2rem] text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#a1887f,#795548)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
+                            class="flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#795548,#5d4037)] p-0 text-[1.2rem] text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#a1887f,#795548)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
                             href={bmsLinks.mocha}
                             title={bmsLinks.mocha}
                             target="_blank"
@@ -284,7 +284,7 @@
                             />
                           </a>
                           <a
-                            class="flex h-[36px] w-[36px] cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#00bcd4,#0097a7)] p-0 text-[1.2rem] text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#4dd0e1,#00bcd4)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
+                            class="flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border-none bg-[linear-gradient(135deg,#00bcd4,#0097a7)] p-0 text-[1.2rem] text-white no-underline transition-all duration-200 ease-in-out hover:scale-110 hover:bg-[linear-gradient(135deg,#4dd0e1,#00bcd4)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.3)] active:scale-95"
                             href={bmsLinks.minir}
                             title={bmsLinks.minir}
                             target="_blank"
@@ -299,14 +299,14 @@
                         {/if}
                       </div>
                     </td>
-                    <td class="min-w-[200px] border-b border-white/5 p-4 break-words text-white/90">
+                    <td class="min-w-50 border-b border-white/5 p-4 wrap-break-word text-white/90">
                       <strong>{chart.title || "未知标题"}</strong>
                     </td>
-                    <td class="border-b border-white/5 p-4 break-words text-white/90">
+                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       {chart.artist || "未知艺术家"}
                     </td>
                     <td
-                      class="max-w-[300px] min-w-[150px] border-b border-white/5 p-4 break-words text-white/90"
+                      class="max-w-75 min-w-37.5 border-b border-white/5 p-4 wrap-break-word text-white/90"
                     >
                       {chart.comment || ""}
                     </td>

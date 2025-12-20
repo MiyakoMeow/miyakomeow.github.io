@@ -188,12 +188,12 @@
     </div>
 
     {#each groups as g (g.tag1)}
-      <div id={`tag1-group-${slugifyTag(g.tag1)}`} class="mb-12 scroll-mt-[20px]">
+      <div id={`tag1-group-${slugifyTag(g.tag1)}`} class="mb-12 scroll-mt-5">
         <div class="mb-6 border-b-2 border-white/10 pb-4">
           <div class="flex items-center gap-4">
             <input
               type="checkbox"
-              class="h-[22px] w-[22px] scale-[1.2]"
+              class="h-5.5 w-5.5 scale-[1.2]"
               use:indeterminate={tag1State(g) === CheckboxState.Indeterminate}
               checked={tag1State(g) === CheckboxState.Checked}
               on:change={(e) => onTag1Change((e.currentTarget as HTMLInputElement).checked, g)}
@@ -211,7 +211,7 @@
             <h3 class="mt-2 mb-2 flex items-center gap-2 text-[1.1rem] text-white">
               <input
                 type="checkbox"
-                class="h-[22px] w-[22px] scale-[1.2]"
+                class="h-5.5 w-5.5 scale-[1.2]"
                 use:indeterminate={tag2State(sg) === CheckboxState.Indeterminate}
                 checked={tag2State(sg) === CheckboxState.Checked}
                 on:change={(e) => onTag2Change((e.currentTarget as HTMLInputElement).checked, sg)}
@@ -222,13 +222,13 @@
               class="overflow-x-auto rounded-[10px] border border-white/10 bg-black/20"
               use:scrollSync
             >
-              <table class="w-full min-w-[800px] table-fixed border-collapse">
+              <table class="w-full min-w-200 table-fixed border-collapse">
                 <colgroup>
-                  <col class="w-[60px]" />
-                  <col class="w-[120px]" />
+                  <col class="w-15" />
+                  <col class="w-30" />
                   <col class="w-[320px]" />
-                  <col class="w-[160px]" />
-                  <col class="w-[160px]" />
+                  <col class="w-40" />
+                  <col class="w-40" />
                 </colgroup>
                 <thead>
                   <tr>
@@ -262,28 +262,28 @@
                 <tbody>
                   {#each sg.items as item (item.url)}
                     <tr class="hover:bg-white/5 last:[&>td]:border-b-0">
-                      <td class="border-b border-white/5 p-4 break-words text-white/90">
+                      <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                         <input
                           type="checkbox"
-                          class="h-[22px] w-[22px] scale-[1.2]"
+                          class="h-5.5 w-5.5 scale-[1.2]"
                           checked={!!selectedMap[item.url]}
                           on:change={(e) =>
                             onRowChange((e.currentTarget as HTMLInputElement).checked, item.url)}
                         />
                       </td>
-                      <td class="border-b border-white/5 p-4 break-words text-white/90">
+                      <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                         {item.symbol || ""}
                       </td>
                       <td
-                        class="min-w-[200px] border-b border-white/5 p-4 break-words text-white/90"
+                        class="min-w-50 border-b border-white/5 p-4 wrap-break-word text-white/90"
                       >
                         <strong>{item.name}</strong>
                       </td>
                       <td
-                        class="min-w-[130px] border-b border-white/5 p-4 break-words text-white/90"
+                        class="min-w-32.5 border-b border-white/5 p-4 wrap-break-word text-white/90"
                       >
                         <a
-                          class="flex min-w-[60px] cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#42a5f5,#1976d2)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
+                          class="flex min-w-15 cursor-pointer items-center justify-center gap-[0.2rem] rounded-md border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-2 py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#42a5f5,#1976d2)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
                           href={item.url}
                           title={item.url}
                           target="_blank"
@@ -293,11 +293,11 @@
                         </a>
                       </td>
                       <td
-                        class="min-w-[130px] border-b border-white/5 p-4 break-words text-white/90"
+                        class="min-w-32.5 border-b border-white/5 p-4 wrap-break-word text-white/90"
                       >
                         {#if item.url_ori}
                           <a
-                            class="flex min-w-[60px] cursor-pointer items-center justify-center gap-[0.2rem] rounded-[6px] border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.5rem] py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#ffb74d,#ff9800)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
+                            class="flex min-w-15 cursor-pointer items-center justify-center gap-[0.2rem] rounded-md border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-2 py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#ffb74d,#ff9800)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
                             href={item.url_ori}
                             title={item.url_ori}
                             target="_blank"
