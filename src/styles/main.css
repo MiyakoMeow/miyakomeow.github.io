@@ -31,7 +31,7 @@ h1 {
 }
 
 button {
-  @apply cursor-pointer rounded-[8px] border border-transparent bg-[#1a1a1a] px-[1.2em] py-[0.6em] text-base font-medium;
+  @apply cursor-pointer rounded-lg border border-transparent bg-[#1a1a1a] px-[1.2em] py-[0.6em] text-base font-medium;
   font-family: inherit;
   transition: border-color 0.25s;
   &:hover {
