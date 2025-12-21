@@ -3,14 +3,14 @@
  * 在构建前根据页面配置生成HTML文件
  */
 
-import type { Plugin } from 'vite';
-import { resolve, relative } from 'path';
-import { mkdirSync, existsSync, readdirSync, rmSync } from 'fs';
-import { getAllPages } from '../config/pages.config';
-import { generateHtmlFiles } from '../src/utils/html-generator';
+import type { Plugin } from "vite";
+import { resolve, relative } from "path";
+import { mkdirSync, existsSync, readdirSync, rmSync } from "fs";
+import { getAllPages } from "../config/pages.config";
+import { generateHtmlFiles } from "../src/utils/html-generator";
 
-const TEMP_HTML_DIR = resolve(__dirname, '../.temp-html');
-const TEMPLATE_PATH = resolve(__dirname, '../config/templates/base.html.template');
+const TEMP_HTML_DIR = resolve(__dirname, "../.temp-html");
+const TEMPLATE_PATH = resolve(__dirname, "../config/templates/base.html.template");
 
 /**
  * HTML生成器Vite插件
@@ -32,9 +32,9 @@ export default function htmlGeneratorPlugin(): Plugin {
         const fullPath = resolve(dir, item.name);
         if (item.isDirectory()) {
           scanDir(fullPath, baseDir);
-        } else if (item.isFile() && item.name.endsWith('.html')) {
-          const relPath = relative(baseDir, fullPath).split('\\').join('/');
-          const key = relPath === 'index.html' ? 'main' : relPath.replace(/\.html$/, '');
+        } else if (item.isFile() && item.name.endsWith(".html")) {
+          const relPath = relative(baseDir, fullPath).split("\\").join("/");
+          const key = relPath === "index.html" ? "main" : relPath.replace(/\.html$/, "");
           inputs[key] = fullPath;
         }
       }
@@ -51,7 +51,7 @@ export default function htmlGeneratorPlugin(): Plugin {
       if (existsSync(TEMP_HTML_DIR)) {
         const items = readdirSync(TEMP_HTML_DIR, { withFileTypes: true });
         for (const item of items) {
-          if (!item.name.startsWith('.')) {
+          if (!item.name.startsWith(".")) {
             const itemPath = resolve(TEMP_HTML_DIR, item.name);
             if (item.isDirectory()) {
               rmSync(itemPath, { recursive: true, force: true });
@@ -71,18 +71,18 @@ export default function htmlGeneratorPlugin(): Plugin {
       // 更新输入映射
       generateInputMapping();
     } catch (error) {
-      console.error('Failed to generate HTML files:', error);
+      console.error("Failed to generate HTML files:", error);
       throw error;
     }
   };
 
   return {
-    name: 'html-generator',
-    enforce: 'pre',
+    name: "html-generator",
+    enforce: "pre",
 
     // 配置钩子：设置开发模式标志并返回构建配置
     async config(config, { command }) {
-      isDev = command === 'serve';
+      isDev = command === "serve";
 
       // 确保临时目录存在
       if (!existsSync(TEMP_HTML_DIR)) {
@@ -102,9 +102,9 @@ export default function htmlGeneratorPlugin(): Plugin {
           ...config.build,
           rollupOptions: {
             ...config.build?.rollupOptions,
-            input: generatedInputs
-          }
-        }
+            input: generatedInputs,
+          },
+        },
       };
     },
 
@@ -119,11 +119,11 @@ export default function htmlGeneratorPlugin(): Plugin {
       generateHtmlFilesFn();
 
       // 监听页面配置和模板文件变化，重新生成HTML
-      server.watcher.add(resolve(__dirname, '../config/pages.config.ts'));
-      server.watcher.add(resolve(__dirname, '../config/templates'));
-      server.watcher.on('change', (file) => {
-        if (file.includes('pages.config.ts') || file.includes('templates')) {
-          console.log('Pages config or template changed, regenerating HTML files...');
+      server.watcher.add(resolve(__dirname, "../config/pages.config.ts"));
+      server.watcher.add(resolve(__dirname, "../config/templates"));
+      server.watcher.on("change", (file) => {
+        if (file.includes("pages.config.ts") || file.includes("templates")) {
+          console.log("Pages config or template changed, regenerating HTML files...");
           generateHtmlFilesFn();
           server.restart();
         }
@@ -136,6 +136,6 @@ export default function htmlGeneratorPlugin(): Plugin {
       if (config.root !== TEMP_HTML_DIR) {
         config.root = TEMP_HTML_DIR;
       }
-    }
+    },
   };
 }

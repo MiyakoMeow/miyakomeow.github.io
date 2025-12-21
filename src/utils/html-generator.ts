@@ -3,9 +3,9 @@
  * 根据页面配置和模板生成HTML文件
  */
 
-import { dirname, join } from 'path';
-import { mkdirSync, writeFileSync, readFileSync } from 'fs';
-import { AnyPageConfig } from '../config/pages';
+import { dirname, join } from "path";
+import { mkdirSync, writeFileSync, readFileSync } from "fs";
+import { AnyPageConfig } from "../config/pages";
 
 /**
  * 生成HTML文件内容
@@ -13,25 +13,22 @@ import { AnyPageConfig } from '../config/pages';
  * @param templatePath 模板文件路径
  * @returns 生成的HTML字符串
  */
-export function generateHtmlContent(
-  pageConfig: AnyPageConfig,
-  templatePath: string
-): string {
-  let template = readFileSync(templatePath, 'utf-8');
+export function generateHtmlContent(pageConfig: AnyPageConfig, templatePath: string): string {
+  let template = readFileSync(templatePath, "utf-8");
 
   // 替换页面标题
-  template = template.replace('{{PAGE_TITLE}}', pageConfig.title);
+  template = template.replace("{{PAGE_TITLE}}", pageConfig.title);
 
   // 替换组件路径，使用Vite别名@指向src目录
-  template = template.replace('{{COMPONENT_PATH}}', `@/${pageConfig.component}`);
+  template = template.replace("{{COMPONENT_PATH}}", `@/${pageConfig.component}`);
 
   // 替换props JSON
   const propsJson = JSON.stringify(pageConfig.props || {});
-  template = template.replace('{{PROPS_JSON}}', propsJson);
+  template = template.replace("{{PROPS_JSON}}", propsJson);
 
   // 生成head内容
   const headContent = generateHeadContent(pageConfig);
-  template = template.replace('{{HEAD_CONTENT}}', headContent);
+  template = template.replace("{{HEAD_CONTENT}}", headContent);
 
   return template;
 }
@@ -54,7 +51,7 @@ export function generateHeadContent(pageConfig: AnyPageConfig): string {
     for (const headItem of pageConfig.head) {
       const attrs = Object.entries(headItem.attributes)
         .map(([key, value]) => `${key}="${escapeHtml(value)}"`)
-        .join(' ');
+        .join(" ");
 
       if (headItem.content) {
         lines.push(`<${headItem.tag} ${attrs}>${escapeHtml(headItem.content)}</${headItem.tag}>`);
@@ -64,7 +61,7 @@ export function generateHeadContent(pageConfig: AnyPageConfig): string {
     }
   }
 
-  return lines.join('\n    ');
+  return lines.join("\n    ");
 }
 
 /**
@@ -86,8 +83,8 @@ export function generateHtmlFile(
 
   // 根据页面路径确定输出文件路径
   // 如果path以'/'开头，去除开头的'/'
-  const relativePath = pageConfig.path.startsWith('/') ? pageConfig.path.slice(1) : pageConfig.path;
-  const outputPath = join(outputDir, relativePath, 'index.html');
+  const relativePath = pageConfig.path.startsWith("/") ? pageConfig.path.slice(1) : pageConfig.path;
+  const outputPath = join(outputDir, relativePath, "index.html");
 
   // 确保目录存在
   mkdirSync(dirname(outputPath), { recursive: true });
@@ -127,11 +124,11 @@ export function generateHtmlFiles(
  */
 function escapeHtml(text: string): string {
   const escapeMap: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
   };
   return text.replace(/[&<>"']/g, (char) => escapeMap[char] || char);
 }

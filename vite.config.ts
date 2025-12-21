@@ -8,7 +8,11 @@ import htmlGeneratorPlugin from "./vite-plugins/html-generator";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [svelte({ preprocess: vitePreprocess({ script: true }) }), tailwindcss(), htmlGeneratorPlugin()],
+  plugins: [
+    svelte({ preprocess: vitePreprocess({ script: true }) }),
+    tailwindcss(),
+    htmlGeneratorPlugin(),
+  ],
   root: resolve(__dirname, ".temp-html"),
   publicDir: resolve(__dirname, "public"),
   appType: "mpa",

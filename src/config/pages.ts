@@ -30,7 +30,7 @@ export interface PageConfig {
 
 /** BMS表镜像页面特殊配置 */
 export interface BMSTablePageConfig extends PageConfig {
-  type: 'bms-table-mirror';
+  type: "bms-table-mirror";
   /** BMS表header.json的URL */
   headerUrl: string;
   /** 原始表的URL（可选） */
@@ -44,5 +44,5 @@ export type AnyPageConfig = PageConfig | BMSTablePageConfig;
 
 /** 检查是否为BMS表镜像页面配置 */
 export function isBMSTablePageConfig(config: AnyPageConfig): config is BMSTablePageConfig {
-  return (config as BMSTablePageConfig).type === 'bms-table-mirror';
+  return (config as BMSTablePageConfig).type === "bms-table-mirror";
 }
