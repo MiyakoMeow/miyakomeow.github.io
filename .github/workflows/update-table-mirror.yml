@@ -36,9 +36,6 @@ jobs:
       - name: Run fetch script
         run: nu scripts/fetch-table-data.nu
 
-      - name: Generate BMS page configurations
-        run: bun run generate:pages
-
       - name: Format with Prettier
         run: bun run format
 
