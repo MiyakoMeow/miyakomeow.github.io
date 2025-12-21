@@ -16,7 +16,6 @@ const TEMPLATE_PATH = resolve(__dirname, "../config/templates/base.html.template
  * HTML生成器Vite插件
  */
 export default function htmlGeneratorPlugin(): Plugin {
-  let isDev = false;
   let generatedInputs: Record<string, string> = {};
 
   // 生成输入映射的函数
@@ -81,9 +80,7 @@ export default function htmlGeneratorPlugin(): Plugin {
     enforce: "pre",
 
     // 配置钩子：设置开发模式标志并返回构建配置
-    async config(config, { command }) {
-      isDev = command === "serve";
-
+    async config(config) {
       // 确保临时目录存在
       if (!existsSync(TEMP_HTML_DIR)) {
         mkdirSync(TEMP_HTML_DIR, { recursive: true });
