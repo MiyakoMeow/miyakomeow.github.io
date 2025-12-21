@@ -15,7 +15,7 @@ export interface PageConfig {
   /** 使用的Svelte组件路径（相对于src目录，如 'App.svelte'、'pages/BMSTable.svelte'） */
   component: string;
   /** 传递给Svelte组件的props */
-  props?: Record<string, any>;
+  props?: Record<string, PagePropValue>;
   /** 额外的head标签（meta、link等） */
   head?: Array<{
     tag: string;
@@ -27,6 +27,14 @@ export interface PageConfig {
   /** 是否生成HTML文件（默认true） */
   generateHtml?: boolean;
 }
+
+export type PagePropPrimitive = string | number | boolean | null;
+
+export type PagePropValue = PagePropPrimitive | PagePropObject | PagePropValue[];
+
+export type PagePropObject = {
+  [key: string]: PagePropValue;
+};
 
 /** BMS表镜像页面特殊配置 */
 export interface BMSTablePageConfig extends PageConfig {

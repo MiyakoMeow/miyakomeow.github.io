@@ -29,7 +29,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*", "config/*", "vite-plugins/*"]
     },
     "types": ["node"],
     "allowJs": false,

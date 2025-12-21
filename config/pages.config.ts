@@ -77,7 +77,6 @@ interface BMSTableItem {
   dir_name: string;
   url: string;
   url_ori?: string;
-  [key: string]: any;
 }
 
 /**
