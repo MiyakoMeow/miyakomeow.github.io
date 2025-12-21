@@ -12,6 +12,9 @@ build/
 *.a
 *.out
 
+# Self build artifacts
+.temp-html
+
 # Dependencies
 node_modules/
 venv/
