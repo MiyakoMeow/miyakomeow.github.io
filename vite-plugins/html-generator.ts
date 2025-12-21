@@ -131,7 +131,13 @@ export default function htmlGeneratorPlugin(): Plugin {
     configResolved(config) {
       // 确保root指向临时目录
       if (config.root !== TEMP_HTML_DIR) {
-        config.root = TEMP_HTML_DIR;
+        // 由于 config.root 是只读属性，无法直接赋值
+        // 这里改为在 config 钩子中提前设置 root，或抛出警告提示用户手动调整
+        console.warn(
+          `[html-generator] 无法将 Vite 的 root 修改为 ${TEMP_HTML_DIR}，` +
+          `请在 vite.config.ts 中手动设置 root: "${TEMP_HTML_DIR}"` +
+          `当前 root: "${config.root}"`
+        );
       }
     },
   };
