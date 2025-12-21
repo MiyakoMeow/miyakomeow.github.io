@@ -79,6 +79,21 @@ interface BMSTableItem {
   url_ori?: string;
 }
 
+function warnDuplicatePaths(pages: Array<{ path: string }>): void {
+  const pathCounts = pages.reduce<Record<string, number>>((acc, page) => {
+    acc[page.path] = (acc[page.path] || 0) + 1;
+    return acc;
+  }, {});
+
+  const duplicates = Object.entries(pathCounts).filter(([, count]) => count > 1);
+  if (duplicates.length === 0) return;
+
+  console.warn("[pages.config] Found duplicate paths:");
+  duplicates.forEach(([path, count]) => {
+    console.warn(`  "${path}" appears ${count} times`);
+  });
+}
+
 /**
  * 生成BMS表镜像页面配置
  * 从public/bms/table-mirror/tables_proxy.json读取数据并生成配置
@@ -88,7 +103,7 @@ export function generateBMSTablePages(): BMSTablePageConfig[] {
     const tablesProxyPath = resolve(__dirname, "../public/bms/table-mirror/tables_proxy.json");
     const data: BMSTableItem[] = JSON.parse(readFileSync(tablesProxyPath, "utf-8"));
 
-    return data.map(
+    const pages = data.map(
       (item): BMSTablePageConfig => ({
         id: `bms-table-mirror-${item.dir_name}`,
         type: "bms-table-mirror",
@@ -114,6 +129,12 @@ export function generateBMSTablePages(): BMSTablePageConfig[] {
         generateHtml: true,
       })
     );
+
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[pages.config] Generated ${pages.length} BMS table mirror pages`);
+    }
+    warnDuplicatePaths(pages);
+    return pages;
   } catch (error) {
     console.error("Failed to generate BMS table pages:", error);
     // 开发环境下返回空数组，避免阻塞开发
