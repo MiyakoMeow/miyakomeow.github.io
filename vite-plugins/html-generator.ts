@@ -118,8 +118,13 @@ export default function htmlGeneratorPlugin(): Plugin {
       // 监听页面配置和模板文件变化，重新生成HTML
       server.watcher.add(resolve(__dirname, "../config/pages.config.ts"));
       server.watcher.add(resolve(__dirname, "../config/templates"));
+      server.watcher.add(resolve(__dirname, "../public/bms/table-mirror/tables_proxy.json"));
       server.watcher.on("change", (file) => {
-        if (file.includes("pages.config.ts") || file.includes("templates")) {
+        if (
+          file.includes("pages.config.ts") ||
+          file.includes("templates") ||
+          file.includes("tables_proxy.json")
+        ) {
           console.log("Pages config or template changed, regenerating HTML files...");
           generateHtmlFilesFn();
           server.restart();
@@ -135,8 +140,8 @@ export default function htmlGeneratorPlugin(): Plugin {
         // 这里改为在 config 钩子中提前设置 root，或抛出警告提示用户手动调整
         console.warn(
           `[html-generator] 无法将 Vite 的 root 修改为 ${TEMP_HTML_DIR}，` +
-          `请在 vite.config.ts 中手动设置 root: "${TEMP_HTML_DIR}"` +
-          `当前 root: "${config.root}"`
+            `请在 vite.config.ts 中手动设置 root: "${TEMP_HTML_DIR}"` +
+            `当前 root: "${config.root}"`
         );
       }
     },
