@@ -5,7 +5,6 @@
   import QuickActions from "../components/QuickActions.svelte";
   import ChartsTableSection from "./BMSTable/ChartsTableSection.svelte";
   import LevelRefTable from "./BMSTable/LevelRefTable.svelte";
-  import "../styles/main.css";
 
   interface ChartData {
     title?: string;
