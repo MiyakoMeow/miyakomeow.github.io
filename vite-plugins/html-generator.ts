@@ -4,13 +4,18 @@
  */
 
 import type { Plugin } from "vite";
-import { resolve, relative } from "path";
+import { resolve, relative, normalize } from "path";
 import { mkdirSync, existsSync, readdirSync, rmSync } from "fs";
 import { getAllPages } from "../config/pages.config";
 import { generateHtmlFiles } from "../src/utils/html-generator";
 
 const TEMP_HTML_DIR = resolve(__dirname, "../.temp-html");
 const TEMPLATE_PATH = resolve(__dirname, "../config/templates/base.html.template");
+
+const normalizePathForCompare = (pathValue: string) => {
+  const normalized = normalize(resolve(pathValue)).split("\\").join("/").replace(/\/+$/, "");
+  return process.platform === "win32" ? normalized.toLowerCase() : normalized;
+};
 
 /**
  * HTML生成器Vite插件
@@ -135,7 +140,7 @@ export default function htmlGeneratorPlugin(): Plugin {
     // 配置解析后确保root正确
     configResolved(config) {
       // 确保root指向临时目录
-      if (config.root !== TEMP_HTML_DIR) {
+      if (normalizePathForCompare(config.root) !== normalizePathForCompare(TEMP_HTML_DIR)) {
         // 由于 config.root 是只读属性，无法直接赋值
         // 这里改为在 config 钩子中提前设置 root，或抛出警告提示用户手动调整
         console.warn(
