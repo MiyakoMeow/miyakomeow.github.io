@@ -12,7 +12,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
+    "generate:pages": "bun scripts/generate-bms-pages.ts",
+    "generate:html": "echo 'HTML generation is handled by Vite plugin during build/dev'"
   },
   "dependencies": {
     "svelte": "^5.46.0"

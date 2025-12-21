@@ -6,7 +6,7 @@
   "trailingComma": "es5",
   "overrides": [
     {
-      "files": "entry/**/*.html",
+      "files": ".temp-html/**/*.html",
       "options": {
         "printWidth": 9999
       }

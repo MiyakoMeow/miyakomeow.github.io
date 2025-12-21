@@ -1,0 +1,141 @@
+/**
+ * Vite插件：HTML生成器
+ * 在构建前根据页面配置生成HTML文件
+ */
+
+import type { Plugin } from "vite";
+import { resolve, relative } from "path";
+import { mkdirSync, existsSync, readdirSync, rmSync } from "fs";
+import { getAllPages } from "../config/pages.config";
+import { generateHtmlFiles } from "../src/utils/html-generator";
+
+const TEMP_HTML_DIR = resolve(__dirname, "../.temp-html");
+const TEMPLATE_PATH = resolve(__dirname, "../config/templates/base.html.template");
+
+/**
+ * HTML生成器Vite插件
+ */
+export default function htmlGeneratorPlugin(): Plugin {
+  let isDev = false;
+  let generatedInputs: Record<string, string> = {};
+
+  // 生成输入映射的函数
+  const generateInputMapping = () => {
+    const inputs: Record<string, string> = {};
+
+    // 扫描临时目录下的HTML文件，生成Rollup输入映射
+    const scanDir = (dir: string, baseDir: string) => {
+      if (!existsSync(dir)) return;
+
+      const items = readdirSync(dir, { withFileTypes: true });
+      for (const item of items) {
+        const fullPath = resolve(dir, item.name);
+        if (item.isDirectory()) {
+          scanDir(fullPath, baseDir);
+        } else if (item.isFile() && item.name.endsWith(".html")) {
+          const relPath = relative(baseDir, fullPath).split("\\").join("/");
+          const key = relPath === "index.html" ? "main" : relPath.replace(/\.html$/, "");
+          inputs[key] = fullPath;
+        }
+      }
+    };
+
+    scanDir(TEMP_HTML_DIR, TEMP_HTML_DIR);
+    generatedInputs = inputs;
+  };
+
+  // 生成HTML文件的函数
+  const generateHtmlFilesFn = async () => {
+    try {
+      // 清理临时目录（保留.gitkeep等隐藏文件）
+      if (existsSync(TEMP_HTML_DIR)) {
+        const items = readdirSync(TEMP_HTML_DIR, { withFileTypes: true });
+        for (const item of items) {
+          if (!item.name.startsWith(".")) {
+            const itemPath = resolve(TEMP_HTML_DIR, item.name);
+            if (item.isDirectory()) {
+              rmSync(itemPath, { recursive: true, force: true });
+            } else {
+              rmSync(itemPath, { force: true });
+            }
+          }
+        }
+      }
+
+      // 获取所有页面配置
+      const allPages = getAllPages();
+
+      // 生成HTML文件
+      generateHtmlFiles(allPages, TEMP_HTML_DIR, TEMPLATE_PATH);
+
+      // 更新输入映射
+      generateInputMapping();
+    } catch (error) {
+      console.error("Failed to generate HTML files:", error);
+      throw error;
+    }
+  };
+
+  return {
+    name: "html-generator",
+    enforce: "pre",
+
+    // 配置钩子：设置开发模式标志并返回构建配置
+    async config(config, { command }) {
+      isDev = command === "serve";
+
+      // 确保临时目录存在
+      if (!existsSync(TEMP_HTML_DIR)) {
+        mkdirSync(TEMP_HTML_DIR, { recursive: true });
+      }
+
+      // 生成HTML文件
+      await generateHtmlFilesFn();
+
+      // 生成输入映射
+      generateInputMapping();
+
+      return {
+        ...config,
+        root: TEMP_HTML_DIR,
+        build: {
+          ...config.build,
+          rollupOptions: {
+            ...config.build?.rollupOptions,
+            input: generatedInputs,
+          },
+        },
+      };
+    },
+
+    // 在构建开始时生成HTML文件（已在config钩子中生成，此处留空）
+    async buildStart() {
+      // HTML文件已在config钩子中生成
+    },
+
+    // 配置开发服务器
+    configureServer(server) {
+      // 开发模式下也生成HTML文件
+      generateHtmlFilesFn();
+
+      // 监听页面配置和模板文件变化，重新生成HTML
+      server.watcher.add(resolve(__dirname, "../config/pages.config.ts"));
+      server.watcher.add(resolve(__dirname, "../config/templates"));
+      server.watcher.on("change", (file) => {
+        if (file.includes("pages.config.ts") || file.includes("templates")) {
+          console.log("Pages config or template changed, regenerating HTML files...");
+          generateHtmlFilesFn();
+          server.restart();
+        }
+      });
+    },
+
+    // 配置解析后确保root正确
+    configResolved(config) {
+      // 确保root指向临时目录
+      if (config.root !== TEMP_HTML_DIR) {
+        config.root = TEMP_HTML_DIR;
+      }
+    },
+  };
+}

@@ -2,35 +2,18 @@ import { defineConfig } from "vite";
 import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "path";
-import { readdirSync } from "fs";
-import { relative } from "path";
+import htmlGeneratorPlugin from "./vite-plugins/html-generator";
 
-// 递归扫描 entry 目录下所有 .html 文件作为构建入口（保持路径不变）
-const entryRoot = resolve(__dirname, "entry");
-function collectHtmlFiles(dir: string, acc: string[] = []): string[] {
-  const entries = readdirSync(dir, { withFileTypes: true });
-  for (const e of entries) {
-    const full = resolve(dir, e.name);
-    if (e.isDirectory()) {
-      collectHtmlFiles(full, acc);
-    } else if (e.isFile() && e.name.endsWith(".html")) {
-      acc.push(full);
-    }
-  }
-  return acc;
-}
-
-const dynamicInputs: Record<string, string> = {};
-for (const file of collectHtmlFiles(entryRoot)) {
-  const rel = relative(entryRoot, file).split("\\").join("/");
-  const key = rel === "index.html" ? "main" : rel.replace(/\.html$/, "");
-  dynamicInputs[key] = file;
-}
+// 由html-generator插件动态生成HTML文件，不再使用entry目录下的HTML文件
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [svelte({ preprocess: vitePreprocess({ script: true }) }), tailwindcss()],
-  root: resolve(__dirname, "entry"),
+  plugins: [
+    svelte({ preprocess: vitePreprocess({ script: true }) }),
+    tailwindcss(),
+    htmlGeneratorPlugin(),
+  ],
+  root: resolve(__dirname, ".temp-html"),
   publicDir: resolve(__dirname, "public"),
   appType: "mpa",
   base: "./",
@@ -50,7 +33,8 @@ export default defineConfig({
     outDir: resolve(__dirname, "dist"),
     emptyOutDir: true,
     rollupOptions: {
-      input: dynamicInputs,
+      // input由html-generator插件动态生成
+      input: {},
     },
   },
 });
