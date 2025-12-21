@@ -3,7 +3,6 @@
   import BlogLayout from "@/layout/BlogLayout.svelte";
   import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
-  import "@/styles/main.css";
 
   interface MirrorTableItem {
     name: string;

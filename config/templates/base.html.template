@@ -11,6 +11,7 @@
     <div id="app"></div>
     <script type="module">
       import { mount } from "svelte";
+      import "@/styles/main.css";
       import Component from "{{COMPONENT_PATH}}";
 
       const target = document.getElementById("app");

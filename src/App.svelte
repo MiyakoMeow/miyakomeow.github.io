@@ -1,7 +1,6 @@
 <script lang="ts">
   import BlogLayout from "@/layout/BlogLayout.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
-  import "@/styles/main.css";
 </script>
 
 <BlogLayout>
