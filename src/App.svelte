@@ -27,19 +27,19 @@
         class="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
         href="/bms/table/self-sp/index.html"
       >
-        谱面合集（SP）
+        MiyakoMeow谱面合集（SP）
       </a>
       <a
         class="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
         href="/bms/table/self-dp/index.html"
       >
-        谱面合集（DP）
+        MiyakoMeow谱面合集（DP）
       </a>
       <a
         class="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
         href="/bms/table-mirror/index.html"
       >
-        表镜像
+        BMS难度表镜像
       </a>
     </div>
   </section>
