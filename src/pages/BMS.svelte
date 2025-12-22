@@ -1,6 +1,7 @@
 <script lang="ts">
-  import BlogLayout from "../layout/BlogLayout.svelte";
+  import ProfileCard from "../components/ProfileCard.svelte";
   import QuickActions from "../components/QuickActions.svelte";
+  import StarryBackground from "../components/StarryBackground.svelte";
 
   interface LinkItem {
     href: string;
@@ -15,7 +16,9 @@
   ];
 </script>
 
-<BlogLayout>
+<StarryBackground />
+<ProfileCard />
+<main class="m-0 mx-auto box-border w-full max-w-350 p-8">
   <div
     class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
@@ -32,5 +35,5 @@
       {/each}
     </div>
   </div>
-</BlogLayout>
+</main>
 <QuickActions />
