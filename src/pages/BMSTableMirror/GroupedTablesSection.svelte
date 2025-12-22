@@ -31,6 +31,19 @@
   export let groups: Tag1Group[] = [];
   export let selectedMap: Record<string, boolean> = {};
 
+  function compareAscii(a: string, b: string): number {
+    if (a === b) return 0;
+    return a < b ? -1 : 1;
+  }
+
+  function sortedItems(items: MirrorTableItem[]): MirrorTableItem[] {
+    return [...items].sort((a, b) => {
+      const byName = compareAscii(a.name, b.name);
+      if (byName !== 0) return byName;
+      return compareAscii(a.url, b.url);
+    });
+  }
+
   function slugifyTag(tag: string): string {
     return tag
       .toLowerCase()
@@ -260,7 +273,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {#each sg.items as item (item.url)}
+                  {#each sortedItems(sg.items) as item (item.url)}
                     <tr class="hover:bg-white/5 last:[&>td]:border-b-0">
                       <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                         <input
