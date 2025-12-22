@@ -8,7 +8,8 @@
   let fadeTimer: ReturnType<typeof setTimeout> | undefined;
   let autoCloseTimer: ReturnType<typeof setTimeout> | undefined;
 
-  let autoCloseArmed = false;
+  let cardElement: HTMLDivElement | undefined;
+
   let isPointerInside = false;
 
   const fadeDurationMs = 200;
@@ -46,7 +47,6 @@
 
   function scheduleClose() {
     if (closeTimer) clearTimeout(closeTimer);
-    if (!autoCloseArmed) return;
     if (!isOpen(cardState)) return;
     closeTimer = setTimeout(() => {
       transitionTo(false);
@@ -55,11 +55,58 @@
   }
 
   onMount(() => {
+    function closeImmediately() {
+      if (closeTimer) clearTimeout(closeTimer);
+      closeTimer = undefined;
+
+      if (autoCloseTimer) clearTimeout(autoCloseTimer);
+      autoCloseTimer = undefined;
+
+      isPointerInside = false;
+
+      if (isOpen(cardState)) transitionTo(false);
+    }
+
+    function onOutsidePointerDown(event: PointerEvent) {
+      if (!cardElement) return;
+      if (event.target instanceof Node && cardElement.contains(event.target)) return;
+      closeImmediately();
+    }
+
+    function onOutsideKeyDown(event: KeyboardEvent) {
+      if (!cardElement) return;
+      if (event.target instanceof Node && cardElement.contains(event.target)) return;
+      closeImmediately();
+    }
+
+    function onOutsideWheel(event: WheelEvent) {
+      if (!cardElement) return;
+      if (event.target instanceof Node && cardElement.contains(event.target)) return;
+      closeImmediately();
+    }
+
+    function onOutsideFocusIn(event: FocusEvent) {
+      if (!cardElement) return;
+      if (event.target instanceof Node && cardElement.contains(event.target)) return;
+      closeImmediately();
+    }
+
+    document.addEventListener("pointerdown", onOutsidePointerDown, true);
+    document.addEventListener("keydown", onOutsideKeyDown, true);
+    document.addEventListener("wheel", onOutsideWheel, { capture: true, passive: true });
+    document.addEventListener("focusin", onOutsideFocusIn, true);
+
     autoCloseTimer = setTimeout(() => {
-      autoCloseArmed = true;
       if (!isPointerInside && isOpen(cardState)) transitionTo(false);
       autoCloseTimer = undefined;
     }, 3000);
+
+    return () => {
+      document.removeEventListener("pointerdown", onOutsidePointerDown, true);
+      document.removeEventListener("keydown", onOutsideKeyDown, true);
+      document.removeEventListener("wheel", onOutsideWheel, true);
+      document.removeEventListener("focusin", onOutsideFocusIn, true);
+    };
   });
 
   onDestroy(() => {
@@ -82,6 +129,7 @@
     class:rounded-full={!isOpen(cardState)}
     class:opacity-100={cardState === "open" || cardState === "closed"}
     class:opacity-0={cardState === "openHidden" || cardState === "closedHidden"}
+    bind:this={cardElement}
     role="button"
     aria-label={isOpen(cardState) ? "个人信息卡片" : "展开个人信息卡片"}
     aria-expanded={isOpen(cardState)}
