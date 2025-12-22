@@ -1,33 +1,107 @@
 <script lang="ts">
-  let isOpen = true;
+  import { onDestroy } from "svelte";
+
+  type CardState = "open" | "openHidden" | "closed" | "closedHidden";
+
+  let cardState: CardState = "open";
+  let closeTimer: ReturnType<typeof setTimeout> | undefined;
+  let fadeTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const fadeDurationMs = 200;
+
+  function isOpen(state: CardState) {
+    return state === "open" || state === "openHidden";
+  }
+
+  function clearFadeTimer() {
+    if (fadeTimer) clearTimeout(fadeTimer);
+    fadeTimer = undefined;
+  }
+
+  function transitionTo(nextOpen: boolean) {
+    clearFadeTimer();
+
+    const currentOpen = isOpen(cardState);
+    cardState = currentOpen ? "openHidden" : "closedHidden";
+
+    fadeTimer = setTimeout(() => {
+      cardState = nextOpen ? "openHidden" : "closedHidden";
+      requestAnimationFrame(() => (cardState = nextOpen ? "open" : "closed"));
+      fadeTimer = undefined;
+    }, fadeDurationMs);
+  }
+
+  function openCard() {
+    if (closeTimer) clearTimeout(closeTimer);
+    closeTimer = undefined;
+    clearFadeTimer();
+    cardState = isOpen(cardState) ? "open" : "closed";
+    if (isOpen(cardState)) return;
+    transitionTo(true);
+  }
+
+  function scheduleClose() {
+    if (closeTimer) clearTimeout(closeTimer);
+    if (!isOpen(cardState)) return;
+    closeTimer = setTimeout(() => {
+      transitionTo(false);
+      closeTimer = undefined;
+    }, 500);
+  }
+
+  onDestroy(() => {
+    if (closeTimer) clearTimeout(closeTimer);
+    clearFadeTimer();
+  });
 </script>
 
 <div class="fixed top-4 left-4 z-1000">
-  <div class:hidden={!isOpen} class="w-[min(380px,calc(100vw-2rem))]">
+  <div
+    class="relative overflow-hidden border border-white/20 bg-white/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px] transition-opacity duration-200 ease-in-out"
+    class:max-h-[600px]={isOpen(cardState)}
+    class:w-[min(380px,calc(100vw-2rem))]={isOpen(cardState)}
+    class:p-8={isOpen(cardState)}
+    class:rounded-2xl={isOpen(cardState)}
+    class:max-h-14={!isOpen(cardState)}
+    class:w-14={!isOpen(cardState)}
+    class:p-2={!isOpen(cardState)}
+    class:rounded-full={!isOpen(cardState)}
+    class:opacity-100={cardState === "open" || cardState === "closed"}
+    class:opacity-0={cardState === "openHidden" || cardState === "closedHidden"}
+    role="button"
+    aria-label={isOpen(cardState) ? "个人信息卡片" : "展开个人信息卡片"}
+    aria-expanded={isOpen(cardState)}
+    tabindex={0}
+    on:mouseenter={openCard}
+    on:mousemove={openCard}
+    on:click={() => {
+      if (!isOpen(cardState)) openCard();
+    }}
+    on:keydown={(event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        if (!isOpen(cardState)) openCard();
+      }
+    }}
+    on:mouseleave={scheduleClose}
+  >
     <div
-      class="relative rounded-2xl border border-white/20 bg-white/10 p-8 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px]"
+      class="pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-200 ease-in-out"
+      class:opacity-0={isOpen(cardState)}
+      class:opacity-100={!isOpen(cardState)}
     >
-      <button
-        class="absolute top-3 right-3 flex size-10 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition-all hover:bg-white/20"
-        type="button"
-        aria-label="隐藏个人信息卡片"
-        title="隐藏"
-        on:click={() => {
-          isOpen = false;
-        }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="size-5"
-          fill="currentColor"
-        >
-          <path
-            d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12 5.7 16.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4Z"
-          />
-        </svg>
-      </button>
+      <img
+        class="size-11 rounded-full border-2 border-white/30"
+        src="https://github.com/MiyakoMeow.png"
+        alt="Miyako Meow"
+      />
+    </div>
 
+    <div
+      class="transition-opacity duration-200 ease-in-out"
+      class:opacity-100={isOpen(cardState)}
+      class:opacity-0={!isOpen(cardState)}
+    >
       <div>
         <div>
           <img
@@ -71,22 +145,4 @@
       </div>
     </div>
   </div>
-
-  <button
-    class:hidden={isOpen}
-    class="flex cursor-pointer items-center gap-3 rounded-full border border-white/25 bg-white/15 p-3 text-white shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all hover:bg-white/25"
-    type="button"
-    aria-label="显示个人信息卡片"
-    title="显示"
-    on:click={() => {
-      isOpen = true;
-    }}
-  >
-    <img
-      class="size-11 rounded-full border-2 border-white/30"
-      src="https://github.com/MiyakoMeow.png"
-      alt="Miyako Meow"
-    />
-    <span class="pr-1 font-semibold">MiyakoMeow</span>
-  </button>
 </div>
