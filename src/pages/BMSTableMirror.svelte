@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import BlogLayout from "@/layout/BlogLayout.svelte";
   import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.svelte";
+  import ProfileCard from "@/components/ProfileCard.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
+  import StarryBackground from "@/components/StarryBackground.svelte";
 
   interface MirrorTableItem {
     name: string;
@@ -177,7 +178,9 @@
   });
 </script>
 
-<BlogLayout>
+<StarryBackground />
+<ProfileCard />
+<main class="m-0 mx-auto box-border w-full max-w-350 p-8">
   <section
     class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
@@ -226,7 +229,7 @@
       <GroupedTablesSection bind:selectedMap groups={groupedByTags} />
     {/if}
   </section>
-</BlogLayout>
+</main>
 
 {#if selectedCount > 0}
   <div class="fixed bottom-4 left-1/2 z-999 translate-x-[-50%]">
