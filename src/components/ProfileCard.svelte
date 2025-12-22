@@ -1,11 +1,15 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   type CardState = "open" | "openHidden" | "closed" | "closedHidden";
 
   let cardState: CardState = "open";
   let closeTimer: ReturnType<typeof setTimeout> | undefined;
   let fadeTimer: ReturnType<typeof setTimeout> | undefined;
+  let autoCloseTimer: ReturnType<typeof setTimeout> | undefined;
+
+  let autoCloseArmed = false;
+  let isPointerInside = false;
 
   const fadeDurationMs = 200;
 
@@ -42,6 +46,7 @@
 
   function scheduleClose() {
     if (closeTimer) clearTimeout(closeTimer);
+    if (!autoCloseArmed) return;
     if (!isOpen(cardState)) return;
     closeTimer = setTimeout(() => {
       transitionTo(false);
@@ -49,9 +54,18 @@
     }, 500);
   }
 
+  onMount(() => {
+    autoCloseTimer = setTimeout(() => {
+      autoCloseArmed = true;
+      if (!isPointerInside && isOpen(cardState)) transitionTo(false);
+      autoCloseTimer = undefined;
+    }, 3000);
+  });
+
   onDestroy(() => {
     if (closeTimer) clearTimeout(closeTimer);
     clearFadeTimer();
+    if (autoCloseTimer) clearTimeout(autoCloseTimer);
   });
 </script>
 
@@ -72,7 +86,10 @@
     aria-label={isOpen(cardState) ? "个人信息卡片" : "展开个人信息卡片"}
     aria-expanded={isOpen(cardState)}
     tabindex={0}
-    on:mouseenter={openCard}
+    on:mouseenter={() => {
+      isPointerInside = true;
+      openCard();
+    }}
     on:mousemove={openCard}
     on:click={() => {
       if (!isOpen(cardState)) openCard();
@@ -83,7 +100,10 @@
         if (!isOpen(cardState)) openCard();
       }
     }}
-    on:mouseleave={scheduleClose}
+    on:mouseleave={() => {
+      isPointerInside = false;
+      scheduleClose();
+    }}
   >
     <div
       class="pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-200 ease-in-out"
