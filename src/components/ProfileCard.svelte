@@ -2,8 +2,8 @@
   let isOpen = true;
 </script>
 
-{#if isOpen}
-  <div class="fixed top-4 left-4 z-1000 w-[min(380px,calc(100vw-2rem))]">
+<div class="fixed top-4 left-4 z-1000">
+  <div class:hidden={!isOpen} class="w-[min(380px,calc(100vw-2rem))]">
     <div
       class="relative rounded-2xl border border-white/20 bg-white/10 p-8 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px]"
     >
@@ -71,9 +71,10 @@
       </div>
     </div>
   </div>
-{:else}
+
   <button
-    class="fixed top-4 left-4 z-1000 flex cursor-pointer items-center gap-3 rounded-full border border-white/25 bg-white/15 p-3 text-white shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all hover:bg-white/25"
+    class:hidden={isOpen}
+    class="flex cursor-pointer items-center gap-3 rounded-full border border-white/25 bg-white/15 p-3 text-white shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all hover:bg-white/25"
     type="button"
     aria-label="显示个人信息卡片"
     title="显示"
@@ -88,4 +89,4 @@
     />
     <span class="pr-1 font-semibold">MiyakoMeow</span>
   </button>
-{/if}
+</div>
