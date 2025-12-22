@@ -3,7 +3,17 @@
 
   type CardState = "open" | "openHidden" | "closed" | "closedHidden";
 
-  let cardState: CardState = "open";
+  const sessionKey = "miyakomeow_profile_card_seen";
+  const hasSeenProfileCard = (() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.sessionStorage.getItem(sessionKey) === "1";
+    } catch {
+      return false;
+    }
+  })();
+
+  let cardState: CardState = hasSeenProfileCard ? "closed" : "open";
   let closeTimer: ReturnType<typeof setTimeout> | undefined;
   let fadeTimer: ReturnType<typeof setTimeout> | undefined;
   let autoCloseTimer: ReturnType<typeof setTimeout> | undefined;
@@ -55,6 +65,10 @@
   }
 
   onMount(() => {
+    try {
+      window.sessionStorage.setItem(sessionKey, "1");
+    } catch {}
+
     function closeImmediately() {
       if (closeTimer) clearTimeout(closeTimer);
       closeTimer = undefined;
@@ -96,10 +110,12 @@
     document.addEventListener("wheel", onOutsideWheel, { capture: true, passive: true });
     document.addEventListener("focusin", onOutsideFocusIn, true);
 
-    autoCloseTimer = setTimeout(() => {
-      if (!isPointerInside && isOpen(cardState)) transitionTo(false);
-      autoCloseTimer = undefined;
-    }, 3000);
+    if (isOpen(cardState)) {
+      autoCloseTimer = setTimeout(() => {
+        if (!isPointerInside && isOpen(cardState)) transitionTo(false);
+        autoCloseTimer = undefined;
+      }, 3000);
+    }
 
     return () => {
       document.removeEventListener("pointerdown", onOutsidePointerDown, true);
