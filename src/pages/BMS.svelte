@@ -2,6 +2,8 @@
   import ProfileCard from "../components/ProfileCard.svelte";
   import QuickActions from "../components/QuickActions.svelte";
   import StarryBackground from "../components/StarryBackground.svelte";
+  import MarkdownContent from "../components/MarkdownContent.svelte";
+  import bmsContent from "../content/bms/index.md?raw";
 
   interface LinkItem {
     href: string;
@@ -19,6 +21,7 @@
 <StarryBackground />
 <ProfileCard />
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
+  <!-- 菜单部分 -->
   <div
     class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
@@ -34,6 +37,13 @@
         </a>
       {/each}
     </div>
+  </div>
+
+  <!-- Markdown内容部分 -->
+  <div
+    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+  >
+    <MarkdownContent content={bmsContent} />
   </div>
 </main>
 <QuickActions />

@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./.temp-html/**/*.html", "./src/**/*.{svelte,js,ts}"],
+  content: ["./.temp-html/**/*.html", "./src/**/*.{svelte,js,ts}", "./src/content/**/*.md"],
   theme: {
     extend: {
       keyframes: {
@@ -63,6 +63,95 @@ export default {
         },
         "button:focus, button:focus-visible": {
           outline: "4px auto -webkit-focus-ring-color",
+        },
+        // Markdown内容样式
+        ".markdown-content": {
+          "& h1": {
+            fontSize: "2.5rem",
+            fontWeight: "bold",
+            marginTop: "2rem",
+            marginBottom: "1rem",
+            color: "white",
+            textShadow: "0 2px 4px rgba(0,0,0,0.5)",
+          },
+          "& h2": {
+            fontSize: "2rem",
+            fontWeight: "bold",
+            marginTop: "1.5rem",
+            marginBottom: "0.75rem",
+            color: "white",
+          },
+          "& h3": {
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            marginTop: "1.25rem",
+            marginBottom: "0.5rem",
+            color: "white",
+          },
+          "& p": {
+            marginBottom: "1rem",
+            lineHeight: "1.6",
+            color: "rgba(255, 255, 255, 0.9)",
+          },
+          "& a": {
+            color: "#64b5f6",
+            textDecoration: "underline",
+            "&:hover": {
+              color: "#42a5f5",
+            },
+          },
+          "& code": {
+            backgroundColor: "rgba(255, 255, 255, 0.1)",
+            padding: "0.2rem 0.4rem",
+            borderRadius: "0.25rem",
+            fontSize: "0.9em",
+            fontFamily: "monospace",
+          },
+          "& pre": {
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            borderRadius: "0.5rem",
+            padding: "1rem",
+            overflow: "auto",
+            marginBottom: "1rem",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+          },
+          "& blockquote": {
+            borderLeft: "4px solid rgba(100, 181, 246, 0.5)",
+            paddingLeft: "1rem",
+            marginLeft: "0",
+            marginRight: "0",
+            fontStyle: "italic",
+            color: "rgba(255, 255, 255, 0.8)",
+          },
+          "& ul, & ol": {
+            marginBottom: "1rem",
+            paddingLeft: "1.5rem",
+          },
+          "& li": {
+            marginBottom: "0.5rem",
+            color: "rgba(255, 255, 255, 0.9)",
+          },
+          "& table": {
+            width: "100%",
+            borderCollapse: "collapse",
+            marginBottom: "1rem",
+            backgroundColor: "rgba(255, 255, 255, 0.05)",
+            borderRadius: "0.5rem",
+            overflow: "hidden",
+          },
+          "& th, & td": {
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            padding: "0.75rem",
+            textAlign: "left",
+          },
+          "& th": {
+            backgroundColor: "rgba(100, 181, 246, 0.2)",
+            fontWeight: "bold",
+            color: "white",
+          },
+          "& .katex": {
+            fontSize: "1.1em",
+          },
         },
       });
     },
