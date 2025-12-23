@@ -2,6 +2,8 @@
   import ProfileCard from "../components/ProfileCard.svelte";
   import QuickActions from "../components/QuickActions.svelte";
   import StarryBackground from "../components/StarryBackground.svelte";
+  import MarkdownContent from "../components/MarkdownContent.svelte";
+  import bmsContent from "../content/bms/index.md?raw";
 
   interface LinkItem {
     href: string;
@@ -23,6 +25,8 @@
     class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
     <h1 class="text-[2.5rem] font-bold text-white">BMS</h1>
+    <!-- BMS页面Markdown内容 -->
+    <MarkdownContent content={bmsContent} className="mt-4 mb-8" />
     <div class="mt-4 grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4">
       {#each links as link (link.href)}
         <a
