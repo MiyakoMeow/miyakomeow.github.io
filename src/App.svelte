@@ -23,12 +23,6 @@
       >
         BMS 主页
       </a>
-    </div>
-
-    <h2 class="mb-8 text-center text-[2.5rem] text-white [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]">
-      其他链接
-    </h2>
-    <div class="flex flex-row flex-wrap items-center justify-center gap-4">
       <a
         class="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
         href="/bms/table/self-sp/index.html"
