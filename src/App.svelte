@@ -9,12 +9,10 @@
 <StarryBackground />
 <ProfileCard />
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
+  <!-- 菜单部分 -->
   <section
     class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
-    <!-- 首页Markdown内容 -->
-    <MarkdownContent content={homeContent} className="mb-8" />
-
     <h1 class="mb-8 text-center text-[2.5rem] text-white [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]">
       BMS
     </h1>
@@ -50,6 +48,13 @@
         BMS难度表镜像
       </a>
     </div>
+  </section>
+
+  <!-- Markdown内容部分 -->
+  <section
+    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+  >
+    <MarkdownContent content={homeContent} />
   </section>
 </main>
 <QuickActions />
