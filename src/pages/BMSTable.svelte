@@ -318,8 +318,8 @@
       </div>
     {:else}
       <div class="py-4">
-        <div class="mb-8 grid grid-cols-2 gap-8 rounded-[15px] bg-black/20 p-6">
-          <div>
+        <div class="mb-8 flex flex-wrap gap-8 rounded-[15px] bg-black/20 p-6">
+          <div class="min-w-[18rem] flex-1">
             <h2 class="mt-0 mb-4 text-white">难度表信息</h2>
             <div>
               {#if headerData}
@@ -335,7 +335,7 @@
             </div>
           </div>
 
-          <div>
+          <div class="min-w-[18rem] flex-1">
             <h3 class="mt-0 mb-4 text-white">统计摘要</h3>
             <div class="grid grid-cols-3 gap-4">
               <div class="rounded-[10px] border border-white/10 bg-white/5 p-4 text-center">
