@@ -52,18 +52,6 @@ declare module "*.md?raw" {
   export default content;
 }
 
-declare module "markdown-it-katex" {
-  import type { PluginSimple } from "markdown-it";
-  const plugin: PluginSimple;
-  export default plugin;
-}
-
-declare module "markdown-it-container" {
-  import type { PluginWithOptions } from "markdown-it";
-  const plugin: PluginWithOptions<string>;
-  export default plugin;
-}
-
 declare module "*.json" {
   const content: unknown;
   export default content;
