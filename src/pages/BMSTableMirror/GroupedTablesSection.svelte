@@ -174,28 +174,29 @@
   <div class="mt-8">
     <div class="mt-6 mb-8">
       {#each groups as g (g.tag1)}
-        <div class="mb-4">
+        <div class="mb-4 flex flex-wrap items-center gap-2">
           <button
-            class="mr-3 cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+            class="cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
             type="button"
             on:click={() => scrollToTag1(g.tag1)}
           >
             {g.tag1}
           </button>
-          <div class="mt-2 flex flex-wrap gap-2">
-            {#each g.subgroups as sg (sg.tag2)}
-              <button
-                class="cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
-                type="button"
-                on:click={() => scrollToTag2(g.tag1, sg.tag2)}
-              >
-                {sg.tag2}
-                <span class="rounded-[10px] bg-black/20 px-2 py-[0.1rem] text-[0.9rem] opacity-90">
-                  ({sg.items.length})
-                </span>
-              </button>
-            {/each}
-          </div>
+          {#if g.subgroups.length > 0}
+            <span class="mx-1 text-white/40">|</span>
+          {/if}
+          {#each g.subgroups as sg (sg.tag2)}
+            <button
+              class="cursor-pointer rounded-[18px] bg-white/10 px-4 py-2 font-bold text-white opacity-80 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+              type="button"
+              on:click={() => scrollToTag2(g.tag1, sg.tag2)}
+            >
+              {sg.tag2}
+              <span class="rounded-[10px] bg-black/20 px-2 py-[0.1rem] text-[0.9rem] opacity-90">
+                ({sg.items.length})
+              </span>
+            </button>
+          {/each}
         </div>
       {/each}
     </div>
