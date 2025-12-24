@@ -209,9 +209,7 @@
   class="mx-auto my-8 max-w-375 rounded-[20px] border border-white/10 bg-white/5 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[10px]"
 >
   <div class="mb-8 text-center">
-    <h1
-      class="mb-2 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)] bg-clip-text text-[2.5rem] font-bold text-transparent [text-shadow:0_2px_4px_rgba(0,0,0,0.3)]"
-    >
+    <h1 class="page-title mb-2">
       {pageTitle}
     </h1>
     {#if headerData?.symbol}
@@ -320,7 +318,7 @@
       <div class="py-4">
         <div class="mb-8 flex flex-wrap gap-8 rounded-[15px] bg-black/20 p-6">
           <div class="min-w-[18rem] flex-1">
-            <h2 class="mt-0 mb-4 text-white">难度表信息</h2>
+            <h2 class="section-title mt-0 mb-4">难度表信息</h2>
             <div>
               {#if headerData}
                 <p class="my-2 text-white/80">
@@ -336,7 +334,7 @@
           </div>
 
           <div class="min-w-[18rem] flex-1">
-            <h3 class="mt-0 mb-4 text-white">统计摘要</h3>
+            <h3 class="section-title mt-0 mb-4">统计摘要</h3>
             <div class="grid grid-cols-3 gap-4">
               <div class="rounded-[10px] border border-white/10 bg-white/5 p-4 text-center">
                 <div class="mb-2 text-[2rem] font-bold text-[#64b5f6]">

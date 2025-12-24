@@ -87,7 +87,7 @@
 
 {#if shouldShow && levelRefData.length > 0}
   <div class="mt-8 mb-8 rounded-[15px] border border-white/10 bg-black/20 p-6">
-    <h3 class="mt-0 mb-6 text-center text-[1.3rem] text-white">难度对照表</h3>
+    <h3 class="section-title mt-0 mb-6 text-center">难度对照表</h3>
     <div class="flex flex-wrap items-start justify-center gap-8">
       {#each tableHalves as half (half.id)}
         <div class="min-w-[18rem] flex-1">
