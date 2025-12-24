@@ -9,8 +9,8 @@
     "preview": "vite preview",
     "type-check": "svelte-check --tsconfig ./tsconfig.json --diagnostic-sources \"js,svelte\"",
     "type-check:watch": "svelte-check --tsconfig ./tsconfig.json --diagnostic-sources \"js,svelte\" --watch",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint . --flag unstable_ts_config",
+    "lint:fix": "eslint . --fix --flag unstable_ts_config",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "generate:html": "echo 'HTML generation is handled by Vite plugin during build/dev'"
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.0",
+    "@eslint/core": "^1.0.0",
     "@eslint/css": "^0.14.1",
     "@eslint/js": "^9.39.2",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
@@ -37,6 +38,7 @@
     "eslint-plugin-svelte": "^3.13.1",
     "eslint-plugin-tailwind-canonical-classes": "^1.1.0",
     "globals": "^16.5.0",
+    "jiti": "^2.6.1",
     "markdown-it": "^14.1.0",
     "markdown-it-container": "^4.0.0",
     "markdown-it-highlightjs": "^4.2.0",

@@ -124,7 +124,7 @@ export function generateBMSTablePages(): BMSTablePageConfig[] {
           },
         ],
         headerUrl: item.url,
-        originUrl: item.url_ori,
+        ...(item.url_ori ? { originUrl: item.url_ori } : {}),
         dirName: item.dir_name,
         generateHtml: true,
       })

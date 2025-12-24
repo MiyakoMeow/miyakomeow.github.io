@@ -5,8 +5,9 @@ import prettier from "eslint-config-prettier";
 import pluginBetterTailwind from "eslint-plugin-better-tailwindcss";
 import svelte from "eslint-plugin-svelte";
 import tailwindCanonicalClasses from "eslint-plugin-tailwind-canonical-classes";
-import svelteTailwindCanonicalRule from "./eslint-plugin-svelte-tailwind-canonical.mjs";
+import svelteTailwindCanonicalRule from "./eslint-plugin-svelte-tailwind-canonical.ts";
 import { defineConfig } from "eslint/config";
+import type { Plugin, RulesConfig } from "@eslint/core";
 import { fileURLToPath } from "node:url";
 import globals from "globals";
 import { tailwind4 } from "tailwind-csstree";
@@ -19,25 +20,25 @@ const svelteFiles = ["**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"];
 const betterTailwindPlugins = { "better-tailwindcss": pluginBetterTailwind };
 const betterTailwindSettings = { "better-tailwindcss": { entryPoint: "src/styles/main.css" } };
 const tailwindCanonicalPlugins = { "tailwind-canonical-classes": tailwindCanonicalClasses };
-const svelteTailwindCanonicalPlugins = {
+const svelteTailwindCanonicalPlugins: Record<string, Plugin> = {
   "svelte-tailwind-canonical": {
     rules: {
       "tailwind-canonical-classes-svelte": svelteTailwindCanonicalRule,
     },
   },
 };
-const betterTailwindRules = {
-  ...pluginBetterTailwind.configs["recommended"].rules,
+const betterTailwindRules: RulesConfig = {
+  ...(pluginBetterTailwind.configs["recommended"].rules as unknown as RulesConfig),
   "better-tailwindcss/enforce-consistent-line-wrapping": "off",
   "better-tailwindcss/no-unregistered-classes": "off",
 };
-const tailwindCanonicalRules = {
+const tailwindCanonicalRules: RulesConfig = {
   "tailwind-canonical-classes/tailwind-canonical-classes": [
     "warn",
     { cssPath: "./src/styles/main.css" },
   ],
 };
-const svelteTailwindCanonicalRules = {
+const svelteTailwindCanonicalRules: RulesConfig = {
   "svelte-tailwind-canonical/tailwind-canonical-classes-svelte": [
     "warn",
     { cssPath: "./src/styles/main.css" },
@@ -57,10 +58,7 @@ export default defineConfig(
     files: config.files ?? svelteFiles,
   })),
   prettier,
-  ...svelte.configs.prettier.map((config) => ({
-    ...config,
-    files: config.files ?? svelteFiles,
-  })),
+  ...svelte.configs.prettier.map((config) => ({ ...config, files: config.files ?? svelteFiles })),
   {
     files: svelteFiles,
     plugins: {

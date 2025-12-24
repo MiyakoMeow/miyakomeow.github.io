@@ -4,33 +4,42 @@ import { fileURLToPath } from "node:url";
 import { createSyncFn, runAsWorker } from "synckit";
 import { __unstable__loadDesignSystem } from "@tailwindcss/node";
 
-const designSystemCache = new Map();
+const designSystemCache = new Map<string, unknown>();
 
-async function canonicalizeInWorker(cssContent, basePath, candidates, options = {}) {
+async function canonicalizeInWorker(
+  cssContent: string,
+  basePath: string,
+  candidates: string[],
+  options: Record<string, unknown> = {}
+): Promise<string[]> {
   const cacheKey = basePath;
   let designSystem = designSystemCache.get(cacheKey);
   if (!designSystem) {
     designSystem = await __unstable__loadDesignSystem(cssContent, { base: basePath });
     designSystemCache.set(cacheKey, designSystem);
   }
-  return designSystem.canonicalizeCandidates(candidates, options);
+  const ds = designSystem as {
+    canonicalizeCandidates: (c: string[], o: Record<string, unknown>) => string[];
+  };
+  return ds.canonicalizeCandidates(candidates, options);
 }
 
 runAsWorker(canonicalizeInWorker);
 
-function splitClasses(className) {
+function splitClasses(className: string): string[] {
   return className.trim().split(/\s+/).filter(Boolean);
 }
 
-function joinClasses(classes) {
+function joinClasses(classes: string[]): string {
   return classes.join(" ");
 }
 
-function extractStaticClassValue(node) {
-  if (!node.value || node.value.length !== 1) {
+function extractStaticClassValue(node: unknown): string | null {
+  const n = node as { value?: unknown[] };
+  if (!n.value || n.value.length !== 1) {
     return null;
   }
-  const valueNode = node.value[0];
+  const valueNode = n.value[0] as { type?: string; value?: unknown };
   if (
     (valueNode.type === "SvelteLiteral" || valueNode.type === "Literal") &&
     typeof valueNode.value === "string"
@@ -43,7 +52,11 @@ function extractStaticClassValue(node) {
 const workerPath = fileURLToPath(import.meta.url);
 const canonicalizeSync = createSyncFn(workerPath);
 
-function canonicalizeClasses(cssPath, candidates, rootFontSize = 16) {
+function canonicalizeClasses(
+  cssPath: string,
+  candidates: string[],
+  rootFontSize = 16
+): string[] | null {
   if (!fs.existsSync(cssPath)) {
     return null;
   }
@@ -54,11 +67,11 @@ function canonicalizeClasses(cssPath, candidates, rootFontSize = 16) {
 
 const rule = {
   meta: {
-    type: "suggestion",
+    type: "suggestion" as const,
     docs: {
       description: "Enforce canonical Tailwind CSS class names in Svelte class attributes",
     },
-    fixable: "code",
+    fixable: "code" as const,
     messages: {
       nonCanonical: "Class '{{original}}' should be '{{canonical}}'",
       cssNotFound: "Could not load Tailwind CSS file: {{path}}",
@@ -79,11 +92,21 @@ const rule = {
       },
     ],
   },
-  create(context) {
-    const options = context.options[0];
+  create(context: unknown) {
+    const ctx = context as {
+      options: unknown[];
+      getSourceCode: () => { ast: unknown; text: string };
+      report: (input: {
+        node: unknown;
+        messageId: string;
+        data?: Record<string, unknown>;
+        fix?: unknown;
+      }) => void;
+    };
+    const options = (ctx.options?.[0] ?? {}) as { cssPath?: string; rootFontSize?: number };
     if (!options || !options.cssPath) {
-      context.report({
-        node: context.getSourceCode().ast,
+      ctx.report({
+        node: ctx.getSourceCode().ast,
         messageId: "cssNotFound",
         data: {
           path: "not specified",
@@ -91,7 +114,7 @@ const rule = {
       });
       return {};
     }
-    let cssPath;
+    let cssPath: string;
     if (path.isAbsolute(options.cssPath)) {
       cssPath = path.normalize(options.cssPath);
     } else {
@@ -99,8 +122,8 @@ const rule = {
     }
     const rootFontSize = options.rootFontSize ?? 16;
     if (!fs.existsSync(cssPath)) {
-      context.report({
-        node: context.getSourceCode().ast,
+      ctx.report({
+        node: ctx.getSourceCode().ast,
         messageId: "cssNotFound",
         data: {
           path: cssPath,
@@ -109,8 +132,9 @@ const rule = {
       return {};
     }
     return {
-      SvelteAttribute(node) {
-        if (!node.key || node.key.name !== "class") {
+      SvelteAttribute(node: unknown) {
+        const n = node as { key?: { name?: string }; range?: [number, number] };
+        if (!n.key || n.key.name !== "class") {
           return;
         }
         const staticValue = extractStaticClassValue(node);
@@ -121,17 +145,17 @@ const rule = {
         if (classes.length === 0) {
           return;
         }
-        const sourceCode = context.getSourceCode();
+        const sourceCode = ctx.getSourceCode();
         const sourceText = sourceCode.text;
-        const errors = [];
-        let canonicalized;
+        const errors: Array<{ original: string; canonical: string; index: number }> = [];
+        let canonicalized: string[] | null;
         try {
           canonicalized = canonicalizeClasses(cssPath, classes, rootFontSize);
         } catch {
           return;
         }
         if (canonicalized === null) {
-          context.report({
+          ctx.report({
             node,
             messageId: "cssNotFound",
             data: {
@@ -141,7 +165,7 @@ const rule = {
           return;
         }
         classes.forEach((className, index) => {
-          const canonical = canonicalized[index];
+          const canonical = canonicalized![index];
           if (canonical && canonical !== className) {
             errors.push({
               original: className,
@@ -150,11 +174,11 @@ const rule = {
             });
           }
         });
-        if (errors.length === 0 || !Array.isArray(node.range)) {
+        if (errors.length === 0 || !Array.isArray(n.range)) {
           return;
         }
-        const fullRangeStart = node.range[0];
-        const fullRangeEnd = node.range[1];
+        const fullRangeStart = n.range[0];
+        const fullRangeEnd = n.range[1];
         const fullText = sourceText.slice(fullRangeStart, fullRangeEnd);
         const doubleQuoteIndex = fullText.indexOf('"');
         const singleQuoteIndex = fullText.indexOf("'");
@@ -185,7 +209,7 @@ const rule = {
         const after = fullText.slice(lastQuoteIndex);
         const fixedAttrText = before + fixedValue + after;
         errors.forEach((error, errorIndex) => {
-          context.report({
+          ctx.report({
             node,
             messageId: "nonCanonical",
             data: {
@@ -194,7 +218,8 @@ const rule = {
             },
             fix:
               errorIndex === 0
-                ? (fixer) => fixer.replaceTextRange([fullRangeStart, fullRangeEnd], fixedAttrText)
+                ? (fixer: { replaceTextRange: (r: [number, number], t: string) => unknown }) =>
+                    fixer.replaceTextRange([fullRangeStart, fullRangeEnd], fixedAttrText)
                 : undefined,
           });
         });
