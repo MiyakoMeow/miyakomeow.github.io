@@ -45,6 +45,7 @@
 
   let tables: MirrorTableItem[] = [];
   let selectedMap: Record<string, boolean> = {};
+  let searchQuery = "";
 
   const links: LinkItem[] = [
     { href: "/bms", title: "返回 BMS", desc: "返回 BMS 页面" },
@@ -105,10 +106,31 @@
   $: tooltipMirror = JSON.stringify(selectedMirrorArray, null, 2);
   $: tooltipOrigin = JSON.stringify(selectedOriginArray, null, 2);
 
+  $: normalizedSearch = searchQuery.trim().toLowerCase();
+  $: filteredTables =
+    normalizedSearch.length === 0
+      ? tables
+      : tables.filter((item) => {
+          const haystack = [
+            item.name,
+            item.symbol,
+            item.comment,
+            item.tag1,
+            item.tag2,
+            item.dir_name,
+            item.url,
+            item.url_ori,
+          ]
+            .filter((v): v is string => typeof v === "string" && v.length > 0)
+            .join("\n")
+            .toLowerCase();
+          return haystack.includes(normalizedSearch);
+        });
+
   $: groupedByTags = (() => {
     const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>();
 
-    tables.forEach((item) => {
+    filteredTables.forEach((item) => {
       const tag1 = item.tag1 || "未分类";
       const tag2 = item.tag2 || "其它";
       const orderRaw = item.tag_order;
@@ -220,11 +242,44 @@
         </a>
       {/each}
     </div>
+  </section>
+
+  <section
+    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+  >
+    <div class="flex flex-col gap-3">
+      <div class="text-[1.05rem] text-white/80">搜索</div>
+      <div class="relative w-full">
+        <input
+          class="w-full rounded-xl border border-white/20 bg-black/20 px-4 py-3 pr-12 text-white outline-none placeholder:text-white/50 focus:border-[#64b5f6]/60 focus:ring-2 focus:ring-[#64b5f6]/30"
+          type="text"
+          placeholder="按 名称 / 符号 / 备注 / 标签 搜索"
+          bind:value={searchQuery}
+        />
+        {#if normalizedSearch.length > 0}
+          <button
+            class="absolute top-1/2 right-2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg border border-white/20 bg-white/10 p-0 text-[1.25rem] leading-none text-white transition-all duration-200 ease-in-out hover:bg-white/20"
+            type="button"
+            aria-label="清空搜索"
+            on:click={() => (searchQuery = "")}
+          >
+            ×
+          </button>
+        {/if}
+      </div>
+      {#if normalizedSearch.length > 0}
+        <div class="text-[0.95rem] text-white/60">
+          匹配 {filteredTables.length} / {tables.length}
+        </div>
+      {/if}
+    </div>
 
     {#if loading}
       <div class="mt-6 text-white/80">正在加载镜像列表...</div>
     {:else if error}
       <div class="mt-6 text-red-300">加载失败：{error}</div>
+    {:else if groupedByTags.length === 0}
+      <div class="mt-6 text-white/70">没有匹配的难度表</div>
     {:else}
       <GroupedTablesSection bind:selectedMap groups={groupedByTags} />
     {/if}
