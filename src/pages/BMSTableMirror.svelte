@@ -248,7 +248,6 @@
     class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
     <div class="flex flex-col gap-3">
-      <div class="text-[1.05rem] text-white/80">搜索</div>
       <div class="relative w-full">
         <input
           class="w-full rounded-xl border border-white/20 bg-black/20 px-4 py-3 pr-12 text-white outline-none placeholder:text-white/50 focus:border-[#64b5f6]/60 focus:ring-2 focus:ring-[#64b5f6]/30"
