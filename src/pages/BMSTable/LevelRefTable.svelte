@@ -12,12 +12,19 @@
   let leftTableData: LevelRefItem[] = [];
   let rightTableData: LevelRefItem[] = [];
 
+  let tableHalves: Array<{ id: "left" | "right"; items: LevelRefItem[] }> = [];
+
   $: {
     const data = levelRefData;
     const midIndex = Math.ceil(data.length / 2);
     leftTableData = data.slice(0, midIndex);
     rightTableData = data.slice(midIndex);
   }
+
+  $: tableHalves = [
+    { id: "left", items: leftTableData },
+    { id: "right", items: rightTableData },
+  ];
 
   function buildLevelRefUrl(headerUrlRaw: string): string {
     try {
@@ -81,67 +88,38 @@
 {#if shouldShow && levelRefData.length > 0}
   <div class="mt-8 mb-8 rounded-[15px] border border-white/10 bg-black/20 p-6">
     <h3 class="mt-0 mb-6 text-center text-[1.3rem] text-white">难度对照表</h3>
-    <div class="flex justify-center gap-8">
-      <div class="min-w-0 flex-1">
-        <table class="w-full border-collapse overflow-hidden rounded-[10px] bg-white/5">
-          <thead>
-            <tr>
-              <th
-                class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
-              >
-                难度等级
-              </th>
-              <th
-                class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
-              >
-                对应难度
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each leftTableData as item (item.level)}
-              <tr class="hover:bg-white/5 last:[&>td]:border-b-0">
-                <td class="border-b border-white/5 px-4 py-3 text-white/90">
-                  {item.level}
-                </td>
-                <td class="border-b border-white/5 px-4 py-3 text-white/90">
-                  {item.ref}
-                </td>
+    <div class="flex flex-wrap items-start justify-center gap-8">
+      {#each tableHalves as half (half.id)}
+        <div class="min-w-[18rem] flex-1">
+          <table
+            class="w-full table-fixed border-collapse overflow-hidden rounded-[10px] bg-white/5"
+          >
+            <colgroup>
+              {#each ["40%", "60%"] as w (w)}
+                <col style={`width: ${w}`} />
+              {/each}
+            </colgroup>
+            <thead>
+              <tr>
+                {#each ["难度等级", "对应难度"] as label (label)}
+                  <th
+                    class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
+                    >{label}</th
+                  >
+                {/each}
               </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
-      <div class="min-w-0 flex-1">
-        <table class="w-full border-collapse overflow-hidden rounded-[10px] bg-white/5">
-          <thead>
-            <tr>
-              <th
-                class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
-              >
-                难度等级
-              </th>
-              <th
-                class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
-              >
-                对应难度
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each rightTableData as item (item.level)}
-              <tr class="hover:bg-white/5 last:[&>td]:border-b-0">
-                <td class="border-b border-white/5 px-4 py-3 text-white/90">
-                  {item.level}
-                </td>
-                <td class="border-b border-white/5 px-4 py-3 text-white/90">
-                  {item.ref}
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {#each half.items as item (item.level)}
+                <tr class="hover:bg-white/5 last:[&>td]:border-b-0">
+                  <td class="border-b border-white/5 px-4 py-3 text-white/90">{item.level}</td>
+                  <td class="border-b border-white/5 px-4 py-3 text-white/90">{item.ref}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/each}
     </div>
   </div>
 {/if}
