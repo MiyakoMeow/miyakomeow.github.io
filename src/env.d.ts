@@ -46,6 +46,12 @@ declare module "*.md" {
   export default content;
 }
 
+declare module "markdown-it-katex" {
+  import type { PluginSimple } from "markdown-it";
+  const plugin: PluginSimple;
+  export default plugin;
+}
+
 declare module "*.json" {
   const content: unknown;
   export default content;

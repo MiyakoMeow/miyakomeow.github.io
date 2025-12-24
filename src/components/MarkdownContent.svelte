@@ -1,7 +1,6 @@
 <script lang="ts">
   import "katex/dist/katex.min.css";
   import MarkdownIt from "markdown-it";
-  // @ts-ignore - markdown-it-katex没有类型定义
   import mk from "markdown-it-katex";
 
   export let content: string = "";
