@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import * as OpenCC from "opencc-js";
   import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
@@ -46,6 +47,43 @@
   let tables: MirrorTableItem[] = [];
   let selectedMap: Record<string, boolean> = {};
   let searchQuery = "";
+
+  type StringConverter = (input: string) => string;
+
+  const searchConverters: StringConverter[] = (() => {
+    try {
+      return [
+        OpenCC.Converter({ from: "cn", to: "jp" }),
+        OpenCC.Converter({ from: "jp", to: "cn" }),
+        OpenCC.Converter({ from: "cn", to: "tw" }),
+        OpenCC.Converter({ from: "tw", to: "cn" }),
+      ];
+    } catch {
+      return [];
+    }
+  })();
+
+  function buildSearchNeedles(raw: string): string[] {
+    const input = raw.trim();
+    if (input.length === 0) return [];
+
+    const normalized = input.normalize("NFKC");
+    const needles = new Set<string>();
+
+    const add = (value: string) => {
+      const v = value.normalize("NFKC").toLowerCase();
+      if (v.length > 0) needles.add(v);
+    };
+
+    add(normalized);
+    for (const convert of searchConverters) {
+      try {
+        add(convert(normalized));
+      } catch {}
+    }
+
+    return Array.from(needles);
+  }
 
   const links: LinkItem[] = [
     { href: "/bms", title: "返回 BMS", desc: "返回 BMS 页面" },
@@ -107,6 +145,7 @@
   $: tooltipOrigin = JSON.stringify(selectedOriginArray, null, 2);
 
   $: normalizedSearch = searchQuery.trim().toLowerCase();
+  $: searchNeedles = buildSearchNeedles(searchQuery);
   $: filteredTables =
     normalizedSearch.length === 0
       ? tables
@@ -114,8 +153,9 @@
           const haystack = [item.name, item.symbol]
             .filter((v): v is string => typeof v === "string" && v.length > 0)
             .join("\n")
+            .normalize("NFKC")
             .toLowerCase();
-          return haystack.includes(normalizedSearch);
+          return searchNeedles.some((needle) => haystack.includes(needle));
         });
 
   $: groupedByTags = (() => {

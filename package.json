@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "katex": "^0.16.27",
+    "opencc-js": "^1.0.5",
     "svelte": "^5.46.0"
   },
   "devDependencies": {
