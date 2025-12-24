@@ -160,14 +160,14 @@
           </div>
 
           <div class="overflow-x-auto rounded-[10px] border border-white/10 bg-black/20" use:setRef>
-            <table class="w-full min-w-225 table-fixed border-collapse">
+            <table class="w-full min-w-210 table-fixed border-collapse">
               <colgroup>
-                <col class="w-12.5" />
-                <col class="w-35" />
-                <col class="w-35" />
-                <col class="w-65" />
-                <col class="w-50" />
-                <col class="w-65" />
+                <col style="width: 5%" />
+                <col style="width: 12%" />
+                <col style="width: 15%" />
+                <col style="width: 30%" />
+                <col style="width: 20%" />
+                <col style="width: 18%" />
               </colgroup>
               <thead>
                 <tr>
@@ -217,9 +217,7 @@
                         {group.level}
                       </span>
                     </td>
-                    <td
-                      class="max-w-45 min-w-32.5 border-b border-white/5 p-4 wrap-break-word text-white/90"
-                    >
+                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       <div class="flex flex-row flex-wrap gap-[0.3rem]">
                         {#if bundleUrl}
                           <a
@@ -245,9 +243,7 @@
                         {/if}
                       </div>
                     </td>
-                    <td
-                      class="max-w-45 min-w-35 border-b border-white/5 p-4 wrap-break-word text-white/90"
-                    >
+                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       <div class="flex flex-wrap justify-center gap-[0.4rem]">
                         {#if hasMd5(chart)}
                           <a
@@ -299,15 +295,13 @@
                         {/if}
                       </div>
                     </td>
-                    <td class="min-w-50 border-b border-white/5 p-4 wrap-break-word text-white/90">
+                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       <strong>{chart.title || "未知标题"}</strong>
                     </td>
                     <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       {chart.artist || "未知艺术家"}
                     </td>
-                    <td
-                      class="max-w-75 min-w-37.5 border-b border-white/5 p-4 wrap-break-word text-white/90"
-                    >
+                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       {chart.comment || ""}
                     </td>
                   </tr>
