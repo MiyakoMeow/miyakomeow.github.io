@@ -8,7 +8,7 @@ import markdownItContainer from "markdown-it-container";
 import markdownItHighlightjs from "markdown-it-highlightjs";
 import markdownItKatex from "markdown-it-katex";
 import * as shiki from "shiki";
-import Markdown from "vite-plugin-md";
+import svelteMd from "vite-plugin-svelte-md";
 
 // 由html-generator插件动态生成HTML文件，不再使用entry目录下的HTML文件
 
@@ -17,27 +17,27 @@ const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [
-    svelte({ preprocess: vitePreprocess({ script: true }) }),
-    tailwindcss(),
-    htmlGeneratorPlugin(),
-    Markdown({
+    svelteMd({
       markdownItOptions: {
         html: true,
         linkify: true,
         typographer: true,
       },
-      markdownItSetup(md) {
-        // 代码高亮
-        md.use(markdownItHighlightjs, { hljs: shiki });
-        // 数学公式
-        md.use(markdownItKatex);
-        // 自定义容器
-        md.use(markdownItContainer, "info");
-        md.use(markdownItContainer, "warning");
-        md.use(markdownItContainer, "tip");
-      },
-      wrapperClasses: "markdown-content",
+      markdownItUses: [
+        [markdownItHighlightjs, { hljs: shiki }],
+        [markdownItKatex],
+        [markdownItContainer, "info"],
+        [markdownItContainer, "warning"],
+        [markdownItContainer, "tip"],
+      ],
+      wrapperClasses: "",
     }),
+    svelte({
+      preprocess: vitePreprocess({ script: true }),
+      extensions: [".svelte", ".md"],
+    }),
+    tailwindcss(),
+    htmlGeneratorPlugin(),
   ],
   root: resolve(projectRoot, ".temp-html"),
   publicDir: resolve(projectRoot, "public"),

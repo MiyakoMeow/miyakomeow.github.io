@@ -28,6 +28,7 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 deno.lock
+*.tsbuildinfo
 
 # Logs and temp files
 *.log

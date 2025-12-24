@@ -8,5 +8,12 @@
     "strict": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts",
+    "vite-plugins/**/*.ts",
+    "config/**/*.ts",
+    "src/config/**/*.ts",
+    "src/utils/**/*.ts",
+    "src/env.d.ts"
+  ]
 }
