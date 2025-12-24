@@ -114,12 +114,6 @@
           const haystack = [
             item.name,
             item.symbol,
-            item.comment,
-            item.tag1,
-            item.tag2,
-            item.dir_name,
-            item.url,
-            item.url_ori,
           ]
             .filter((v): v is string => typeof v === "string" && v.length > 0)
             .join("\n")
@@ -252,7 +246,7 @@
         <input
           class="w-full rounded-xl border border-white/20 bg-black/20 px-4 py-3 pr-12 text-white outline-none placeholder:text-white/50 focus:border-[#64b5f6]/60 focus:ring-2 focus:ring-[#64b5f6]/30"
           type="text"
-          placeholder="按 名称 / 符号 / 备注 / 标签 搜索"
+          placeholder="按 名称 / 符号 搜索"
           bind:value={searchQuery}
         />
         {#if normalizedSearch.length > 0}
