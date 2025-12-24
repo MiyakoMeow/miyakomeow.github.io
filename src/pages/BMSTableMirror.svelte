@@ -111,10 +111,7 @@
     normalizedSearch.length === 0
       ? tables
       : tables.filter((item) => {
-          const haystack = [
-            item.name,
-            item.symbol,
-          ]
+          const haystack = [item.name, item.symbol]
             .filter((v): v is string => typeof v === "string" && v.length > 0)
             .join("\n")
             .toLowerCase();
