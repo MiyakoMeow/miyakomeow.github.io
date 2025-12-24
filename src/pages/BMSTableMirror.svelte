@@ -237,9 +237,9 @@
   <section
     class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
-    <h1 class="content-title">BMS 难度表镜像</h1>
+    <h1 class="page-title mb-2 text-center">BMS 难度表镜像</h1>
 
-    <div class="mt-2 text-[1.1rem] text-white/70 italic">
+    <div class="mt-2 text-center text-[1.1rem] text-white/70 italic">
       对于BeMusicSeeker用户，可以使用tables.json链接（
       <button
         class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
