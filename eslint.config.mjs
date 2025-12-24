@@ -5,7 +5,7 @@ import prettier from "eslint-config-prettier";
 import pluginBetterTailwind from "eslint-plugin-better-tailwindcss";
 import svelte from "eslint-plugin-svelte";
 import tailwindCanonicalClasses from "eslint-plugin-tailwind-canonical-classes";
-import svelteTailwindCanonicalRule from "./tailwind-svelte-canonical-eslint-plugin.mjs";
+import svelteTailwindCanonicalRule from "./eslint-plugin-svelte-tailwind-canonical.mjs";
 import { defineConfig } from "eslint/config";
 import { fileURLToPath } from "node:url";
 import globals from "globals";
