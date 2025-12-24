@@ -262,10 +262,10 @@
       {/if}
     </div>
 
-    <div class="mt-4 grid grid-cols-[repeat(2,minmax(240px,1fr))] gap-4">
+    <div class="mt-4 flex flex-wrap items-stretch justify-center gap-4">
       {#each links as link (link.href)}
         <a
-          class="block rounded-[14px] border border-white/10 bg-black/20 p-5 text-white no-underline transition-[transform,background] duration-300 ease-out hover:-translate-y-0.5 hover:bg-[rgba(255,255,255,0.06)]"
+          class="flex w-80 flex-col rounded-[14px] border border-white/10 bg-black/20 p-5 text-white no-underline transition-[transform,background] duration-300 ease-out hover:-translate-y-0.5 hover:bg-[rgba(255,255,255,0.06)]"
           href={link.href}
         >
           <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]">{link.title}</div>

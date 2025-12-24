@@ -4,10 +4,10 @@
  */
 
 import type { Plugin } from "vite";
-import { resolve, relative, normalize } from "path";
-import { mkdirSync, existsSync, readdirSync, rmSync } from "fs";
+import { dirname, join, normalize, relative, resolve } from "path";
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "fs";
 import { getAllPages } from "../config/pages.config";
-import { generateHtmlFiles } from "../src/utils/html-generator";
+import type { AnyPageConfig } from "../src/config/pages";
 
 const TEMP_HTML_DIR = resolve(__dirname, "../.temp-html");
 const TEMPLATE_PATH = resolve(__dirname, "../config/templates/base.html.template");
@@ -16,6 +16,91 @@ const normalizePathForCompare = (pathValue: string) => {
   const normalized = normalize(resolve(pathValue)).split("\\").join("/").replace(/\/+$/, "");
   return process.platform === "win32" ? normalized.toLowerCase() : normalized;
 };
+
+function escapeHtml(text: string): string {
+  const escapeMap: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  };
+  return text.replace(/[&<>"']/g, (char) => escapeMap[char] || char);
+}
+
+function generateHeadContent(pageConfig: AnyPageConfig): string {
+  const lines: string[] = [];
+
+  if (pageConfig.description) {
+    lines.push(`<meta name="description" content="${escapeHtml(pageConfig.description)}" />`);
+  }
+
+  if (pageConfig.head) {
+    for (const headItem of pageConfig.head) {
+      const attrs = Object.entries(headItem.attributes)
+        .map(([key, value]) => `${key}="${escapeHtml(value)}"`)
+        .join(" ");
+
+      if (headItem.content) {
+        lines.push(`<${headItem.tag} ${attrs}>${escapeHtml(headItem.content)}</${headItem.tag}>`);
+      } else {
+        lines.push(`<${headItem.tag} ${attrs} />`);
+      }
+    }
+  }
+
+  return lines.join("\n    ");
+}
+
+function generateHtmlContent(pageConfig: AnyPageConfig, templatePath: string): string {
+  let template = readFileSync(templatePath, "utf-8");
+
+  template = template.replace("{{PAGE_TITLE}}", pageConfig.title);
+  template = template.replace("{{COMPONENT_PATH}}", `@/${pageConfig.component}`);
+
+  const propsJson = JSON.stringify(pageConfig.props || {});
+  template = template.replace("{{PROPS_JSON}}", propsJson);
+
+  const headContent = generateHeadContent(pageConfig);
+  template = template.replace("{{HEAD_CONTENT}}", headContent);
+
+  return template;
+}
+
+function generateHtmlFile(
+  pageConfig: AnyPageConfig,
+  outputDir: string,
+  templatePath: string
+): void {
+  if (pageConfig.generateHtml === false) {
+    return;
+  }
+
+  const htmlContent = generateHtmlContent(pageConfig, templatePath);
+  const relativePath = pageConfig.path.startsWith("/") ? pageConfig.path.slice(1) : pageConfig.path;
+  const outputPath = join(outputDir, relativePath, "index.html");
+
+  mkdirSync(dirname(outputPath), { recursive: true });
+  writeFileSync(outputPath, htmlContent);
+}
+
+function generateHtmlFiles(
+  pageConfigs: AnyPageConfig[],
+  outputDir: string,
+  templatePath: string
+): void {
+  console.log(`Generating ${pageConfigs.length} HTML files to ${outputDir}...`);
+
+  let generatedCount = 0;
+  for (const pageConfig of pageConfigs) {
+    if (pageConfig.generateHtml !== false) {
+      generateHtmlFile(pageConfig, outputDir, templatePath);
+      generatedCount++;
+    }
+  }
+
+  console.log(`Generated ${generatedCount} HTML files.`);
+}
 
 /**
  * HTML生成器Vite插件
