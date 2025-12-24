@@ -1,39 +1,46 @@
 import { defineConfig } from "vite";
 import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
-import { resolve } from "path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import htmlGeneratorPlugin from "./vite-plugins/html-generator";
-import Markdown from "vite-plugin-md";
+import markdownItContainer from "markdown-it-container";
+import markdownItHighlightjs from "markdown-it-highlightjs";
+import markdownItKatex from "markdown-it-katex";
+import * as shiki from "shiki";
+import svelteMd from "vite-plugin-svelte-md";
 
 // 由html-generator插件动态生成HTML文件，不再使用entry目录下的HTML文件
 
 // https://vite.dev/config/
+const projectRoot = dirname(fileURLToPath(import.meta.url));
+
 export default defineConfig({
   plugins: [
-    svelte({ preprocess: vitePreprocess({ script: true }) }),
-    tailwindcss(),
-    htmlGeneratorPlugin(),
-    Markdown({
+    svelteMd({
       markdownItOptions: {
         html: true,
         linkify: true,
         typographer: true,
       },
-      markdownItSetup(md) {
-        // 代码高亮
-        md.use(require("markdown-it-highlightjs"), { hljs: require("shiki") });
-        // 数学公式
-        md.use(require("markdown-it-katex"));
-        // 自定义容器
-        md.use(require("markdown-it-container"), "info");
-        md.use(require("markdown-it-container"), "warning");
-        md.use(require("markdown-it-container"), "tip");
-      },
-      wrapperClasses: "markdown-content",
+      markdownItUses: [
+        [markdownItHighlightjs, { hljs: shiki }],
+        [markdownItKatex],
+        [markdownItContainer, "info"],
+        [markdownItContainer, "warning"],
+        [markdownItContainer, "tip"],
+      ],
+      wrapperClasses: "",
     }),
+    svelte({
+      preprocess: vitePreprocess({ script: true }),
+      extensions: [".svelte", ".md"],
+    }),
+    tailwindcss(),
+    htmlGeneratorPlugin(),
   ],
-  root: resolve(__dirname, ".temp-html"),
-  publicDir: resolve(__dirname, "public"),
+  root: resolve(projectRoot, ".temp-html"),
+  publicDir: resolve(projectRoot, "public"),
   appType: "mpa",
   base: "./",
   define: {
@@ -41,7 +48,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": resolve(__dirname, "src"),
+      "@": resolve(projectRoot, "src"),
     },
   },
   server: {
@@ -49,7 +56,7 @@ export default defineConfig({
     fs: { allow: [".."] },
   },
   build: {
-    outDir: resolve(__dirname, "dist"),
+    outDir: resolve(projectRoot, "dist"),
     emptyOutDir: true,
     rollupOptions: {
       // input由html-generator插件动态生成

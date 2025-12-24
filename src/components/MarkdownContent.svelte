@@ -1,30 +1,11 @@
 <script lang="ts">
   import "katex/dist/katex.min.css";
-  import MarkdownIt from "markdown-it";
-  // @ts-ignore - markdown-it-katex没有类型定义
-  import mk from "markdown-it-katex";
-
-  export let content: string = "";
   export let className: string = "";
-
-  let renderedContent = "";
-
-  // 创建markdown-it实例，配置与vite-plugin-md一致
-  const md = new MarkdownIt({
-    html: true,
-    linkify: true,
-    typographer: true,
-  }).use(mk);
-
-  // 渲染Markdown内容
-  $: renderedContent = content ? md.render(content) : "";
 </script>
 
-{#if content}
-  <div class="markdown-content {className}">
-    {@html renderedContent}
-  </div>
-{/if}
+<div class={["markdown-content", className].filter(Boolean).join(" ")}>
+  <slot />
+</div>
 
 <style>
   /* 组件特定样式增强 */

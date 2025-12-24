@@ -42,8 +42,26 @@ declare module "*.stylus" {
 }
 
 declare module "*.md" {
+  import type { Component } from "svelte";
+  const component: Component;
+  export default component;
+}
+
+declare module "*.md?raw" {
   const content: string;
   export default content;
+}
+
+declare module "markdown-it-katex" {
+  import type { PluginSimple } from "markdown-it";
+  const plugin: PluginSimple;
+  export default plugin;
+}
+
+declare module "markdown-it-container" {
+  import type { PluginWithOptions } from "markdown-it";
+  const plugin: PluginWithOptions<string>;
+  export default plugin;
 }
 
 declare module "*.json" {
