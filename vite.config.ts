@@ -4,11 +4,10 @@ import tailwindcss from "@tailwindcss/vite";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import htmlGeneratorPlugin from "./vite-plugins/html-generator";
-import markdownItContainer from "markdown-it-container";
-import markdownItHighlightjs from "markdown-it-highlightjs";
-import markdownItKatex from "markdown-it-katex";
-import * as shiki from "shiki";
-import svelteMd from "vite-plugin-svelte-md";
+import { mdsvex } from "mdsvex";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import type { PreprocessorGroup } from "svelte/compiler";
 
 // 由html-generator插件动态生成HTML文件，不再使用entry目录下的HTML文件
 
@@ -17,23 +16,21 @@ const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [
-    svelteMd({
-      markdownItOptions: {
-        html: true,
-        linkify: true,
-        typographer: true,
-      },
-      markdownItUses: [
-        [markdownItHighlightjs, { hljs: shiki }],
-        [markdownItKatex],
-        [markdownItContainer, "info"],
-        [markdownItContainer, "warning"],
-        [markdownItContainer, "tip"],
-      ],
-      wrapperClasses: "",
-    }),
     svelte({
-      preprocess: vitePreprocess({ script: true }),
+      preprocess: [
+        (() => {
+          const md = mdsvex({
+            extensions: [".md"],
+            remarkPlugins: [remarkGfm, remarkMath],
+          });
+          const pre: PreprocessorGroup = {
+            markup: ({ content, filename }) =>
+              md.markup({ content, filename: filename ?? "unknown.md" }),
+          };
+          return pre;
+        })(),
+        vitePreprocess({ script: true }),
+      ],
       extensions: [".svelte", ".md"],
     }),
     tailwindcss(),
@@ -56,6 +53,7 @@ export default defineConfig({
     fs: { allow: [".."] },
   },
   build: {
+    sourcemap: true,
     outDir: resolve(projectRoot, "dist"),
     emptyOutDir: true,
     rollupOptions: {
