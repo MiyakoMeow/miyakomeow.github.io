@@ -1,4 +1,8 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from "tailwindcss";
+type CssInJs = {
+  [key: string]: string | string[] | CssInJs | CssInJs[];
+};
+
 export default {
   content: ["./.temp-html/**/*.html", "./src/**/*.{svelte,js,ts}", "./src/content/**/*.md"],
   theme: {
@@ -15,7 +19,7 @@ export default {
     },
   },
   plugins: [
-    function ({ addBase }) {
+    function ({ addBase }: { addBase: (base: CssInJs) => void }) {
       addBase({
         ":root": {
           fontFamily: '"Inter", system-ui, Avenir, Helvetica, Arial, sans-serif',
@@ -64,7 +68,6 @@ export default {
         "button:focus, button:focus-visible": {
           outline: "4px auto -webkit-focus-ring-color",
         },
-        // Markdown内容样式
         ".markdown-content": {
           "& h1": {
             fontSize: "2.5rem",
@@ -156,4 +159,4 @@ export default {
       });
     },
   ],
-};
+} satisfies Config;
