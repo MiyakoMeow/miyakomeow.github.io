@@ -160,13 +160,13 @@
           </div>
 
           <div class="overflow-x-auto rounded-[10px] border border-white/10 bg-black/20" use:setRef>
-            <table class="w-full min-w-210 table-fixed border-collapse">
+            <table class="w-full min-w-225 table-fixed border-collapse">
               <colgroup>
-                <col style="width: 5%" />
-                <col style="width: 12%" />
-                <col style="width: 15%" />
-                <col style="width: 30%" />
-                <col style="width: 20%" />
+                <col style="width: 7%" />
+                <col style="width: 13%" />
+                <col style="width: 14%" />
+                <col style="width: 26%" />
+                <col style="width: 22%" />
                 <col style="width: 18%" />
               </colgroup>
               <thead>
@@ -221,7 +221,7 @@
                       <div class="flex flex-row flex-wrap gap-[0.3rem]">
                         {#if bundleUrl}
                           <a
-                            class="flex min-w-15 flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-md border-none bg-[linear-gradient(135deg,#4caf50,#2e7d32)] px-2 py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#66bb6a,#388e3c)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
+                            class="flex min-w-17 flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-md border-none bg-[linear-gradient(135deg,#4caf50,#2e7d32)] px-2 py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#66bb6a,#388e3c)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
                             href={bundleUrl}
                             title={bundleUrl}
                             target="_blank"
@@ -232,7 +232,7 @@
                         {/if}
                         {#if diffUrl}
                           <a
-                            class="flex min-w-15 flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-md border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-2 py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#42a5f5,#1976d2)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
+                            class="flex min-w-17 flex-1 cursor-pointer items-center justify-center gap-[0.2rem] rounded-md border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-2 py-[0.35rem] text-[0.85rem] font-semibold text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#42a5f5,#1976d2)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-0"
                             href={diffUrl}
                             title={diffUrl}
                             target="_blank"
