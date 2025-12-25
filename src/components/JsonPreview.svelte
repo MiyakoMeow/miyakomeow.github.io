@@ -100,25 +100,52 @@
     open = false;
   }
 
+  function fixedContainingBlock(node: HTMLElement): DOMRect | undefined {
+    let el: HTMLElement | null = node.parentElement;
+    while (el) {
+      const style = getComputedStyle(el);
+      const contain = style.contain ?? "";
+      const willChange = style.willChange ?? "";
+
+      const createsContainingBlock =
+        style.transform !== "none" ||
+        style.perspective !== "none" ||
+        style.filter !== "none" ||
+        style.backdropFilter !== "none" ||
+        contain.includes("paint") ||
+        willChange.includes("transform") ||
+        willChange.includes("filter");
+
+      if (createsContainingBlock) return el.getBoundingClientRect();
+      el = el.parentElement;
+    }
+    return undefined;
+  }
+
   function updatePositionAtPointer(clientX: number, clientY: number): void {
     if (!open) return;
     if (!popoverEl) return;
 
     const margin = 12;
     const offset = 18;
-    const viewportW = window.innerWidth;
-    const viewportH = window.innerHeight;
+    const containingRect = fixedContainingBlock(popoverEl);
+    const viewportW = containingRect?.width ?? window.innerWidth;
+    const viewportH = containingRect?.height ?? window.innerHeight;
+    const baseLeft = containingRect?.left ?? 0;
+    const baseTop = containingRect?.top ?? 0;
+    const localX = clientX - baseLeft;
+    const localY = clientY - baseTop;
     const popRect = popoverEl.getBoundingClientRect();
 
-    let left = clientX + offset;
+    let left = localX + offset;
     if (left + popRect.width + margin > viewportW) {
-      left = clientX - offset - popRect.width;
+      left = localX - offset - popRect.width;
     }
     left = Math.max(margin, Math.min(left, viewportW - popRect.width - margin));
 
-    let top = clientY + offset;
+    let top = localY + offset;
     if (top + popRect.height + margin > viewportH) {
-      top = clientY - offset - popRect.height;
+      top = localY - offset - popRect.height;
     }
     top = Math.max(margin, Math.min(top, viewportH - popRect.height - margin));
 
