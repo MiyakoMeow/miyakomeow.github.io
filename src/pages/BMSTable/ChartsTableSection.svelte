@@ -1,5 +1,7 @@
 <script lang="ts">
+  import JsonPreview from "../../components/JsonPreview.svelte";
   import ScrollSyncGroup from "../../components/ScrollSyncGroup.svelte";
+  import { jsonPreviewMove, jsonPreviewScheduleHide, jsonPreviewShow } from "../../components/jsonPreview";
 
   interface ChartData {
     title?: string;
@@ -208,6 +210,7 @@
                   {@const bundleUrl = resolvedBundleUrl(chart)}
                   {@const diffUrl = resolvedDiffUrl(chart)}
                   {@const bmsLinks = getBmsLinks(chart)}
+                  {@const chartJson = { ...chart, groupLevel: group.level }}
                   <tr class="hover:bg-white/5">
                     <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       <span
@@ -296,7 +299,16 @@
                       </div>
                     </td>
                     <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
-                      <strong>{chart.title || "未知标题"}</strong>
+                      <strong
+                        class="cursor-default"
+                        on:pointerenter={(event) => {
+                          jsonPreviewShow({ value: chartJson, label: "谱面 JSON", maxHeightRem: 16 }, event.clientX, event.clientY);
+                        }}
+                        on:pointermove={(event) => jsonPreviewMove(event.clientX, event.clientY)}
+                        on:pointerleave={jsonPreviewScheduleHide}
+                      >
+                        {chart.title || "未知标题"}
+                      </strong>
                     </td>
                     <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       {chart.artist || "未知艺术家"}
@@ -314,3 +326,5 @@
     </ScrollSyncGroup>
   </div>
 {/if}
+
+<JsonPreview />
