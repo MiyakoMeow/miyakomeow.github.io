@@ -1,5 +1,10 @@
 <script lang="ts">
   import { jsonPreviewCancelHide, jsonPreviewHideAllNow, jsonPreviewHideNow, jsonPreviewStore, jsonPreviewScheduleHide } from "./jsonPreview";
+  import { cubicOut } from "svelte/easing";
+  import { fade, fly } from "svelte/transition";
+
+  const copiedTimers = new Map<string, ReturnType<typeof setTimeout>>();
+  let copiedIds = new Set<string>();
 
   function safeStringify(input: unknown, space = 2): string {
     const seen = new WeakSet<object>();
@@ -51,6 +56,27 @@
       await navigator.clipboard.writeText(textarea.value);
     } catch {}
     document.body.removeChild(textarea);
+  }
+
+  async function copyJsonForPreview(
+    id: string,
+    text: string,
+    onCopy: ((text: string) => Promise<void> | void) | undefined
+  ): Promise<void> {
+    await copyText(text, onCopy);
+
+    const prevTimer = copiedTimers.get(id);
+    if (prevTimer) clearTimeout(prevTimer);
+
+    copiedIds = new Set(copiedIds);
+    copiedIds.add(id);
+
+    const t = setTimeout(() => {
+      copiedTimers.delete(id);
+      copiedIds = new Set(copiedIds);
+      copiedIds.delete(id);
+    }, 1000);
+    copiedTimers.set(id, t);
   }
 
   function positionPopover(
@@ -114,6 +140,8 @@
     <div
       use:positionPopover={{ x: preview.x, y: preview.y, open: preview.open }}
       class="fixed z-2000 w-[min(44rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-white/20 bg-white/10 shadow-[0_10px_24px_rgba(0,0,0,0.45)] backdrop-blur-sm"
+      in:fly={{ y: 10, opacity: 0, duration: 160, easing: cubicOut }}
+      out:fade={{ duration: 120 }}
       on:pointerenter={() => jsonPreviewCancelHide(preview.id)}
       on:pointerleave={() => jsonPreviewScheduleHide(preview.id)}
     >
@@ -123,9 +151,9 @@
           <button
             class="cursor-pointer rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-[0.85rem] font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/15"
             type="button"
-            on:click={() => copyText(jsonText, preview.onCopy)}
+            on:click={() => copyJsonForPreview(preview.id, jsonText, preview.onCopy)}
           >
-            复制
+            {copiedIds.has(preview.id) ? "已复制" : "复制"}
           </button>
           <button
             class="cursor-pointer rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-[0.85rem] font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/15"
