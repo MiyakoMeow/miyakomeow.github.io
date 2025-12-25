@@ -4,6 +4,9 @@
   import StarryBackground from "@/components/StarryBackground.svelte";
   import MarkdownContent from "@/components/MarkdownContent.svelte";
   import HomeContent from "@/content/index.md";
+  import { blogPosts } from "@/blog/posts";
+
+  const featuredPosts = blogPosts.slice(0, 2);
 </script>
 
 <StarryBackground />
@@ -50,5 +53,16 @@
       <HomeContent />
     </MarkdownContent>
   </section>
+
+  {#each featuredPosts as post (post.slug)}
+    <section
+      class="mt-6 w-full animate-fadeIn rounded-2xl border border-white/10 bg-white/10 p-6 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+    >
+      <a class="block text-white no-underline" href={post.url}>
+        <h2 class="section-title mb-2">{post.title}</h2>
+        <p class="m-0 text-white/80">{post.firstSentence}</p>
+      </a>
+    </section>
+  {/each}
 </main>
 <QuickActions />
