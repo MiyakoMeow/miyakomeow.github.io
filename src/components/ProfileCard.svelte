@@ -167,14 +167,14 @@
       </div>
 
       <div
-        class="transition-opacity duration-200 ease-in-out"
+        class="text-center transition-opacity duration-200 ease-in-out"
         class:opacity-100={open}
         class:opacity-0={!open}
       >
         <div>
           <div>
             <img
-              class="mb-4 h-30 w-30 rounded-full border-4 border-white/30 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-300 ease-in-out hover:scale-105 hover:rotate-[5deg]"
+              class="mx-auto mb-4 h-30 w-30 rounded-full border-4 border-white/30 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-300 ease-in-out hover:scale-105 hover:rotate-[5deg]"
               src="https://github.com/MiyakoMeow.png"
               alt="Miyako Meow"
             />
@@ -184,11 +184,11 @@
           >
             MiyakoMeow
           </h1>
-          <p class="mb-8 text-[1.1rem] text-[#a5b4fc]">一个天天摸鱼的大学生。</p>
+          <p class="mb-8 text-[1.1rem] text-[#a5b4fc]">喵喵喵！</p>
         </div>
 
         <div class="mb-10 leading-[1.6] text-white/90">
-          <p>欢迎来到我的个人主页！</p>
+          <p>追逐成就感中</p>
         </div>
 
         <div class="flex flex-wrap justify-center gap-4">
@@ -209,7 +209,7 @@
             href="https://x.com/MiyakoWoW"
             class="rounded-[50px] border border-white/20 bg-white/10 px-6 py-[0.8rem] font-medium text-white no-underline transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-white/20 hover:shadow-[0_5px_15px_rgba(0,0,0,0.2)]"
           >
-            X
+            X (Twitter)
           </a>
         </div>
       </div>
