@@ -1,7 +1,7 @@
 <script lang="ts">
   import JsonPreview from "../../components/JsonPreview.svelte";
   import ScrollSyncGroup from "../../components/ScrollSyncGroup.svelte";
-  import { jsonPreviewMove, jsonPreviewScheduleHide, jsonPreviewShow } from "../../components/jsonPreview";
+  import { jsonPreviewScheduleHide, jsonPreviewShow } from "../../components/jsonPreview";
 
   interface ChartData {
     title?: string;
@@ -304,7 +304,6 @@
                         on:pointerenter={(event) => {
                           jsonPreviewShow({ value: chartJson, label: "谱面 JSON", maxHeightRem: 16 }, event.clientX, event.clientY);
                         }}
-                        on:pointermove={(event) => jsonPreviewMove(event.clientX, event.clientY)}
                         on:pointerleave={jsonPreviewScheduleHide}
                       >
                         {chart.title || "未知标题"}

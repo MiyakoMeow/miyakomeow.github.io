@@ -1,6 +1,6 @@
 <script lang="ts">
   import JsonPreview from "../../components/JsonPreview.svelte";
-  import { jsonPreviewMove, jsonPreviewScheduleHide, jsonPreviewShow } from "../../components/jsonPreview";
+  import { jsonPreviewScheduleHide, jsonPreviewShow } from "../../components/jsonPreview";
   import { cubicIn, cubicOut } from "svelte/easing";
   import { fly } from "svelte/transition";
 
@@ -57,7 +57,6 @@
               event.clientY
             );
           }}
-          on:pointermove={(event) => jsonPreviewMove(event.clientX, event.clientY)}
           on:pointerleave={jsonPreviewScheduleHide}
         >
           复制镜像链接
@@ -73,7 +72,6 @@
               event.clientY
             );
           }}
-          on:pointermove={(event) => jsonPreviewMove(event.clientX, event.clientY)}
           on:pointerleave={jsonPreviewScheduleHide}
         >
           复制原链接
