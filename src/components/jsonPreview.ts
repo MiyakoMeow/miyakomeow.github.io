@@ -1,4 +1,4 @@
-import { get, writable } from "svelte/store";
+import { writable } from "svelte/store";
 
 export type JsonPreviewCopyHandler = (text: string) => Promise<void> | void;
 
@@ -58,14 +58,6 @@ export function jsonPreviewSetFrozen(frozen: boolean): void {
   jsonPreviewState.update((s) => ({ ...s, frozen }));
 }
 
-export function jsonPreviewMove(x: number, y: number): void {
-  const s = get(jsonPreviewState);
-  if (!s.open) return;
-  if (s.frozen) return;
-  if (s.x === x && s.y === y) return;
-  jsonPreviewState.update((cur) => ({ ...cur, x, y }));
-}
-
 export function jsonPreviewShow(options: JsonPreviewOpenOptions, x?: number, y?: number): void {
   jsonPreviewCancelHide();
   jsonPreviewState.update((s) => ({
@@ -76,8 +68,7 @@ export function jsonPreviewShow(options: JsonPreviewOpenOptions, x?: number, y?:
     maxHeightRem: options.maxHeightRem ?? 18,
     onCopy: options.onCopy,
     frozen: false,
+    x: typeof x === "number" ? x : s.x,
+    y: typeof y === "number" ? y : s.y,
   }));
-  if (typeof x === "number" && typeof y === "number") {
-    jsonPreviewMove(x, y);
-  }
 }
