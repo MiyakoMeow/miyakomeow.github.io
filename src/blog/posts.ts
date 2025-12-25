@@ -3,6 +3,7 @@ import type { Component } from "svelte";
 export type BlogPost = {
   slug: string;
   title: string;
+  order?: number;
   date?: string;
   firstSentence: string;
   url: string;
@@ -103,10 +104,14 @@ export const blogPosts: BlogPost[] = Object.entries(markdownComponents)
     const title = extractTitle(body, frontmatter);
     const firstSentence = extractFirstSentence(body);
     const date = frontmatter.date?.trim() || undefined;
+    const orderValue = frontmatter.order?.trim();
+    const order = orderValue ? Number(orderValue) : undefined;
+    const resolvedOrder = Number.isFinite(order) ? order : undefined;
 
     return {
       slug,
       title,
+      ...(resolvedOrder !== undefined ? { order: resolvedOrder } : {}),
       ...(date ? { date } : {}),
       firstSentence,
       url: `/blog/${slug}/index.html`,
@@ -114,6 +119,9 @@ export const blogPosts: BlogPost[] = Object.entries(markdownComponents)
     };
   })
   .sort((a, b) => {
+    if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
+    if (a.order !== undefined && b.order === undefined) return -1;
+    if (a.order === undefined && b.order !== undefined) return 1;
     if (a.date && b.date) return b.date.localeCompare(a.date);
     if (a.date && !b.date) return -1;
     if (!a.date && b.date) return 1;

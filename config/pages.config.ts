@@ -89,6 +89,7 @@ interface BMSTableItem {
 type BlogPostInfo = {
   slug: string;
   title: string;
+  order?: number;
   date?: string;
 };
 
@@ -118,6 +119,21 @@ function parseBlogPostDate(md: string): string | undefined {
   return unquoted || undefined;
 }
 
+function parseBlogPostOrder(md: string): number | undefined {
+  const fm = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
+  if (!fm) return undefined;
+
+  const orderLine = fm[1].split("\n").find((line) => line.trim().startsWith("order:"));
+  if (!orderLine) return undefined;
+
+  const value = orderLine.split(":").slice(1).join(":").trim();
+  const unquoted = value.replace(/^"(.*)"$/, "$1").replace(/^'(.*)'$/, "$1");
+  if (!unquoted) return undefined;
+
+  const order = Number(unquoted);
+  return Number.isFinite(order) ? order : undefined;
+}
+
 export function generateBlogPages(): PageConfig[] {
   try {
     const blogDir = resolve(__dirname, "../src/content/blog");
@@ -130,11 +146,15 @@ export function generateBlogPages(): PageConfig[] {
       const fullPath = resolve(blogDir, fileName);
       const md = readFileSync(fullPath, "utf-8");
       const title = parseBlogPostTitle(md);
+      const order = parseBlogPostOrder(md);
       const date = parseBlogPostDate(md);
-      return { slug, title, ...(date ? { date } : {}) };
+      return { slug, title, ...(order !== undefined ? { order } : {}), ...(date ? { date } : {}) };
     });
 
     posts.sort((a, b) => {
+      if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
+      if (a.order !== undefined && b.order === undefined) return -1;
+      if (a.order === undefined && b.order !== undefined) return 1;
       if (a.date && b.date) return b.date.localeCompare(a.date);
       if (a.date && !b.date) return -1;
       if (!a.date && b.date) return 1;
