@@ -1,4 +1,9 @@
 <script lang="ts">
+  import JsonPreview, {
+    jsonPreview,
+    type JsonPreviewHandle,
+  } from "../../components/JsonPreview.svelte";
+
   interface MirrorTableItem {
     name: string;
     symbol?: string;
@@ -30,6 +35,8 @@
 
   export let groups: Tag1Group[] = [];
   export let selectedMap: Record<string, boolean> = {};
+
+  let tablePreview: JsonPreviewHandle | undefined;
 
   function compareAscii(a: string, b: string): number {
     if (a === b) return 0;
@@ -291,7 +298,19 @@
                       <td
                         class="min-w-50 border-b border-white/5 p-4 wrap-break-word text-white/90"
                       >
-                        <strong>{item.name}</strong>
+                        <strong
+                          class="cursor-default"
+                          use:jsonPreview={{
+                            preview: tablePreview,
+                            options: {
+                              value: item,
+                              label: `${item.name || "难度表"} JSON`,
+                              maxHeightRem: 14,
+                            },
+                          }}
+                        >
+                          {item.name}
+                        </strong>
                       </td>
                       <td
                         class="min-w-32.5 border-b border-white/5 p-4 wrap-break-word text-white/90"
@@ -334,3 +353,5 @@
     {/each}
   </div>
 {/if}
+
+<JsonPreview bind:this={tablePreview} />
