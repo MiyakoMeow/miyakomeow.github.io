@@ -16,7 +16,7 @@
 
   $: selectedMirrorArray = Object.entries(selectedMap)
     .filter(([, v]) => !!v)
-    .map(([url]) => url);
+    .map(([url]) => new URL(url, window.location.origin).toString());
 
   $: urlToOrigin = (() => {
     const m = new Map<string, string>();
