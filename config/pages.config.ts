@@ -5,7 +5,7 @@
 
 import { PageConfig, BMSTablePageConfig } from "../src/config/pages";
 import { resolve } from "path";
-import { readFileSync } from "fs";
+import { readdirSync, readFileSync } from "fs";
 
 /** 基础页面配置（手动定义的页面） */
 export const basePages: PageConfig[] = [
@@ -77,6 +77,99 @@ interface BMSTableItem {
   dir_name: string;
   url: string;
   url_ori?: string;
+}
+
+type BlogPostInfo = {
+  slug: string;
+  title: string;
+  order?: number;
+  date?: string;
+};
+
+function parseBlogPostTitle(md: string): string {
+  const fm = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
+  if (fm) {
+    const titleLine = fm[1].split("\n").find((line) => line.trim().startsWith("title:"));
+    if (titleLine) {
+      const value = titleLine.split(":").slice(1).join(":").trim();
+      const unquoted = value.replace(/^"(.*)"$/, "$1").replace(/^'(.*)'$/, "$1");
+      if (unquoted) return unquoted;
+    }
+  }
+
+  const h1 = md.match(/^#\s+(.+?)\s*$/m);
+  return h1?.[1]?.trim() || "未命名文章";
+}
+
+function parseBlogPostDate(md: string): string | undefined {
+  const fm = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
+  if (!fm) return undefined;
+
+  const dateLine = fm[1].split("\n").find((line) => line.trim().startsWith("date:"));
+  if (!dateLine) return undefined;
+  const value = dateLine.split(":").slice(1).join(":").trim();
+  const unquoted = value.replace(/^"(.*)"$/, "$1").replace(/^'(.*)'$/, "$1");
+  return unquoted || undefined;
+}
+
+function parseBlogPostOrder(md: string): number | undefined {
+  const fm = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
+  if (!fm) return undefined;
+
+  const orderLine = fm[1].split("\n").find((line) => line.trim().startsWith("order:"));
+  if (!orderLine) return undefined;
+
+  const value = orderLine.split(":").slice(1).join(":").trim();
+  const unquoted = value.replace(/^"(.*)"$/, "$1").replace(/^'(.*)'$/, "$1");
+  if (!unquoted) return undefined;
+
+  const order = Number(unquoted);
+  return Number.isFinite(order) ? order : undefined;
+}
+
+export function generateBlogPages(): PageConfig[] {
+  try {
+    const blogDir = resolve(__dirname, "../src/content/blog");
+    const files = readdirSync(blogDir, { withFileTypes: true })
+      .filter((d) => d.isFile() && d.name.toLowerCase().endsWith(".md"))
+      .map((d) => d.name);
+
+    const posts: BlogPostInfo[] = files.map((fileName) => {
+      const slug = fileName.replace(/\.md$/i, "");
+      const fullPath = resolve(blogDir, fileName);
+      const md = readFileSync(fullPath, "utf-8");
+      const title = parseBlogPostTitle(md);
+      const order = parseBlogPostOrder(md);
+      const date = parseBlogPostDate(md);
+      return { slug, title, ...(order !== undefined ? { order } : {}), ...(date ? { date } : {}) };
+    });
+
+    posts.sort((a, b) => {
+      if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
+      if (a.order !== undefined && b.order === undefined) return -1;
+      if (a.order === undefined && b.order !== undefined) return 1;
+      if (a.date && b.date) return b.date.localeCompare(a.date);
+      if (a.date && !b.date) return -1;
+      if (!a.date && b.date) return 1;
+      return a.slug.localeCompare(b.slug);
+    });
+
+    return posts.map((post) => ({
+      id: `blog-${post.slug}`,
+      title: `${post.title} - 博客`,
+      path: `/blog/${post.slug}`,
+      component: "pages/BlogPost.svelte",
+      props: { slug: post.slug },
+      generateHtml: true,
+    }));
+  } catch (error) {
+    console.error("Failed to generate blog pages:", error);
+    if (process.env.NODE_ENV === "development") {
+      console.warn("Using empty blog pages for development");
+      return [];
+    }
+    throw error;
+  }
 }
 
 function warnDuplicatePaths(pages: Array<{ path: string }>): void {
@@ -151,5 +244,7 @@ export function generateBMSTablePages(): BMSTablePageConfig[] {
  * 包括基础页面和动态生成的BMS表镜像页面
  */
 export function getAllPages(): (PageConfig | BMSTablePageConfig)[] {
-  return [...basePages, ...generateBMSTablePages()];
+  const allPages = [...basePages, ...generateBlogPages(), ...generateBMSTablePages()];
+  warnDuplicatePaths(allPages);
+  return allPages;
 }
