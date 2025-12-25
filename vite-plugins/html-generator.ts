@@ -7,7 +7,8 @@ import type { Plugin } from "vite";
 import { dirname, join, normalize, relative, resolve } from "path";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "fs";
 import { getAllPages } from "../config/pages.config";
-import type { AnyPageConfig } from "../src/config/pages";
+
+type AnyPageConfig = ReturnType<typeof getAllPages>[number];
 
 const TEMP_HTML_DIR = resolve(__dirname, "../.temp-html");
 const TEMPLATE_PATH = resolve(__dirname, "../config/templates/base.html.template");

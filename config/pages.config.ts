@@ -3,9 +3,45 @@
  * 定义所有页面的配置，包括基础页面和动态生成的BMS表镜像页面
  */
 
-import { PageConfig, BMSTablePageConfig } from "../src/config/pages";
 import { resolve } from "path";
 import { readdirSync, readFileSync } from "fs";
+
+export type PagePropPrimitive = string | number | boolean | null;
+
+export type PagePropValue = PagePropPrimitive | PagePropObject | PagePropValue[];
+
+export type PagePropObject = {
+  [key: string]: PagePropValue;
+};
+
+export interface PageConfig {
+  id: string;
+  title: string;
+  description?: string;
+  path: string;
+  component: string;
+  props?: Record<string, PagePropValue>;
+  head?: Array<{
+    tag: string;
+    attributes: Record<string, string>;
+    content?: string;
+  }>;
+  group?: string;
+  generateHtml?: boolean;
+}
+
+export interface BMSTablePageConfig extends PageConfig {
+  type: "bms-table-mirror";
+  headerUrl: string;
+  originUrl?: string;
+  dirName: string;
+}
+
+export type AnyPageConfig = PageConfig | BMSTablePageConfig;
+
+export function isBMSTablePageConfig(config: AnyPageConfig): config is BMSTablePageConfig {
+  return (config as BMSTablePageConfig).type === "bms-table-mirror";
+}
 
 /** 基础页面配置（手动定义的页面） */
 export const basePages: PageConfig[] = [
