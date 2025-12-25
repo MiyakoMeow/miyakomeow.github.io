@@ -1,7 +1,17 @@
 <script lang="ts">
   import JsonPreview from "../../components/JsonPreview.svelte";
   import ScrollSyncGroup from "../../components/ScrollSyncGroup.svelte";
-  import { jsonPreviewScheduleHide, jsonPreviewShow } from "../../components/jsonPreview";
+
+  type JsonPreviewHandle = {
+    show: (
+      options: { value: unknown; label?: string; maxHeightRem?: number },
+      x: number,
+      y: number
+    ) => void | Promise<void>;
+    scheduleHide: () => void;
+  };
+
+  let chartPreview: JsonPreviewHandle | undefined;
 
   interface ChartData {
     title?: string;
@@ -77,18 +87,6 @@
       mocha: `https://mocha-repository.info/song.php?sha256=${encodeURIComponent(sha)}`,
       minir: `https://www.gaftalk.com/minir/#/viewer/song/${encodeURIComponent(sha)}/0`,
     };
-  }
-
-  function chartPreviewId(chart: ChartData, groupLevel: string, index: number): string {
-    const sha = typeof chart.sha256 === "string" ? chart.sha256.trim() : "";
-    if (sha.length > 0) return `bms-table:chart-json:${sha}`;
-    const md5 = typeof chart.md5 === "string" ? chart.md5.trim() : "";
-    if (md5.length > 0) return `bms-table:chart-json:${md5}`;
-    const url = typeof chart.url === "string" ? chart.url.trim() : "";
-    if (url.length > 0) return `bms-table:chart-json:${url}`;
-    const title = typeof chart.title === "string" ? chart.title.trim() : "";
-    if (title.length > 0) return `bms-table:chart-json:${groupLevel}:${title}:${index}`;
-    return `bms-table:chart-json:${groupLevel}:${index}`;
   }
 
   function hasMd5(chart: ChartData): boolean {
@@ -223,7 +221,6 @@
                   {@const diffUrl = resolvedDiffUrl(chart)}
                   {@const bmsLinks = getBmsLinks(chart)}
                   {@const chartJson = { ...chart, groupLevel: group.level }}
-                  {@const previewId = chartPreviewId(chart, group.level, index)}
                   <tr class="hover:bg-white/5">
                     <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       <span
@@ -315,14 +312,13 @@
                       <strong
                         class="cursor-default"
                         on:pointerenter={(event) => {
-                          jsonPreviewShow(
-                            previewId,
+                          chartPreview?.show(
                             { value: chartJson, label: "谱面 JSON", maxHeightRem: 14 },
                             event.clientX,
                             event.clientY
                           );
                         }}
-                        on:pointerleave={() => jsonPreviewScheduleHide(previewId)}
+                        on:pointerleave={() => chartPreview?.scheduleHide()}
                       >
                         {chart.title || "未知标题"}
                       </strong>
@@ -344,4 +340,4 @@
   </div>
 {/if}
 
-<JsonPreview />
+<JsonPreview bind:this={chartPreview} />

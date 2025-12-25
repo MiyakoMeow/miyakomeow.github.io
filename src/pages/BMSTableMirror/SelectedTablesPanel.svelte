@@ -1,6 +1,5 @@
 <script lang="ts">
   import JsonPreview from "../../components/JsonPreview.svelte";
-  import { jsonPreviewScheduleHide, jsonPreviewShow } from "../../components/jsonPreview";
   import { cubicIn, cubicOut } from "svelte/easing";
   import { fly } from "svelte/transition";
 
@@ -11,8 +10,18 @@
 
   export let tables: MirrorTableItem[] = [];
   export let selectedMap: Record<string, boolean> = {};
-  const mirrorPreviewId = "bms-table-mirror:selected-mirror-links";
-  const originPreviewId = "bms-table-mirror:selected-origin-links";
+
+  type JsonPreviewHandle = {
+    show: (
+      options: { value: unknown; label?: string; maxHeightRem?: number },
+      x: number,
+      y: number
+    ) => void | Promise<void>;
+    scheduleHide: () => void;
+  };
+
+  let mirrorPreview: JsonPreviewHandle | undefined;
+  let originPreview: JsonPreviewHandle | undefined;
 
   $: totalCount = tables.length;
   $: selectedCount = Object.values(selectedMap).filter(Boolean).length;
@@ -51,14 +60,13 @@
           class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
           on:pointerenter={(event) => {
-            jsonPreviewShow(
-              mirrorPreviewId,
+            mirrorPreview?.show(
               { value: selectedMirrorArray, label: "镜像链接 JSON", maxHeightRem: 12 },
               event.clientX,
               event.clientY
             );
           }}
-          on:pointerleave={() => jsonPreviewScheduleHide(mirrorPreviewId)}
+          on:pointerleave={() => mirrorPreview?.scheduleHide()}
         >
           镜像链接 JSON
         </button>
@@ -66,14 +74,13 @@
           class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
           on:pointerenter={(event) => {
-            jsonPreviewShow(
-              originPreviewId,
+            originPreview?.show(
               { value: selectedOriginArray, label: "原链接 JSON", maxHeightRem: 12 },
               event.clientX,
               event.clientY
             );
           }}
-          on:pointerleave={() => jsonPreviewScheduleHide(originPreviewId)}
+          on:pointerleave={() => originPreview?.scheduleHide()}
         >
           原链接 JSON
         </button>
@@ -82,4 +89,5 @@
   </div>
 {/if}
 
-<JsonPreview />
+<JsonPreview bind:this={mirrorPreview} />
+<JsonPreview bind:this={originPreview} />

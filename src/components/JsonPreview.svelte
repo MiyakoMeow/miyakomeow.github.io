@@ -1,10 +1,31 @@
+<script context="module" lang="ts">
+  export type JsonPreviewCopyHandler = (text: string) => Promise<void> | void;
+
+  export interface JsonPreviewShowOptions {
+    value: unknown;
+    label?: string;
+    maxHeightRem?: number;
+    onCopy?: JsonPreviewCopyHandler;
+  }
+</script>
+
 <script lang="ts">
-  import { jsonPreviewCancelHide, jsonPreviewHideAllNow, jsonPreviewHideNow, jsonPreviewStore, jsonPreviewScheduleHide } from "./jsonPreview";
+  import { onDestroy, tick } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade, fly } from "svelte/transition";
 
-  const copiedTimers = new Map<string, ReturnType<typeof setTimeout>>();
-  let copiedIds = new Set<string>();
+  let open = false;
+  let value: unknown = undefined;
+  let label = "JSON";
+  let maxHeightRem = 14;
+  let onCopy: JsonPreviewCopyHandler | undefined = undefined;
+
+  let popoverEl: HTMLDivElement | undefined;
+  let popoverStyle = "";
+
+  let hideTimer: ReturnType<typeof setTimeout> | undefined;
+  let copied = false;
+  let copiedTimer: ReturnType<typeof setTimeout> | undefined;
 
   function safeStringify(input: unknown, space = 2): string {
     const seen = new WeakSet<object>();
@@ -29,6 +50,8 @@
       }
     }
   }
+
+  $: jsonText = safeStringify(value, 2);
 
   async function copyText(
     text: string,
@@ -58,116 +81,121 @@
     document.body.removeChild(textarea);
   }
 
-  async function copyJsonForPreview(
-    id: string,
-    text: string,
-    onCopy: ((text: string) => Promise<void> | void) | undefined
+  function cancelHide(): void {
+    if (!hideTimer) return;
+    clearTimeout(hideTimer);
+    hideTimer = undefined;
+  }
+
+  export function scheduleHide(): void {
+    cancelHide();
+    hideTimer = setTimeout(() => {
+      open = false;
+      hideTimer = undefined;
+    }, 500);
+  }
+
+  export function hideNow(): void {
+    cancelHide();
+    open = false;
+  }
+
+  function updatePositionAtPointer(clientX: number, clientY: number): void {
+    if (!open) return;
+    if (!popoverEl) return;
+
+    const margin = 12;
+    const offset = 18;
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+    const popRect = popoverEl.getBoundingClientRect();
+
+    let left = clientX + offset;
+    if (left + popRect.width + margin > viewportW) {
+      left = clientX - offset - popRect.width;
+    }
+    left = Math.max(margin, Math.min(left, viewportW - popRect.width - margin));
+
+    let top = clientY + offset;
+    if (top + popRect.height + margin > viewportH) {
+      top = clientY - offset - popRect.height;
+    }
+    top = Math.max(margin, Math.min(top, viewportH - popRect.height - margin));
+
+    popoverStyle = `left:${left}px;top:${top}px;`;
+  }
+
+  export async function show(
+    options: JsonPreviewShowOptions,
+    clientX: number,
+    clientY: number
   ): Promise<void> {
-    await copyText(text, onCopy);
+    cancelHide();
+    open = true;
+    value = options.value;
+    label = options.label ?? "JSON";
+    maxHeightRem = options.maxHeightRem ?? 14;
+    onCopy = options.onCopy;
 
-    const prevTimer = copiedTimers.get(id);
-    if (prevTimer) clearTimeout(prevTimer);
+    await tick();
+    updatePositionAtPointer(clientX, clientY);
+  }
 
-    copiedIds = new Set(copiedIds);
-    copiedIds.add(id);
+  async function copyJson(): Promise<void> {
+    await copyText(jsonText, onCopy);
 
-    const t = setTimeout(() => {
-      copiedTimers.delete(id);
-      copiedIds = new Set(copiedIds);
-      copiedIds.delete(id);
+    copied = true;
+    if (copiedTimer) clearTimeout(copiedTimer);
+    copiedTimer = setTimeout(() => {
+      copied = false;
+      copiedTimer = undefined;
     }, 1000);
-    copiedTimers.set(id, t);
   }
 
-  function positionPopover(
-    node: HTMLDivElement,
-    params: { x: number; y: number; open: boolean }
-  ): { update: (next: typeof params) => void; destroy: () => void } {
-    let raf: number | undefined;
-
-    const apply = (p: typeof params) => {
-      if (!p.open) return;
-      const margin = 12;
-      const offset = 18;
-      const viewportW = window.innerWidth;
-      const viewportH = window.innerHeight;
-      const popRect = node.getBoundingClientRect();
-
-      let left = p.x + offset;
-      if (left + popRect.width + margin > viewportW) {
-        left = p.x - offset - popRect.width;
-      }
-      left = Math.max(margin, Math.min(left, viewportW - popRect.width - margin));
-
-      let top = p.y + offset;
-      if (top + popRect.height + margin > viewportH) {
-        top = p.y - offset - popRect.height;
-      }
-      top = Math.max(margin, Math.min(top, viewportH - popRect.height - margin));
-
-      node.style.left = `${left}px`;
-      node.style.top = `${top}px`;
-    };
-
-    const schedule = () => {
-      if (typeof raf === "number") cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => apply(params));
-    };
-
-    schedule();
-
-    return {
-      update(next) {
-        params = next;
-        schedule();
-      },
-      destroy() {
-        if (typeof raf === "number") cancelAnimationFrame(raf);
-      },
-    };
-  }
+  onDestroy(() => {
+    cancelHide();
+    if (copiedTimer) clearTimeout(copiedTimer);
+  });
 </script>
 
 <svelte:window
   on:keydown={(event) => {
-    if (event.key === "Escape") jsonPreviewHideAllNow();
+    if (event.key === "Escape") hideNow();
   }}
 />
 
-{#each $jsonPreviewStore as preview (preview.id)}
-  {#if preview.open}
-    {@const jsonText = safeStringify(preview.value, 2)}
-    <div
-      use:positionPopover={{ x: preview.x, y: preview.y, open: preview.open }}
-      class="fixed z-2000 w-[min(44rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-white/20 bg-white/10 shadow-[0_10px_24px_rgba(0,0,0,0.45)] backdrop-blur-sm"
-      in:fly={{ y: 10, opacity: 0, duration: 160, easing: cubicOut }}
-      out:fade={{ duration: 120 }}
-      on:pointerenter={() => jsonPreviewCancelHide(preview.id)}
-      on:pointerleave={() => jsonPreviewScheduleHide(preview.id)}
-    >
-      <div class="flex items-center justify-between gap-3 border-b border-white/10 p-3">
-        <div class="text-[0.9rem] font-semibold text-white/90">{preview.label}</div>
-        <div class="flex gap-2">
-          <button
-            class="cursor-pointer rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-[0.85rem] font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/15"
-            type="button"
-            on:click={() => copyJsonForPreview(preview.id, jsonText, preview.onCopy)}
-          >
-            {copiedIds.has(preview.id) ? "已复制" : "复制"}
-          </button>
-          <button
-            class="cursor-pointer rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-[0.85rem] font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/15"
-            type="button"
-            on:click={() => jsonPreviewHideNow(preview.id)}
-          >
-            关闭
-          </button>
-        </div>
+{#if open}
+  <div
+    bind:this={popoverEl}
+    class="fixed z-2000 w-[min(44rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-white/20 bg-white/10 shadow-[0_10px_24px_rgba(0,0,0,0.45)] backdrop-blur-sm"
+    style={popoverStyle}
+    in:fly={{ y: 10, opacity: 0, duration: 160, easing: cubicOut }}
+    out:fade={{ duration: 120 }}
+    on:pointerenter={cancelHide}
+    on:pointerleave={scheduleHide}
+  >
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 p-3">
+      <div class="text-[0.9rem] font-semibold text-white/90">{label}</div>
+      <div class="flex gap-2">
+        <button
+          class="cursor-pointer rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-[0.85rem] font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/15"
+          type="button"
+          on:click={copyJson}
+        >
+          {copied ? "已复制" : "复制"}
+        </button>
+        <button
+          class="cursor-pointer rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-[0.85rem] font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/15"
+          type="button"
+          on:click={hideNow}
+        >
+          关闭
+        </button>
       </div>
-      <pre
-        class="overflow-auto bg-black/20 p-3 font-mono text-[0.8rem] leading-relaxed text-white/90"
-        style={`max-height:${preview.maxHeightRem}rem;`}
-      ><code>{jsonText}</code></pre>
     </div>
-  {/if}
-{/each}
+    <pre
+      class="overflow-auto bg-black/20 p-3 font-mono text-[0.8rem] leading-relaxed text-white/90"
+      style={`max-height:${maxHeightRem}rem;`}
+    ><code>{jsonText}</code></pre>
+  </div>
+{/if}
