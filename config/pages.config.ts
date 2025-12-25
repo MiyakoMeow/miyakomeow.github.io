@@ -17,13 +17,6 @@ export const basePages: PageConfig[] = [
     generateHtml: true,
   },
   {
-    id: "blog",
-    title: "博客",
-    path: "/blog",
-    component: "pages/Blog.svelte",
-    generateHtml: true,
-  },
-  {
     id: "bms",
     title: "BMS",
     path: "/bms",

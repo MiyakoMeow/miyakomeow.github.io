@@ -46,9 +46,6 @@
   >
     <div class="mb-6 flex flex-wrap items-baseline justify-between gap-3">
       <h2 class="section-title m-0">博客</h2>
-      <a class="text-[0.95rem] text-white/80 underline decoration-white/30 underline-offset-4" href="/blog/index.html">
-        博客页
-      </a>
     </div>
 
     {#if blogPosts.length === 0}
