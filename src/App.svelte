@@ -2,8 +2,6 @@
   import ProfileCard from "@/components/ProfileCard.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
-  import MarkdownContent from "@/components/MarkdownContent.svelte";
-  import HomeContent from "@/content/index.md";
   import { blogPosts } from "@/blog/posts";
 
   const featuredPosts = blogPosts.slice(0, 2);
@@ -43,15 +41,6 @@
         难度表：MiyakoMeow谱面合集（DP）
       </a>
     </div>
-  </section>
-
-  <!-- Markdown内容部分 -->
-  <section
-    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
-  >
-    <MarkdownContent>
-      <HomeContent />
-    </MarkdownContent>
   </section>
 
   {#each featuredPosts as post (post.slug)}
