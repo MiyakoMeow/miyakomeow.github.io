@@ -7,6 +7,55 @@
     maxHeightRem?: number;
     onCopy?: JsonPreviewCopyHandler;
   }
+
+  export type JsonPreviewHandle = {
+    show: (
+      options: JsonPreviewShowOptions,
+      clientX: number,
+      clientY: number
+    ) => void | Promise<void>;
+    scheduleHide: () => void;
+    hideNow: () => void;
+  };
+
+  export type JsonPreviewActionParams = {
+    preview: JsonPreviewHandle | undefined;
+    options: JsonPreviewShowOptions | (() => JsonPreviewShowOptions);
+    disabled?: boolean;
+  };
+
+  export function jsonPreview(node: HTMLElement, params: JsonPreviewActionParams) {
+    let current = params;
+
+    function getOptions(): JsonPreviewShowOptions {
+      return typeof current.options === "function" ? current.options() : current.options;
+    }
+
+    function onEnter(event: PointerEvent): void {
+      if (current.disabled) return;
+      const preview = current.preview;
+      if (!preview) return;
+      void preview.show(getOptions(), event.clientX, event.clientY);
+    }
+
+    function onLeave(): void {
+      if (current.disabled) return;
+      current.preview?.scheduleHide();
+    }
+
+    node.addEventListener("pointerenter", onEnter);
+    node.addEventListener("pointerleave", onLeave);
+
+    return {
+      update(next: JsonPreviewActionParams) {
+        current = next;
+      },
+      destroy() {
+        node.removeEventListener("pointerenter", onEnter);
+        node.removeEventListener("pointerleave", onLeave);
+      },
+    };
+  }
 </script>
 
 <script lang="ts">

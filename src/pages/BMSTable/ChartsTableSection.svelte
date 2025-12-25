@@ -1,15 +1,9 @@
 <script lang="ts">
-  import JsonPreview from "../../components/JsonPreview.svelte";
+  import JsonPreview, {
+    jsonPreview,
+    type JsonPreviewHandle,
+  } from "../../components/JsonPreview.svelte";
   import ScrollSyncGroup from "../../components/ScrollSyncGroup.svelte";
-
-  type JsonPreviewHandle = {
-    show: (
-      options: { value: unknown; label?: string; maxHeightRem?: number },
-      x: number,
-      y: number
-    ) => void | Promise<void>;
-    scheduleHide: () => void;
-  };
 
   let chartPreview: JsonPreviewHandle | undefined;
 
@@ -311,14 +305,10 @@
                     <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       <strong
                         class="cursor-default"
-                        on:pointerenter={(event) => {
-                          chartPreview?.show(
-                            { value: chartJson, label: "谱面 JSON", maxHeightRem: 14 },
-                            event.clientX,
-                            event.clientY
-                          );
+                        use:jsonPreview={{
+                          preview: chartPreview,
+                          options: { value: chartJson, label: "谱面 JSON", maxHeightRem: 14 },
                         }}
-                        on:pointerleave={() => chartPreview?.scheduleHide()}
                       >
                         {chart.title || "未知标题"}
                       </strong>

@@ -1,5 +1,8 @@
 <script lang="ts">
-  import JsonPreview from "../../components/JsonPreview.svelte";
+  import JsonPreview, {
+    jsonPreview,
+    type JsonPreviewHandle,
+  } from "../../components/JsonPreview.svelte";
   import { cubicIn, cubicOut } from "svelte/easing";
   import { fly } from "svelte/transition";
 
@@ -10,15 +13,6 @@
 
   export let tables: MirrorTableItem[] = [];
   export let selectedMap: Record<string, boolean> = {};
-
-  type JsonPreviewHandle = {
-    show: (
-      options: { value: unknown; label?: string; maxHeightRem?: number },
-      x: number,
-      y: number
-    ) => void | Promise<void>;
-    scheduleHide: () => void;
-  };
 
   let mirrorPreview: JsonPreviewHandle | undefined;
   let originPreview: JsonPreviewHandle | undefined;
@@ -63,28 +57,20 @@
         <button
           class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
-          on:pointerenter={(event) => {
-            mirrorPreview?.show(
-              { value: selectedMirrorArray, label: "镜像链接 JSON", maxHeightRem: 12 },
-              event.clientX,
-              event.clientY
-            );
+          use:jsonPreview={{
+            preview: mirrorPreview,
+            options: { value: selectedMirrorArray, label: "镜像链接 JSON", maxHeightRem: 12 },
           }}
-          on:pointerleave={() => mirrorPreview?.scheduleHide()}
         >
           镜像链接 JSON
         </button>
         <button
           class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
-          on:pointerenter={(event) => {
-            originPreview?.show(
-              { value: selectedOriginArray, label: "原链接 JSON", maxHeightRem: 12 },
-              event.clientX,
-              event.clientY
-            );
+          use:jsonPreview={{
+            preview: originPreview,
+            options: { value: selectedOriginArray, label: "原链接 JSON", maxHeightRem: 12 },
           }}
-          on:pointerleave={() => originPreview?.scheduleHide()}
         >
           原链接 JSON
         </button>
