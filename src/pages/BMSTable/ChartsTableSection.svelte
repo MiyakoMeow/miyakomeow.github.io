@@ -1,5 +1,11 @@
 <script lang="ts">
+  import JsonPreview, {
+    jsonPreview,
+    type JsonPreviewHandle,
+  } from "../../components/JsonPreview.svelte";
   import ScrollSyncGroup from "../../components/ScrollSyncGroup.svelte";
+
+  let chartPreview: JsonPreviewHandle | undefined;
 
   interface ChartData {
     title?: string;
@@ -208,6 +214,7 @@
                   {@const bundleUrl = resolvedBundleUrl(chart)}
                   {@const diffUrl = resolvedDiffUrl(chart)}
                   {@const bmsLinks = getBmsLinks(chart)}
+                  {@const chartJson = { ...chart, groupLevel: group.level }}
                   <tr class="hover:bg-white/5">
                     <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       <span
@@ -296,7 +303,15 @@
                       </div>
                     </td>
                     <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
-                      <strong>{chart.title || "未知标题"}</strong>
+                      <strong
+                        class="cursor-default"
+                        use:jsonPreview={{
+                          preview: chartPreview,
+                          options: { value: chartJson, label: "谱面 JSON", maxHeightRem: 14 },
+                        }}
+                      >
+                        {chart.title || "未知标题"}
+                      </strong>
                     </td>
                     <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
                       {chart.artist || "未知艺术家"}
@@ -314,3 +329,5 @@
     </ScrollSyncGroup>
   </div>
 {/if}
+
+<JsonPreview bind:this={chartPreview} />

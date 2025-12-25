@@ -1,4 +1,8 @@
 <script lang="ts">
+  import JsonPreview, {
+    jsonPreview,
+    type JsonPreviewHandle,
+  } from "../../components/JsonPreview.svelte";
   import { cubicIn, cubicOut } from "svelte/easing";
   import { fly } from "svelte/transition";
 
@@ -9,7 +13,9 @@
 
   export let tables: MirrorTableItem[] = [];
   export let selectedMap: Record<string, boolean> = {};
-  export let copySelected: (data: string) => Promise<void>;
+
+  let mirrorPreview: JsonPreviewHandle | undefined;
+  let originPreview: JsonPreviewHandle | undefined;
 
   $: totalCount = tables.length;
   $: selectedCount = Object.values(selectedMap).filter(Boolean).length;
@@ -21,7 +27,11 @@
   $: urlToOrigin = (() => {
     const m = new Map<string, string>();
     for (const t of tables) {
-      if (t.url) m.set(t.url, t.url_ori || "");
+      if (!t.url) continue;
+      const mirrorAbs = new URL(t.url, window.location.origin).toString();
+      const rawOri = String(t.url_ori || "").trim();
+      const oriAbs = rawOri.length > 0 ? new URL(rawOri, window.location.origin).toString() : "";
+      m.set(mirrorAbs, oriAbs);
     }
     return m;
   })();
@@ -29,9 +39,6 @@
   $: selectedOriginArray = selectedMirrorArray
     .map((u) => urlToOrigin.get(u) || "")
     .filter((v) => v.length > 0);
-
-  $: tooltipMirror = JSON.stringify(selectedMirrorArray, null, 2);
-  $: tooltipOrigin = JSON.stringify(selectedOriginArray, null, 2);
 </script>
 
 {#if selectedCount > 0}
@@ -50,20 +57,27 @@
         <button
           class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
-          title={tooltipMirror}
-          on:click={() => copySelected(JSON.stringify(selectedMirrorArray, null, 2))}
+          use:jsonPreview={{
+            preview: mirrorPreview,
+            options: { value: selectedMirrorArray, label: "镜像链接 JSON", maxHeightRem: 12 },
+          }}
         >
-          复制镜像链接
+          镜像链接 JSON
         </button>
         <button
           class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
-          title={tooltipOrigin}
-          on:click={() => copySelected(JSON.stringify(selectedOriginArray, null, 2))}
+          use:jsonPreview={{
+            preview: originPreview,
+            options: { value: selectedOriginArray, label: "原链接 JSON", maxHeightRem: 12 },
+          }}
         >
-          复制原链接
+          原链接 JSON
         </button>
       </div>
     </div>
   </div>
 {/if}
+
+<JsonPreview bind:this={mirrorPreview} />
+<JsonPreview bind:this={originPreview} />
