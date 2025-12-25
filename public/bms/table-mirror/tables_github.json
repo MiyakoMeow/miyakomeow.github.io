@@ -953,6 +953,21 @@
   {
     "name": "DP Overjoy",
     "symbol": "★★",
+    "url": "https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bbms.limiteknj.net%5D%20DP%20Overjoy/header.json",
+    "comment": "Mirror",
+    "date": "2025.12. 26",
+    "state": "",
+    "tag1": "DP",
+    "tag2": "Personal",
+    "tag_order": "2",
+    "url_data_json": "https://bms.limiteknj.net/dpoverjoy/data.json",
+    "url_header_json": "https://bms.limiteknj.net/dpoverjoy/head.json",
+    "url_ori": "https://bms.limiteknj.net/dpoverjoy/",
+    "dir_name": "[bms.limiteknj.net] DP Overjoy"
+  },
+  {
+    "name": "DP Overjoy",
+    "symbol": "★★",
     "url": "https://raw.githubusercontent.com/MiyakoMeow/bms-table-mirror/main/tables/%5Bereter.net%5D%20DP%20Overjoy/header.json",
     "comment": "",
     "date": "",
