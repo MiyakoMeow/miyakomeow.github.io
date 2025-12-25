@@ -82,21 +82,21 @@
     return sg.items.map((item) => item.url);
   }
 
-  function aggregateCheckboxState(urls: string[]): CheckboxState {
+  function aggregateCheckboxState(urls: string[], map: Record<string, boolean>): CheckboxState {
     if (urls.length === 0) return CheckboxState.Unchecked;
     let selected = 0;
-    for (const u of urls) if (selectedMap[u]) selected++;
+    for (const u of urls) if (map[u]) selected++;
     if (selected === 0) return CheckboxState.Unchecked;
     if (selected === urls.length) return CheckboxState.Checked;
     return CheckboxState.Indeterminate;
   }
 
-  function tag1State(g: Tag1Group): CheckboxState {
-    return aggregateCheckboxState(getTag1Urls(g));
+  function tag1State(g: Tag1Group, map: Record<string, boolean>): CheckboxState {
+    return aggregateCheckboxState(getTag1Urls(g), map);
   }
 
-  function tag2State(sg: Tag2Group): CheckboxState {
-    return aggregateCheckboxState(getTag2Urls(sg));
+  function tag2State(sg: Tag2Group, map: Record<string, boolean>): CheckboxState {
+    return aggregateCheckboxState(getTag2Urls(sg), map);
   }
 
   function onTag1Change(checked: boolean, g: Tag1Group): void {
@@ -208,8 +208,8 @@
             <input
               type="checkbox"
               class="h-5.5 w-5.5 scale-[1.2]"
-              use:indeterminate={tag1State(g) === CheckboxState.Indeterminate}
-              checked={tag1State(g) === CheckboxState.Checked}
+              use:indeterminate={tag1State(g, selectedMap) === CheckboxState.Indeterminate}
+              checked={tag1State(g, selectedMap) === CheckboxState.Checked}
               on:change={(e) => onTag1Change((e.currentTarget as HTMLInputElement).checked, g)}
             />
             <span
@@ -226,8 +226,8 @@
               <input
                 type="checkbox"
                 class="h-5.5 w-5.5 scale-[1.2]"
-                use:indeterminate={tag2State(sg) === CheckboxState.Indeterminate}
-                checked={tag2State(sg) === CheckboxState.Checked}
+                use:indeterminate={tag2State(sg, selectedMap) === CheckboxState.Indeterminate}
+                checked={tag2State(sg, selectedMap) === CheckboxState.Checked}
                 on:change={(e) => onTag2Change((e.currentTarget as HTMLInputElement).checked, sg)}
               />
               {sg.tag2}

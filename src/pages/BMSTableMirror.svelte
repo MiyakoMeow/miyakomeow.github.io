@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import * as OpenCC from "opencc-js";
   import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.svelte";
+  import SelectedTablesPanel from "./BMSTableMirror/SelectedTablesPanel.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
@@ -119,30 +120,6 @@
       copied = false;
     }, 1500);
   }
-
-  $: selectedCount = Object.values(selectedMap).filter(Boolean).length;
-  $: totalCount = tables.length;
-
-  $: selectedMirrorArray = Object.entries(selectedMap)
-    .filter(([, v]) => !!v)
-    .map(([url]) => url);
-
-  $: urlToOrigin = (() => {
-    const m = new Map<string, string>();
-    tables.forEach((t) => {
-      if (t.url) {
-        m.set(t.url, t.url_ori || "");
-      }
-    });
-    return m;
-  })();
-
-  $: selectedOriginArray = selectedMirrorArray
-    .map((u) => urlToOrigin.get(u) || "")
-    .filter((v) => v.length > 0);
-
-  $: tooltipMirror = JSON.stringify(selectedMirrorArray, null, 2);
-  $: tooltipOrigin = JSON.stringify(selectedOriginArray, null, 2);
 
   $: normalizedSearch = searchQuery.trim().toLowerCase();
   $: searchNeedles = buildSearchNeedles(searchQuery);
@@ -283,7 +260,7 @@
         <input
           class="w-full rounded-xl border border-white/20 bg-black/20 px-4 py-3 pr-12 text-white outline-none placeholder:text-white/50 focus:border-[#64b5f6]/60 focus:ring-2 focus:ring-[#64b5f6]/30"
           type="text"
-          placeholder="按 名称 / 符号 搜索"
+          placeholder="按 名称 / 符号 搜索，支持 简体中文 / 繁体中文 / 日文汉字 自动转换"
           bind:value={searchQuery}
         />
         {#if normalizedSearch.length > 0}
@@ -316,31 +293,5 @@
   </section>
 </main>
 
-{#if selectedCount > 0}
-  <div class="fixed bottom-4 left-1/2 z-999 translate-x-[-50%]">
-    <div
-      class="flex items-center gap-4 rounded-xl border border-white/20 bg-white/10 p-3 px-4 shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px]"
-    >
-      <div class="font-semibold text-white">已选中 {selectedCount} / {totalCount}</div>
-      <div class="flex gap-3">
-        <button
-          class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
-          type="button"
-          title={tooltipMirror}
-          on:click={() => copySelected(JSON.stringify(selectedMirrorArray, null, 2))}
-        >
-          复制镜像链接
-        </button>
-        <button
-          class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
-          type="button"
-          title={tooltipOrigin}
-          on:click={() => copySelected(JSON.stringify(selectedOriginArray, null, 2))}
-        >
-          复制原链接
-        </button>
-      </div>
-    </div>
-  </div>
-{/if}
+<SelectedTablesPanel {tables} {selectedMap} {copySelected} />
 <QuickActions />
