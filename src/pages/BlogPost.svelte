@@ -21,7 +21,7 @@
       <div class="text-center text-[0.95rem] text-white/70">
         <a
           class="text-white/90 underline decoration-white/30 underline-offset-4"
-          href="/blog/index.html"
+          href="/index.html#blog"
         >
           返回博客
         </a>
@@ -34,7 +34,7 @@
       <div class="mb-6 flex flex-wrap items-baseline justify-between gap-3">
         <a
           class="text-white/90 underline decoration-white/30 underline-offset-4"
-          href="/blog/index.html"
+          href="/index.html#blog"
         >
           返回博客
         </a>
