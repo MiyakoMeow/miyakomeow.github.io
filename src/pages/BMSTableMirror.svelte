@@ -293,5 +293,6 @@
   </section>
 </main>
 
-<SelectedTablesPanel {tables} {selectedMap} {copySelected} />
+
+<SelectedTablesPanel {tables} {selectedMap} />
 <QuickActions />

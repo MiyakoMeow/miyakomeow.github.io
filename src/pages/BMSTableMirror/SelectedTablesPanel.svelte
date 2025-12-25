@@ -11,7 +11,8 @@
 
   export let tables: MirrorTableItem[] = [];
   export let selectedMap: Record<string, boolean> = {};
-  export let copySelected: (data: string) => Promise<void>;
+  const mirrorPreviewId = "bms-table-mirror:selected-mirror-links";
+  const originPreviewId = "bms-table-mirror:selected-origin-links";
 
   $: totalCount = tables.length;
   $: selectedCount = Object.values(selectedMap).filter(Boolean).length;
@@ -49,32 +50,32 @@
         <button
           class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
-          on:click={() => copySelected(JSON.stringify(selectedMirrorArray, null, 2))}
           on:pointerenter={(event) => {
             jsonPreviewShow(
-              { value: selectedMirrorArray, label: "镜像链接 JSON", maxHeightRem: 14, onCopy: copySelected },
+              mirrorPreviewId,
+              { value: selectedMirrorArray, label: "镜像链接 JSON", maxHeightRem: 12 },
               event.clientX,
               event.clientY
             );
           }}
-          on:pointerleave={jsonPreviewScheduleHide}
+          on:pointerleave={() => jsonPreviewScheduleHide(mirrorPreviewId)}
         >
-          复制镜像链接
+          镜像链接 JSON
         </button>
         <button
           class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#ff9800,#f57c00)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
-          on:click={() => copySelected(JSON.stringify(selectedOriginArray, null, 2))}
           on:pointerenter={(event) => {
             jsonPreviewShow(
-              { value: selectedOriginArray, label: "原链接 JSON", maxHeightRem: 14, onCopy: copySelected },
+              originPreviewId,
+              { value: selectedOriginArray, label: "原链接 JSON", maxHeightRem: 12 },
               event.clientX,
               event.clientY
             );
           }}
-          on:pointerleave={jsonPreviewScheduleHide}
+          on:pointerleave={() => jsonPreviewScheduleHide(originPreviewId)}
         >
-          复制原链接
+          原链接 JSON
         </button>
       </div>
     </div>
