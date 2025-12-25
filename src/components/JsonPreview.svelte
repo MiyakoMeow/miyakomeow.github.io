@@ -222,7 +222,6 @@
     </div>
     <pre
       class="overflow-auto bg-black/20 p-3 font-mono text-[0.8rem] leading-relaxed text-white/90"
-      style={`max-height:${maxHeightRem}rem;`}
-    ><code>{jsonText}</code></pre>
+      style={`max-height:${maxHeightRem}rem;`}><code>{jsonText}</code></pre>
   </div>
 {/if}

@@ -293,6 +293,5 @@
   </section>
 </main>
 
-
 <SelectedTablesPanel {tables} {selectedMap} />
 <QuickActions />
