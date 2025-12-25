@@ -32,12 +32,16 @@
 </script>
 
 {#if selectedCount > 0}
-  <div class="fixed bottom-4 left-1/2 z-999 translate-x-[-50%]">
+  <div
+    class="fixed bottom-4 left-1/2 z-999 max-w-[calc(100vw-2rem)] translate-x-[-50%] overflow-x-auto"
+  >
     <div
-      class="flex items-center gap-4 rounded-xl border border-white/20 bg-white/10 p-3 px-4 shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px]"
+      class="flex w-max flex-nowrap items-center gap-4 rounded-xl border border-white/20 bg-white/10 p-3 px-4 shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-[6px]"
     >
-      <div class="font-semibold text-white">已选中 {selectedCount} / {totalCount}</div>
-      <div class="flex gap-3">
+      <div class="font-semibold whitespace-nowrap text-white">
+        已选中 {selectedCount} / {totalCount}
+      </div>
+      <div class="flex flex-nowrap gap-3">
         <button
           class="cursor-pointer rounded-lg border-none bg-[linear-gradient(135deg,#2196f3,#1565c0)] px-[0.8rem] py-2 text-[0.9rem] font-semibold text-white transition-all duration-200 ease-in-out"
           type="button"
