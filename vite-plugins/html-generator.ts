@@ -210,13 +210,13 @@ export default function htmlGeneratorPlugin(): Plugin {
       server.watcher.add(resolve(__dirname, "../config/pages.config.ts"));
       server.watcher.add(resolve(__dirname, "../config/templates"));
       server.watcher.add(resolve(__dirname, "../public/bms/table-mirror/tables_proxy.json"));
-      server.watcher.add(resolve(__dirname, "../src/content/blog"));
+      server.watcher.add(resolve(__dirname, "../src/blog"));
       server.watcher.on("change", (file) => {
         if (
           file.includes("pages.config.ts") ||
           file.includes("templates") ||
           file.includes("tables_proxy.json") ||
-          file.includes("src/content/blog")
+          file.includes("src/blog")
         ) {
           console.log("Pages config or template changed, regenerating HTML files...");
           generateHtmlFilesFn();

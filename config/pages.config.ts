@@ -165,7 +165,7 @@ function parseBlogPostOrder(md: string): number | undefined {
 
 export function generateBlogPages(): PageConfig[] {
   try {
-    const blogDir = resolve(__dirname, "../src/content/blog");
+    const blogDir = resolve(__dirname, "../src/blog");
     const files = readdirSync(blogDir, { withFileTypes: true })
       .filter((d) => d.isFile() && d.name.toLowerCase().endsWith(".md"))
       .map((d) => d.name);
