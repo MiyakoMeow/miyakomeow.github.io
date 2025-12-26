@@ -2,7 +2,7 @@
   import ProfileCard from "@/components/ProfileCard.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
-  import { blogPosts } from "@/blog/posts";
+  import { blogPosts } from "@/defines/blog-posts";
 </script>
 
 <StarryBackground />

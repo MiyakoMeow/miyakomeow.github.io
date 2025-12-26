@@ -3,7 +3,7 @@
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
   import MarkdownContent from "@/components/MarkdownContent.svelte";
-  import { getBlogPost } from "@/blog/posts";
+  import { getBlogPost } from "@/defines/blog-posts";
 
   export let slug: string;
 
