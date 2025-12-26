@@ -86,11 +86,11 @@ function slugFromFilePath(filePath: string): string {
   return fileName.replace(/\.md$/i, "");
 }
 
-const markdownComponents = import.meta.glob("../content/blog/*.md", {
+const markdownComponents = import.meta.glob("../blog/*.md", {
   eager: true,
 }) as Record<string, { default: Component }>;
 
-const markdownRaw = import.meta.glob("../content/blog/*.md", {
+const markdownRaw = import.meta.glob("../blog/*.md", {
   eager: true,
   query: "?raw",
   import: "default",
