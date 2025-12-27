@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import * as OpenCC from "opencc-js";
   import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.svelte";
   import SelectedTablesPanel from "./BMSTableMirror/SelectedTablesPanel.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
-  import FloatingToc from "@/components/FloatingToc.svelte";
+  import FloatingToc, { buildTocFromHeadings, type TocItem } from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
 
@@ -49,6 +49,17 @@
   let tables: MirrorTableItem[] = [];
   let selectedMap: Record<string, boolean> = {};
   let searchQuery = "";
+  let tocItems: TocItem[] = [];
+  let tocScheduled = false;
+
+  function scheduleRebuildToc(): void {
+    if (tocScheduled) return;
+    tocScheduled = true;
+    requestAnimationFrame(() => {
+      tocScheduled = false;
+      tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
+    });
+  }
 
   type StringConverter = (input: string) => string;
 
@@ -206,7 +217,11 @@
     setTimeout(() => {
       loadTablesJson();
     }, 250);
+
+    tick().then(() => scheduleRebuildToc());
   });
+
+  $: if (typeof loading === "boolean") scheduleRebuildToc();
 </script>
 
 <StarryBackground />
@@ -295,5 +310,5 @@
 </main>
 
 <SelectedTablesPanel {tables} {selectedMap} />
-<FloatingToc />
+<FloatingToc items={tocItems} />
 <QuickActions />

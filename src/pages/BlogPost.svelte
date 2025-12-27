@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { onMount, tick } from "svelte";
+
   import ProfileCard from "@/components/ProfileCard.svelte";
-  import FloatingToc from "@/components/FloatingToc.svelte";
+  import FloatingToc, { buildTocFromHeadings, type TocItem } from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
   import MarkdownContent from "@/components/MarkdownContent.svelte";
@@ -9,6 +11,13 @@
   export let slug: string;
 
   const post = getBlogPost(slug);
+
+  let tocItems: TocItem[] = [];
+
+  onMount(async () => {
+    await tick();
+    tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
+  });
 </script>
 
 <StarryBackground />
@@ -53,5 +62,5 @@
     </section>
   {/if}
 </main>
-<FloatingToc />
+<FloatingToc items={tocItems} />
 <QuickActions />

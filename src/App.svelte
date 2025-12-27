@@ -1,9 +1,17 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import ProfileCard from "@/components/ProfileCard.svelte";
-  import FloatingToc from "@/components/FloatingToc.svelte";
+  import FloatingToc, { buildTocFromHeadings, type TocItem } from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
   import { blogPosts } from "@/defines/blog-posts";
+
+  let tocItems: TocItem[] = [];
+
+  onMount(() => {
+    tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
+  });
 </script>
 
 <StarryBackground />
@@ -72,5 +80,5 @@
     {/if}
   </section>
 </main>
-<FloatingToc />
+<FloatingToc items={tocItems} />
 <QuickActions />

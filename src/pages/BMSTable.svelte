@@ -5,7 +5,7 @@
   import LevelRefTable from "./BMSTable/LevelRefTable.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
-  import FloatingToc from "@/components/FloatingToc.svelte";
+  import FloatingToc, { buildTocFromHeadings, type TocItem } from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
 
   interface ChartData {
@@ -43,13 +43,6 @@
   interface TableStats {
     totalCharts: number;
     difficulties: string[];
-  }
-
-  interface TocItem {
-    id: string;
-    title: string;
-    href?: string;
-    children?: TocItem[];
   }
 
   export let header: string;
@@ -243,10 +236,25 @@
     }
   }
 
+  let tocItems: TocItem[] = [];
+  let tocScheduled = false;
+  function scheduleRebuildToc(): void {
+    if (tocScheduled) return;
+    tocScheduled = true;
+    requestAnimationFrame(() => {
+      tocScheduled = false;
+      const headingItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
+      tocItems = [...headingItems, ...difficultyTocItems];
+    });
+  }
+  $: if (difficultyTocItems) scheduleRebuildToc();
+  $: if (loadingState) scheduleRebuildToc();
+
   onMount(() => {
     setTimeout(() => {
       void lazyLoadTableData();
     }, 300);
+    scheduleRebuildToc();
   });
 </script>
 
@@ -418,5 +426,5 @@
     {/if}
   </div>
 </div>
-<FloatingToc extraItems={difficultyTocItems} />
+<FloatingToc items={tocItems} />
 <QuickActions />

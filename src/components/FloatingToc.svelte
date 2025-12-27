@@ -1,37 +1,22 @@
-<script lang="ts">
-  import { onDestroy, onMount } from "svelte";
-
-  type TocItem = {
+<script context="module" lang="ts">
+  export type TocItem = {
     id: string;
     title: string;
     href?: string;
     children?: TocItem[];
   };
 
-  type FlatTocItem = {
+  type HeadingInfo = {
     id: string;
     title: string;
-    href: string;
-    depth: number;
+    level: number;
   };
 
-  export let items: TocItem[] = [];
-  export let extraItems: TocItem[] = [];
-  export let title: string = "目录";
-  export let minLevel: number = 2;
-  export let maxLevel: number = 6;
-  export let startOpen: boolean = false;
-
-  let open = startOpen;
-  let activeId: string | null = null;
-  let autoItems: TocItem[] = [];
-  let mutationObserver: MutationObserver | null = null;
-  let scheduled = false;
-  let scrollScheduled = false;
-
-  $: baseItems = items.length > 0 ? items : autoItems;
-  $: resolvedItems = extraItems.length > 0 ? [...baseItems, ...extraItems] : baseItems;
-  $: flatItems = flattenItems(resolvedItems);
+  export type BuildTocFromHeadingsOptions = {
+    root?: ParentNode | null;
+    minLevel?: number;
+    maxLevel?: number;
+  };
 
   function slugifyHeadingText(input: string): string {
     const normalized = input
@@ -50,21 +35,11 @@
     return slug || "section";
   }
 
-  function flattenItems(source: TocItem[]): FlatTocItem[] {
-    const out: FlatTocItem[] = [];
-    const walk = (nodes: TocItem[], depth: number) => {
-      for (const node of nodes) {
-        const href = node.href?.trim() ? node.href.trim() : `#${node.id}`;
-        out.push({ id: node.id, title: node.title, href, depth });
-        if (node.children && node.children.length > 0) walk(node.children, depth + 1);
-      }
-    };
-    walk(source, 0);
-    return out;
-  }
-
-  function buildAutoItems(): void {
-    const root = (document.querySelector("main") as HTMLElement | null) ?? document.body;
+  function collectHeadingInfo(
+    root: ParentNode,
+    minLevel: number,
+    maxLevel: number
+  ): HeadingInfo[] {
     const headings = Array.from(root.querySelectorAll("h1,h2,h3,h4,h5,h6")).filter((el) => {
       if (!(el instanceof HTMLHeadingElement)) return false;
       const level = Number(el.tagName.slice(1));
@@ -72,7 +47,7 @@
     }) as HTMLHeadingElement[];
 
     const usedIds = new Map<string, number>();
-    const headingInfo = headings
+    return headings
       .map((h) => {
         const text = (h.textContent ?? "").trim();
         if (!text) return null;
@@ -90,8 +65,13 @@
 
         return { id: h.id, title: text, level };
       })
-      .filter((v): v is { id: string; title: string; level: number } => v !== null);
+      .filter((v): v is HeadingInfo => v !== null);
+  }
 
+  function buildTreeFromHeadingInfo(
+    headingInfo: HeadingInfo[],
+    minLevel: number
+  ): Array<TocItem & { level: number }> {
     const rootItems: Array<TocItem & { level: number }> = [];
     const stack: Array<{ level: number; children: Array<TocItem & { level: number }> }> = [
       { level: minLevel - 1, children: rootItems },
@@ -112,26 +92,72 @@
       stack.push({ level: h.level, children: node.children as Array<TocItem & { level: number }> });
     }
 
-    const stripLevel = (nodes: Array<TocItem & { level: number }>): TocItem[] =>
-      nodes.map((n) => ({
-        id: n.id,
-        title: n.title,
-        ...(n.children && n.children.length > 0
-          ? { children: stripLevel(n.children as Array<TocItem & { level: number }>) }
-          : {}),
-      }));
-
-    autoItems = stripLevel(rootItems);
+    return rootItems;
   }
 
-  function scheduleBuildAutoItems(): void {
-    if (scheduled) return;
-    scheduled = true;
-    requestAnimationFrame(() => {
-      scheduled = false;
-      buildAutoItems();
-      scheduleUpdateActive();
-    });
+  function stripLevel(nodes: Array<TocItem & { level: number }>): TocItem[] {
+    return nodes.map((n) => ({
+      id: n.id,
+      title: n.title,
+      ...(n.children && n.children.length > 0
+        ? { children: stripLevel(n.children as Array<TocItem & { level: number }>) }
+        : {}),
+    }));
+  }
+
+  export function buildTocFromHeadings(options: BuildTocFromHeadingsOptions = {}): TocItem[] {
+    if (typeof document === "undefined") return [];
+
+    const minLevel = options.minLevel ?? 2;
+    const maxLevel = options.maxLevel ?? 6;
+    const root =
+      options.root ??
+      ((document.querySelector("main") as HTMLElement | null) ?? (document.body as HTMLElement));
+
+    const headingInfo = collectHeadingInfo(root, minLevel, maxLevel);
+    const tree = buildTreeFromHeadingInfo(headingInfo, minLevel);
+    return stripLevel(tree);
+  }
+</script>
+
+<script lang="ts">
+  import { onMount } from "svelte";
+
+  type TocItem = {
+    id: string;
+    title: string;
+    href?: string;
+    children?: TocItem[];
+  };
+
+  type FlatTocItem = {
+    id: string;
+    title: string;
+    href: string;
+    depth: number;
+  };
+
+  export let items: TocItem[] = [];
+  export let title: string = "目录";
+  export let startOpen: boolean = false;
+
+  let open = startOpen;
+  let activeId: string | null = null;
+  let scrollScheduled = false;
+
+  $: flatItems = flattenItems(items);
+
+  function flattenItems(source: TocItem[]): FlatTocItem[] {
+    const out: FlatTocItem[] = [];
+    const walk = (nodes: TocItem[], depth: number) => {
+      for (const node of nodes) {
+        const href = node.href?.trim() ? node.href.trim() : `#${node.id}`;
+        out.push({ id: node.id, title: node.title, href, depth });
+        if (node.children && node.children.length > 0) walk(node.children, depth + 1);
+      }
+    };
+    walk(source, 0);
+    return out;
   }
 
   function updateActive(): void {
@@ -185,15 +211,11 @@
   }
 
   onMount(() => {
-    scheduleBuildAutoItems();
-
-    const root = (document.querySelector("main") as HTMLElement | null) ?? document.body;
-    mutationObserver = new MutationObserver(() => scheduleBuildAutoItems());
-    mutationObserver.observe(root, { childList: true, subtree: true });
-
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
     window.addEventListener("resize", onScrollOrResize);
     window.addEventListener("hashchange", onScrollOrResize);
+
+    scheduleUpdateActive();
 
     return () => {
       window.removeEventListener("scroll", onScrollOrResize);
@@ -202,10 +224,7 @@
     };
   });
 
-  onDestroy(() => {
-    mutationObserver?.disconnect();
-    mutationObserver = null;
-  });
+  $: if (flatItems) scheduleUpdateActive();
 </script>
 
 {#if flatItems.length > 0}
