@@ -17,7 +17,11 @@
     <section
       class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
     >
-      <h1 class="page-title mb-2 text-center">文章未找到</h1>
+      <h1
+        class="mb-2 text-center text-[clamp(2rem,3vw,2.5rem)] leading-tight font-extrabold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+      >
+        文章未找到
+      </h1>
       <div class="text-center text-[0.95rem] text-white/70">
         <a
           class="text-white/90 underline decoration-white/30 underline-offset-4"
