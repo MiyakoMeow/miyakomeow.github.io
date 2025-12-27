@@ -50,7 +50,7 @@
 
       const anchor = document.createElement("a");
       anchor.className =
-        "heading-anchor absolute left-0 top-[0.2em] inline-flex size-5 items-center justify-center rounded text-white/40 opacity-0 transition hover:text-white/80 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30";
+        "heading-anchor absolute -left-7 top-[0.2em] inline-flex size-5 items-center justify-center rounded text-white/40 opacity-0 transition hover:text-white/80 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30";
       anchor.setAttribute("href", `#${id}`);
       anchor.setAttribute("aria-label", "跳转到此标题");
       anchor.innerHTML =
@@ -93,13 +93,13 @@
 <div
   bind:this={container}
   class={[
-    "markdown-content leading-relaxed text-white/90",
-    "[&_h1]:relative [&_h1]:mt-10 [&_h1]:mb-4 [&_h1]:scroll-mt-24 [&_h1]:pl-7 [&_h1]:text-[clamp(2rem,3vw,2.5rem)] [&_h1]:leading-tight [&_h1]:font-extrabold [&_h1]:text-white [&_h1]:drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]",
-    "[&_h2]:relative [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:scroll-mt-24 [&_h2]:pl-7 [&_h2]:text-[clamp(1.5rem,2.4vw,1.9rem)] [&_h2]:leading-snug [&_h2]:font-bold [&_h2]:text-white [&_h2]:drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]",
-    "[&_h3]:relative [&_h3]:mt-5 [&_h3]:mb-2 [&_h3]:scroll-mt-24 [&_h3]:pl-7 [&_h3]:text-2xl [&_h3]:font-bold [&_h3]:text-white",
-    "[&_h4]:relative [&_h4]:mt-5 [&_h4]:mb-2 [&_h4]:scroll-mt-24 [&_h4]:pl-7 [&_h4]:text-xl [&_h4]:font-semibold [&_h4]:text-white",
-    "[&_h5]:relative [&_h5]:mt-4 [&_h5]:mb-2 [&_h5]:scroll-mt-24 [&_h5]:pl-7 [&_h5]:text-lg [&_h5]:font-semibold [&_h5]:text-white",
-    "[&_h6]:relative [&_h6]:mt-4 [&_h6]:mb-2 [&_h6]:scroll-mt-24 [&_h6]:pl-7 [&_h6]:text-base [&_h6]:font-semibold [&_h6]:text-white/90",
+    "markdown-content pr-7 pl-7 leading-relaxed text-white/90",
+    "[&_h1]:relative [&_h1]:mt-10 [&_h1]:mb-4 [&_h1]:scroll-mt-24 [&_h1]:text-[clamp(2rem,3vw,2.5rem)] [&_h1]:leading-tight [&_h1]:font-extrabold [&_h1]:text-white [&_h1]:drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]",
+    "[&_h2]:relative [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:scroll-mt-24 [&_h2]:text-[clamp(1.5rem,2.4vw,1.9rem)] [&_h2]:leading-snug [&_h2]:font-bold [&_h2]:text-white [&_h2]:drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]",
+    "[&_h3]:relative [&_h3]:mt-5 [&_h3]:mb-2 [&_h3]:scroll-mt-24 [&_h3]:text-2xl [&_h3]:font-bold [&_h3]:text-white",
+    "[&_h4]:relative [&_h4]:mt-5 [&_h4]:mb-2 [&_h4]:scroll-mt-24 [&_h4]:text-xl [&_h4]:font-semibold [&_h4]:text-white",
+    "[&_h5]:relative [&_h5]:mt-4 [&_h5]:mb-2 [&_h5]:scroll-mt-24 [&_h5]:text-lg [&_h5]:font-semibold [&_h5]:text-white",
+    "[&_h6]:relative [&_h6]:mt-4 [&_h6]:mb-2 [&_h6]:scroll-mt-24 [&_h6]:text-base [&_h6]:font-semibold [&_h6]:text-white/90",
     "[&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-white/90",
     "[&_a]:text-sky-300 [&_a]:underline [&_a]:decoration-white/20 [&_a]:underline-offset-4 [&_a:hover]:text-sky-200",
     "[&_code]:rounded [&_code]:bg-white/10 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.9em]",
