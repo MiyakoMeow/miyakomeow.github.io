@@ -3,7 +3,7 @@
     jsonPreview,
     type JsonPreviewHandle,
   } from "../../components/JsonPreview.svelte";
-  import ScrollSyncGroup from "../../components/ScrollSyncGroup.svelte";
+  import ScrollSyncGroup from "../../utils/ScrollSyncGroup.svelte";
 
   let chartPreview: JsonPreviewHandle | undefined;
 
