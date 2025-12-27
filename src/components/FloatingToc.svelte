@@ -16,6 +16,7 @@
   };
 
   export let items: TocItem[] = [];
+  export let extraItems: TocItem[] = [];
   export let title: string = "目录";
   export let minLevel: number = 2;
   export let maxLevel: number = 6;
@@ -28,7 +29,8 @@
   let scheduled = false;
   let scrollScheduled = false;
 
-  $: resolvedItems = items.length > 0 ? items : autoItems;
+  $: baseItems = items.length > 0 ? items : autoItems;
+  $: resolvedItems = extraItems.length > 0 ? [...baseItems, ...extraItems] : baseItems;
   $: flatItems = flattenItems(resolvedItems);
 
   function slugifyHeadingText(input: string): string {
@@ -221,7 +223,12 @@
           <path d="M17 7L7 17" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
         </svg>
       {:else}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-9" fill="currentColor">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          class="size-9"
+          fill="currentColor"
+        >
           <path d="M4 6h16v2H4V6zm0 5h10v2H4v-2zm0 5h16v2H4v-2z" />
         </svg>
       {/if}

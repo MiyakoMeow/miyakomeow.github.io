@@ -45,6 +45,13 @@
     difficulties: string[];
   }
 
+  interface TocItem {
+    id: string;
+    title: string;
+    href?: string;
+    children?: TocItem[];
+  }
+
   export let header: string;
   export let origin_url: string | undefined = undefined;
 
@@ -197,7 +204,44 @@
   }
 
   let sortedDifficultyGroups: DifficultyGroup[] = [];
-  $: sortedDifficultyGroups = groupedCharts;
+  $: {
+    const order = headerData?.level_order ?? [];
+    const orderIndex = new Map<string, number>();
+    order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
+    const defined: DifficultyGroup[] = [];
+    const others: DifficultyGroup[] = [];
+    for (const g of groupedCharts) {
+      (orderIndex.has(String(g.level)) ? defined : others).push(g);
+    }
+    defined.sort(
+      (a, b) => (orderIndex.get(String(a.level)) ?? 0) - (orderIndex.get(String(b.level)) ?? 0)
+    );
+    others.sort((a, b) => {
+      const as = String(a.level).trim();
+      const bs = String(b.level).trim();
+      const intRe = /^-?\d+$/;
+      const ai = intRe.test(as);
+      const bi = intRe.test(bs);
+      if (ai && bi) return parseInt(as, 10) - parseInt(bs, 10);
+      if (ai && !bi) return -1;
+      if (!ai && bi) return 1;
+      return as.localeCompare(bs);
+    });
+    sortedDifficultyGroups = [...defined, ...others];
+  }
+
+  let difficultyTocItems: TocItem[] = [];
+  $: {
+    if (!sortedDifficultyGroups || sortedDifficultyGroups.length === 0) {
+      difficultyTocItems = [];
+    } else {
+      difficultyTocItems = sortedDifficultyGroups.map((g) => ({
+        id: `difficulty-group-${g.level}`,
+        title: `难度 ${g.level}`,
+        href: `#difficulty-group-${g.level}`,
+      }));
+    }
+  }
 
   onMount(() => {
     setTimeout(() => {
@@ -374,5 +418,5 @@
     {/if}
   </div>
 </div>
-<FloatingToc />
+<FloatingToc extraItems={difficultyTocItems} />
 <QuickActions />
