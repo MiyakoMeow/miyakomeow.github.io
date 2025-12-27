@@ -4,6 +4,7 @@
   import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.svelte";
   import SelectedTablesPanel from "./BMSTableMirror/SelectedTablesPanel.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
+  import FloatingToc from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
 
@@ -294,4 +295,5 @@
 </main>
 
 <SelectedTablesPanel {tables} {selectedMap} />
+<FloatingToc />
 <QuickActions />

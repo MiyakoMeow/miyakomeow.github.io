@@ -5,6 +5,7 @@
   import LevelRefTable from "./BMSTable/LevelRefTable.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
+  import FloatingToc from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
 
   interface ChartData {
@@ -373,4 +374,5 @@
     {/if}
   </div>
 </div>
+<FloatingToc />
 <QuickActions />

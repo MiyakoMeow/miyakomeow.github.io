@@ -1,5 +1,6 @@
 <script lang="ts">
   import ProfileCard from "@/components/ProfileCard.svelte";
+  import FloatingToc from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
   import MarkdownContent from "@/components/MarkdownContent.svelte";
@@ -52,4 +53,5 @@
     </section>
   {/if}
 </main>
+<FloatingToc />
 <QuickActions />
