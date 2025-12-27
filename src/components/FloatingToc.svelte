@@ -209,30 +209,19 @@
 {#if flatItems.length > 0}
   <div class="fixed top-4 right-4 z-1000 flex flex-col items-end gap-3">
     <button
-      class="flex size-24 items-center justify-center rounded-full border border-white/25 bg-white/15 text-white shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all hover:bg-white/25"
+      class="flex size-14 items-center justify-center rounded-full border border-white/25 bg-white/15 text-white shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all hover:bg-white/25"
       type="button"
       aria-label={open ? "关闭目录" : "打开目录"}
       title={open ? "关闭目录" : "打开目录"}
       on:click={() => (open = !open)}
     >
       {#if open}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="size-15"
-          fill="currentColor"
-        >
-          <path
-            d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L12 14.83l-4.89 4.88-1.41-1.42L10.59 12 5.7 7.12l1.41-1.41L12 9.17l4.89-4.88 1.41 1.42z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-9" fill="none">
+          <path d="M7 7l10 10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+          <path d="M17 7L7 17" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
         </svg>
       {:else}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="size-15"
-          fill="currentColor"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-9" fill="currentColor">
           <path d="M4 6h16v2H4V6zm0 5h10v2H4v-2zm0 5h16v2H4v-2z" />
         </svg>
       {/if}
