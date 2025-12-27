@@ -119,9 +119,11 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import { cubicInOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
-  import { createFloatingPanelVisibility, getSessionFlag } from "../utils/floatingPanelVisibility";
+  import {
+    createSvelteFloatingPanelBindings,
+    cubicInOut,
+    fade,
+  } from "../utils/floatingPanelVisibility";
 
   type TocItem = {
     id: string;
@@ -141,15 +143,14 @@
   export let title: string = "目录";
 
   const sessionKey = "miyakomeow_floating_toc_seen";
-  const hasSeenFloatingToc = getSessionFlag(sessionKey);
-
-  let open = !hasSeenFloatingToc;
-  let enableTransitions = false;
   let activeId: string | null = null;
   let scrollScheduled = false;
   let tocContainer: HTMLDivElement | undefined;
 
-  const fadeDurationMs = 200;
+  const { open, enableTransitions, fadeDurationMs, visibility } = createSvelteFloatingPanelBindings({
+    sessionKey,
+    getContainer: () => tocContainer,
+  });
 
   $: flatItems = flattenItems(items);
 
@@ -210,14 +211,6 @@
     history.replaceState(null, "", `#${encodeURIComponent(id)}`);
   }
 
-  const visibility = createFloatingPanelVisibility({
-    sessionKey,
-    getContainer: () => tocContainer,
-    getOpen: () => open,
-    setOpen: (next) => (open = next),
-    setEnableTransitions: (next) => (enableTransitions = next),
-  });
-
   onMount(() => {
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
     window.addEventListener("resize", onScrollOrResize);
@@ -246,8 +239,8 @@
     on:mousemove={visibility.onPointerMove}
     on:mouseleave={visibility.onPointerLeave}
   >
-    {#key open}
-      {@const keyedOpen = open}
+    {#key $open}
+      {@const keyedOpen = $open}
       <div
         class="relative overflow-hidden border border-white/20 bg-white/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px] transition-opacity duration-200 ease-in-out"
         class:max-h-[60vh]={keyedOpen}
@@ -259,11 +252,11 @@
         class:p-2={!keyedOpen}
         class:rounded-full={!keyedOpen}
         in:fade={{
-          delay: enableTransitions ? fadeDurationMs : 0,
-          duration: enableTransitions ? fadeDurationMs : 0,
+          delay: $enableTransitions ? fadeDurationMs : 0,
+          duration: $enableTransitions ? fadeDurationMs : 0,
           easing: cubicInOut,
         }}
-        out:fade={{ duration: enableTransitions ? fadeDurationMs : 0, easing: cubicInOut }}
+        out:fade={{ duration: $enableTransitions ? fadeDurationMs : 0, easing: cubicInOut }}
         role="button"
         aria-label={keyedOpen ? "目录" : "打开目录"}
         aria-expanded={keyedOpen}

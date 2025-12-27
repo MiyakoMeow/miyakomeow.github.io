@@ -1,3 +1,11 @@
+import { cubicInOut } from "svelte/easing";
+import { fade } from "svelte/transition";
+import { writable, type Writable } from "svelte/store";
+
+export { cubicInOut, fade };
+
+export const floatingPanelFadeDurationMs = 200;
+
 export function getSessionFlag(sessionKey: string): boolean {
   if (typeof window === "undefined") return false;
   try {
@@ -25,6 +33,64 @@ export type FloatingPanelVisibilityController = {
   closeImmediately: () => void;
   mount: () => () => void;
 };
+
+type TrackedWritable<T> = Writable<T> & {
+  get: () => T;
+};
+
+function trackedWritable<T>(initial: T): TrackedWritable<T> {
+  const inner = writable(initial);
+  let current = initial;
+
+  return {
+    subscribe: inner.subscribe,
+    set: (next) => {
+      current = next;
+      inner.set(next);
+    },
+    update: (updater) => {
+      const next = updater(current);
+      current = next;
+      inner.set(next);
+    },
+    get: () => current,
+  };
+}
+
+export type SvelteFloatingPanelOptions = {
+  sessionKey: string;
+  getContainer: () => HTMLElement | null | undefined;
+};
+
+export type SvelteFloatingPanelBindings = {
+  open: TrackedWritable<boolean>;
+  enableTransitions: TrackedWritable<boolean>;
+  visibility: FloatingPanelVisibilityController;
+  fadeDurationMs: number;
+};
+
+export function createSvelteFloatingPanelBindings(
+  options: SvelteFloatingPanelOptions
+): SvelteFloatingPanelBindings {
+  const initialOpen = !getSessionFlag(options.sessionKey);
+  const open = trackedWritable(initialOpen);
+  const enableTransitions = trackedWritable(false);
+
+  const visibility = createFloatingPanelVisibility({
+    sessionKey: options.sessionKey,
+    getContainer: options.getContainer,
+    getOpen: () => open.get(),
+    setOpen: (next) => open.set(next),
+    setEnableTransitions: (next) => enableTransitions.set(next),
+  });
+
+  return {
+    open,
+    enableTransitions,
+    visibility,
+    fadeDurationMs: floatingPanelFadeDurationMs,
+  };
+}
 
 export function createFloatingPanelVisibility(
   options: FloatingPanelVisibilityOptions

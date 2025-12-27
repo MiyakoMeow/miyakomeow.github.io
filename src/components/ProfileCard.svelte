@@ -1,25 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { cubicInOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
-  import { createFloatingPanelVisibility, getSessionFlag } from "../utils/floatingPanelVisibility";
+  import {
+    createSvelteFloatingPanelBindings,
+    cubicInOut,
+    fade,
+  } from "../utils/floatingPanelVisibility";
 
   const sessionKey = "miyakomeow_profile_card_seen";
-  const hasSeenProfileCard = getSessionFlag(sessionKey);
-
-  let open = !hasSeenProfileCard;
-  let enableTransitions = false;
 
   let cardContainer: HTMLDivElement | undefined;
 
-  const fadeDurationMs = 200;
-
-  const visibility = createFloatingPanelVisibility({
+  const { open, enableTransitions, fadeDurationMs, visibility } = createSvelteFloatingPanelBindings({
     sessionKey,
     getContainer: () => cardContainer,
-    getOpen: () => open,
-    setOpen: (next) => (open = next),
-    setEnableTransitions: (next) => (enableTransitions = next),
   });
 
   onMount(() => visibility.mount());
@@ -33,41 +26,42 @@
   on:mousemove={visibility.onPointerMove}
   on:mouseleave={visibility.onPointerLeave}
 >
-  {#key open}
+  {#key $open}
+    {@const keyedOpen = $open}
     <div
       class="relative overflow-hidden border border-white/20 bg-white/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px] transition-opacity duration-200 ease-in-out"
-      class:max-h-[600px]={open}
-      class:w-[min(380px,calc(100vw-2rem))]={open}
-      class:p-8={open}
-      class:rounded-2xl={open}
-      class:max-h-14={!open}
-      class:w-14={!open}
-      class:p-2={!open}
-      class:rounded-full={!open}
+      class:max-h-[600px]={keyedOpen}
+      class:w-[min(380px,calc(100vw-2rem))]={keyedOpen}
+      class:p-8={keyedOpen}
+      class:rounded-2xl={keyedOpen}
+      class:max-h-14={!keyedOpen}
+      class:w-14={!keyedOpen}
+      class:p-2={!keyedOpen}
+      class:rounded-full={!keyedOpen}
       in:fade={{
-        delay: enableTransitions ? fadeDurationMs : 0,
-        duration: enableTransitions ? fadeDurationMs : 0,
+        delay: $enableTransitions ? fadeDurationMs : 0,
+        duration: $enableTransitions ? fadeDurationMs : 0,
         easing: cubicInOut,
       }}
-      out:fade={{ duration: enableTransitions ? fadeDurationMs : 0, easing: cubicInOut }}
+      out:fade={{ duration: $enableTransitions ? fadeDurationMs : 0, easing: cubicInOut }}
       role="button"
-      aria-label={open ? "个人信息卡片" : "展开个人信息卡片"}
-      aria-expanded={open}
+      aria-label={keyedOpen ? "个人信息卡片" : "展开个人信息卡片"}
+      aria-expanded={keyedOpen}
       tabindex={0}
       on:click={() => {
-        if (!open) visibility.requestOpen();
+        if (!keyedOpen) visibility.requestOpen();
       }}
       on:keydown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          if (!open) visibility.requestOpen();
+          if (!keyedOpen) visibility.requestOpen();
         }
       }}
     >
       <div
         class="pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-200 ease-in-out"
-        class:opacity-0={open}
-        class:opacity-100={!open}
+        class:opacity-0={keyedOpen}
+        class:opacity-100={!keyedOpen}
       >
         <img
           class="size-11 rounded-full border-2 border-white/30"
@@ -78,8 +72,8 @@
 
       <div
         class="text-center transition-opacity duration-200 ease-in-out"
-        class:opacity-100={open}
-        class:opacity-0={!open}
+        class:opacity-100={keyedOpen}
+        class:opacity-0={!keyedOpen}
       >
         <div>
           <div>
