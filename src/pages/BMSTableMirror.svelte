@@ -4,7 +4,7 @@
   import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.svelte";
   import SelectedTablesPanel from "./BMSTableMirror/SelectedTablesPanel.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
-  import FloatingToc, { buildTocFromHeadings, type TocItem } from "@/components/FloatingToc.svelte";
+  import FloatingToc, { type TocItem } from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
 
@@ -50,16 +50,6 @@
   let selectedMap: Record<string, boolean> = {};
   let searchQuery = "";
   let tocItems: TocItem[] = [];
-  let tocScheduled = false;
-
-  function scheduleRebuildToc(): void {
-    if (tocScheduled) return;
-    tocScheduled = true;
-    requestAnimationFrame(() => {
-      tocScheduled = false;
-      tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
-    });
-  }
 
   type StringConverter = (input: string) => string;
 
@@ -188,6 +178,32 @@
     return tag1Groups;
   })();
 
+  function slugifyTag(tag: string): string {
+    return tag
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "-");
+  }
+
+  $: {
+    const tagItems: TocItem[] = groupedByTags.map((g) => ({
+      id: `tag1-group-${slugifyTag(g.tag1)}`,
+      title: `分类 ${g.tag1}`,
+      href: `#tag1-group-${slugifyTag(g.tag1)}`,
+      children: g.subgroups.map((sg) => ({
+        id: `tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`,
+        title: `${sg.tag2} (${sg.items.length})`,
+        href: `#tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`,
+      })),
+    }));
+
+    tocItems = [
+      { id: "bms-table-mirror", title: "BMS 难度表镜像", href: "#bms-table-mirror" },
+      { id: "mirror-list", title: "镜像列表", href: "#mirror-list", children: tagItems },
+    ];
+  }
+
   async function loadTablesJson(): Promise<void> {
     try {
       const url = new URL("/bms/table-mirror/tables.json", window.location.origin).toString();
@@ -217,11 +233,8 @@
     setTimeout(() => {
       loadTablesJson();
     }, 250);
-
-    tick().then(() => scheduleRebuildToc());
+    tick();
   });
-
-  $: if (typeof loading === "boolean") scheduleRebuildToc();
 </script>
 
 <StarryBackground />
@@ -230,7 +243,7 @@
   <section
     class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
-    <h1 class="page-title mb-2 text-center">BMS 难度表镜像</h1>
+    <h1 id="bms-table-mirror" class="page-title mb-2 scroll-mt-5 text-center">BMS 难度表镜像</h1>
 
     <div class="mt-2 text-center text-[1.1rem] text-white/70 italic">
       对于BeMusicSeeker用户，可以使用tables.json链接（
@@ -269,7 +282,8 @@
   </section>
 
   <section
-    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+    id="mirror-list"
+    class="mt-8 w-full animate-fadeIn scroll-mt-5 rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
     <div class="flex flex-col gap-3">
       <div class="relative w-full">
