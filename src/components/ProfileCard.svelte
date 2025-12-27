@@ -1,127 +1,37 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { cubicInOut } from "svelte/easing";
   import { fade } from "svelte/transition";
+  import { createFloatingPanelVisibility, getSessionFlag } from "../utils/floatingPanelVisibility";
 
   const sessionKey = "miyakomeow_profile_card_seen";
-  const hasSeenProfileCard = (() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return window.sessionStorage.getItem(sessionKey) === "1";
-    } catch {
-      return false;
-    }
-  })();
+  const hasSeenProfileCard = getSessionFlag(sessionKey);
 
   let open = !hasSeenProfileCard;
   let enableTransitions = false;
-  let closeTimer: ReturnType<typeof setTimeout> | undefined;
-  let autoCloseTimer: ReturnType<typeof setTimeout> | undefined;
 
   let cardContainer: HTMLDivElement | undefined;
 
-  let isPointerInside = false;
-
   const fadeDurationMs = 200;
 
-  function openCard() {
-    if (closeTimer) clearTimeout(closeTimer);
-    closeTimer = undefined;
-    if (open) return;
-    open = true;
-  }
-
-  function scheduleClose() {
-    if (closeTimer) clearTimeout(closeTimer);
-    if (!open) return;
-    closeTimer = setTimeout(() => {
-      open = false;
-      closeTimer = undefined;
-    }, 500);
-  }
-
-  onMount(() => {
-    try {
-      window.sessionStorage.setItem(sessionKey, "1");
-    } catch {}
-
-    function closeImmediately() {
-      if (closeTimer) clearTimeout(closeTimer);
-      closeTimer = undefined;
-
-      if (autoCloseTimer) clearTimeout(autoCloseTimer);
-      autoCloseTimer = undefined;
-
-      isPointerInside = false;
-
-      open = false;
-    }
-
-    function onOutsidePointerDown(event: PointerEvent) {
-      if (!cardContainer) return;
-      if (event.target instanceof Node && cardContainer.contains(event.target)) return;
-      closeImmediately();
-    }
-
-    function onOutsideKeyDown(event: KeyboardEvent) {
-      if (!cardContainer) return;
-      if (event.target instanceof Node && cardContainer.contains(event.target)) return;
-      closeImmediately();
-    }
-
-    function onOutsideWheel(event: WheelEvent) {
-      if (!cardContainer) return;
-      if (event.target instanceof Node && cardContainer.contains(event.target)) return;
-      closeImmediately();
-    }
-
-    function onOutsideFocusIn(event: FocusEvent) {
-      if (!cardContainer) return;
-      if (event.target instanceof Node && cardContainer.contains(event.target)) return;
-      closeImmediately();
-    }
-
-    document.addEventListener("pointerdown", onOutsidePointerDown, true);
-    document.addEventListener("keydown", onOutsideKeyDown, true);
-    document.addEventListener("wheel", onOutsideWheel, { capture: true, passive: true });
-    document.addEventListener("focusin", onOutsideFocusIn, true);
-
-    enableTransitions = true;
-
-    if (open) {
-      autoCloseTimer = setTimeout(() => {
-        if (!isPointerInside && open) open = false;
-        autoCloseTimer = undefined;
-      }, 3000);
-    }
-
-    return () => {
-      document.removeEventListener("pointerdown", onOutsidePointerDown, true);
-      document.removeEventListener("keydown", onOutsideKeyDown, true);
-      document.removeEventListener("wheel", onOutsideWheel, true);
-      document.removeEventListener("focusin", onOutsideFocusIn, true);
-    };
+  const visibility = createFloatingPanelVisibility({
+    sessionKey,
+    getContainer: () => cardContainer,
+    getOpen: () => open,
+    setOpen: (next) => (open = next),
+    setEnableTransitions: (next) => (enableTransitions = next),
   });
 
-  onDestroy(() => {
-    if (closeTimer) clearTimeout(closeTimer);
-    if (autoCloseTimer) clearTimeout(autoCloseTimer);
-  });
+  onMount(() => visibility.mount());
 </script>
 
 <div
   class="fixed top-4 left-4 z-1000"
   bind:this={cardContainer}
   role="presentation"
-  on:mouseenter={() => {
-    isPointerInside = true;
-    openCard();
-  }}
-  on:mousemove={openCard}
-  on:mouseleave={() => {
-    isPointerInside = false;
-    scheduleClose();
-  }}
+  on:mouseenter={visibility.onPointerEnter}
+  on:mousemove={visibility.onPointerMove}
+  on:mouseleave={visibility.onPointerLeave}
 >
   {#key open}
     <div
@@ -145,12 +55,12 @@
       aria-expanded={open}
       tabindex={0}
       on:click={() => {
-        if (!open) openCard();
+        if (!open) visibility.requestOpen();
       }}
       on:keydown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          if (!open) openCard();
+          if (!open) visibility.requestOpen();
         }
       }}
     >

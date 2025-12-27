@@ -119,6 +119,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
+  import { createFloatingPanelVisibility, getSessionFlag } from "../utils/floatingPanelVisibility";
 
   type TocItem = {
     id: string;
@@ -136,11 +137,14 @@
 
   export let items: TocItem[] = [];
   export let title: string = "目录";
-  export let startOpen: boolean = false;
 
-  let open = startOpen;
+  const sessionKey = "miyakomeow_floating_toc_seen";
+  const hasSeenFloatingToc = getSessionFlag(sessionKey);
+
+  let open = !hasSeenFloatingToc;
   let activeId: string | null = null;
   let scrollScheduled = false;
+  let tocContainer: HTMLDivElement | undefined;
 
   $: flatItems = flattenItems(items);
 
@@ -191,10 +195,6 @@
     scheduleUpdateActive();
   }
 
-  function isSmallScreen(): boolean {
-    return window.matchMedia("(max-width: 768px)").matches;
-  }
-
   function onNavigate(item: FlatTocItem, event: MouseEvent): void {
     if (!item.href.startsWith("#")) return;
     event.preventDefault();
@@ -203,9 +203,14 @@
     const el = document.getElementById(id);
     el?.scrollIntoView({ behavior: "smooth", block: "start" });
     history.replaceState(null, "", `#${encodeURIComponent(id)}`);
-
-    if (isSmallScreen()) open = false;
   }
+
+  const visibility = createFloatingPanelVisibility({
+    sessionKey,
+    getContainer: () => tocContainer,
+    getOpen: () => open,
+    setOpen: (next) => (open = next),
+  });
 
   onMount(() => {
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
@@ -221,33 +226,37 @@
     };
   });
 
+  onMount(() => visibility.mount());
+
   $: if (flatItems) scheduleUpdateActive();
 </script>
 
 {#if flatItems.length > 0}
-  <div class="fixed top-4 right-4 z-1000 flex flex-col items-end gap-3">
+  <div
+    class="fixed top-4 right-4 z-1000 flex flex-col items-end gap-3"
+    bind:this={tocContainer}
+    role="presentation"
+    on:mouseenter={visibility.onPointerEnter}
+    on:mousemove={visibility.onPointerMove}
+    on:mouseleave={visibility.onPointerLeave}
+  >
     <button
       class="flex size-14 items-center justify-center rounded-full border border-white/25 bg-white/15 text-white shadow-[0_6px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all hover:bg-white/25"
       type="button"
-      aria-label={open ? "关闭目录" : "打开目录"}
-      title={open ? "关闭目录" : "打开目录"}
-      on:click={() => (open = !open)}
+      aria-label={open ? "目录" : "打开目录"}
+      title={open ? "目录" : "打开目录"}
+      on:click={() => {
+        if (!open) visibility.requestOpen();
+      }}
     >
-      {#if open}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-9" fill="none">
-          <path d="M7 7l10 10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
-          <path d="M17 7L7 17" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
-        </svg>
-      {:else}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="size-9"
-          fill="currentColor"
-        >
-          <path d="M4 6h16v2H4V6zm0 5h10v2H4v-2zm0 5h16v2H4v-2z" />
-        </svg>
-      {/if}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="size-9"
+        fill="currentColor"
+      >
+        <path d="M4 6h16v2H4V6zm0 5h10v2H4v-2zm0 5h16v2H4v-2z" />
+      </svg>
     </button>
 
     {#if open}
