@@ -5,6 +5,7 @@
   import LevelRefTable from "./BMSTable/LevelRefTable.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
+  import FloatingToc, { type TocItem } from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
 
   interface ChartData {
@@ -196,7 +197,61 @@
   }
 
   let sortedDifficultyGroups: DifficultyGroup[] = [];
-  $: sortedDifficultyGroups = groupedCharts;
+  $: {
+    const order = headerData?.level_order ?? [];
+    const orderIndex = new Map<string, number>();
+    order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
+    const defined: DifficultyGroup[] = [];
+    const others: DifficultyGroup[] = [];
+    for (const g of groupedCharts) {
+      (orderIndex.has(String(g.level)) ? defined : others).push(g);
+    }
+    defined.sort(
+      (a, b) => (orderIndex.get(String(a.level)) ?? 0) - (orderIndex.get(String(b.level)) ?? 0)
+    );
+    others.sort((a, b) => {
+      const as = String(a.level).trim();
+      const bs = String(b.level).trim();
+      const intRe = /^-?\d+$/;
+      const ai = intRe.test(as);
+      const bi = intRe.test(bs);
+      if (ai && bi) return parseInt(as, 10) - parseInt(bs, 10);
+      if (ai && !bi) return -1;
+      if (!ai && bi) return 1;
+      return as.localeCompare(bs);
+    });
+    sortedDifficultyGroups = [...defined, ...others];
+  }
+
+  let difficultyTocItems: TocItem[] = [];
+  $: {
+    if (!sortedDifficultyGroups || sortedDifficultyGroups.length === 0) {
+      difficultyTocItems = [];
+    } else {
+      difficultyTocItems = sortedDifficultyGroups.map((g) => {
+        const id = `difficulty-group-${g.level}`;
+        return {
+          id,
+          title: `难度 ${g.level} (${g.charts.length})`,
+          href: `#${id}`,
+        };
+      });
+    }
+  }
+
+  let tocItems: TocItem[] = [];
+  $: {
+    tocItems = [
+      {
+        id: "table-info",
+        title: "难度表信息",
+        href: "#table-info",
+        children: [{ id: "table-stats", title: "统计摘要", href: "#table-stats" }],
+      },
+      { id: "level-ref", title: "等级参考", href: "#level-ref" },
+      { id: "charts-list", title: "谱面列表", href: "#charts-list", children: difficultyTocItems },
+    ];
+  }
 
   onMount(() => {
     setTimeout(() => {
@@ -320,7 +375,7 @@
       <div class="py-4">
         <div class="mb-8 flex flex-wrap gap-8 rounded-[15px] bg-black/20 p-6">
           <div class="min-w-[18rem] flex-1">
-            <h2 class="section-title mt-0 mb-4">难度表信息</h2>
+            <h2 id="table-info" class="section-title mt-0 mb-4 scroll-mt-5">难度表信息</h2>
             <div>
               {#if headerData}
                 <p class="my-2 text-white/80">
@@ -336,7 +391,7 @@
           </div>
 
           <div class="min-w-[18rem] flex-1">
-            <h3 class="section-title mt-0 mb-4">统计摘要</h3>
+            <h3 id="table-stats" class="section-title mt-0 mb-4 scroll-mt-5">统计摘要</h3>
             <div class="grid grid-cols-3 gap-4">
               <div class="rounded-[10px] border border-white/10 bg-white/5 p-4 text-center">
                 <div class="mb-2 text-[2rem] font-bold text-[#64b5f6]">
@@ -354,23 +409,28 @@
           </div>
         </div>
 
-        <LevelRefTable headerUrl={header} />
+        <div id="level-ref" class="scroll-mt-5">
+          <LevelRefTable headerUrl={header} />
+        </div>
 
-        {#if sortedDifficultyGroups.length > 0}
-          <ChartsTableSection
-            groups={sortedDifficultyGroups}
-            totalCharts={tableData?.length || 0}
-            levelOrder={headerData?.level_order || []}
-          />
-        {:else}
-          <div class="p-12 text-center">
-            <div class="mb-4 text-[4rem]">📊</div>
-            <h3 class="mb-4 text-white">暂无谱面数据</h3>
-            <p class="text-white/70">难度表中没有找到谱面数据。</p>
-          </div>
-        {/if}
+        <div id="charts-list" class="scroll-mt-5">
+          {#if sortedDifficultyGroups.length > 0}
+            <ChartsTableSection
+              groups={sortedDifficultyGroups}
+              totalCharts={tableData?.length || 0}
+              levelOrder={headerData?.level_order || []}
+            />
+          {:else}
+            <div class="p-12 text-center">
+              <div class="mb-4 text-[4rem]">📊</div>
+              <h3 class="mb-4 text-white">暂无谱面数据</h3>
+              <p class="text-white/70">难度表中没有找到谱面数据。</p>
+            </div>
+          {/if}
+        </div>
       </div>
     {/if}
   </div>
 </div>
+<FloatingToc items={tocItems} />
 <QuickActions />

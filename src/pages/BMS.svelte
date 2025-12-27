@@ -1,5 +1,11 @@
 <script lang="ts">
+  import { onMount, tick } from "svelte";
+
   import ProfileCard from "../components/ProfileCard.svelte";
+  import FloatingToc, {
+    buildTocFromHeadings,
+    type TocItem,
+  } from "../components/FloatingToc.svelte";
   import QuickActions from "../components/QuickActions.svelte";
   import StarryBackground from "../components/StarryBackground.svelte";
   import MarkdownContent from "../components/MarkdownContent.svelte";
@@ -16,6 +22,13 @@
     { href: "/bms/table/self-dp/", title: "MiyakoMeow谱面合集（DP）", desc: "DP 谱面合集" },
     { href: "/bms/table-mirror/", title: "表镜像", desc: "无参数显示导航，有参数跳转" },
   ];
+
+  let tocItems: TocItem[] = [];
+
+  onMount(async () => {
+    await tick();
+    tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
+  });
 </script>
 
 <StarryBackground />
@@ -48,4 +61,5 @@
     </MarkdownContent>
   </div>
 </main>
+<FloatingToc items={tocItems} />
 <QuickActions />
