@@ -2,7 +2,10 @@
   import { onMount, tick } from "svelte";
 
   import ProfileCard from "../components/ProfileCard.svelte";
-  import FloatingToc, { buildTocFromHeadings, type TocItem } from "../components/FloatingToc.svelte";
+  import FloatingToc, {
+    buildTocFromHeadings,
+    type TocItem,
+  } from "../components/FloatingToc.svelte";
   import QuickActions from "../components/QuickActions.svelte";
   import StarryBackground from "../components/StarryBackground.svelte";
   import MarkdownContent from "../components/MarkdownContent.svelte";

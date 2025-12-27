@@ -35,11 +35,7 @@
     return slug || "section";
   }
 
-  function collectHeadingInfo(
-    root: ParentNode,
-    minLevel: number,
-    maxLevel: number
-  ): HeadingInfo[] {
+  function collectHeadingInfo(root: ParentNode, minLevel: number, maxLevel: number): HeadingInfo[] {
     const headings = Array.from(root.querySelectorAll("h1,h2,h3,h4,h5,h6")).filter((el) => {
       if (!(el instanceof HTMLHeadingElement)) return false;
       const level = Number(el.tagName.slice(1));
@@ -112,7 +108,8 @@
     const maxLevel = options.maxLevel ?? 6;
     const root =
       options.root ??
-      ((document.querySelector("main") as HTMLElement | null) ?? (document.body as HTMLElement));
+      (document.querySelector("main") as HTMLElement | null) ??
+      (document.body as HTMLElement);
 
     const headingInfo = collectHeadingInfo(root, minLevel, maxLevel);
     const tree = buildTreeFromHeadingInfo(headingInfo, minLevel);
