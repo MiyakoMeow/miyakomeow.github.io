@@ -10,10 +10,12 @@
 
   let cardContainer: HTMLDivElement | undefined;
 
-  const { open, enableTransitions, fadeDurationMs, visibility } = createSvelteFloatingPanelBindings({
-    sessionKey,
-    getContainer: () => cardContainer,
-  });
+  const { open, enableTransitions, fadeDurationMs, visibility } = createSvelteFloatingPanelBindings(
+    {
+      sessionKey,
+      getContainer: () => cardContainer,
+    }
+  );
 
   onMount(() => visibility.mount());
 </script>

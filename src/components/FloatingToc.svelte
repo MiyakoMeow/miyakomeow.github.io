@@ -147,10 +147,12 @@
   let scrollScheduled = false;
   let tocContainer: HTMLDivElement | undefined;
 
-  const { open, enableTransitions, fadeDurationMs, visibility } = createSvelteFloatingPanelBindings({
-    sessionKey,
-    getContainer: () => tocContainer,
-  });
+  const { open, enableTransitions, fadeDurationMs, visibility } = createSvelteFloatingPanelBindings(
+    {
+      sessionKey,
+      getContainer: () => tocContainer,
+    }
+  );
 
   $: flatItems = flattenItems(items);
 
