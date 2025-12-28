@@ -241,7 +241,7 @@
 <ProfileCard />
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
   <section
-    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+    class="animate-fadeIn mt-8 w-full rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
     <h1 id="bms-table-mirror" class="page-title mb-2 scroll-mt-5 text-center">BMS 难度表镜像</h1>
 
@@ -283,7 +283,7 @@
 
   <section
     id="mirror-list"
-    class="mt-8 w-full animate-fadeIn scroll-mt-5 rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+    class="animate-fadeIn mt-8 w-full scroll-mt-5 rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
     <div class="flex flex-col gap-3">
       <div class="relative w-full">
