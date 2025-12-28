@@ -20,7 +20,7 @@
   <!-- 菜单部分 -->
   <section
     id="blog"
-    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+    class="animate-fadeIn mt-8 w-full rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
     <h1 class="page-title mb-8 text-center">欢迎来到白喵斯的小屋！</h1>
     <div class="mb-8 flex flex-wrap items-center justify-center gap-4">
@@ -52,7 +52,7 @@
   </section>
 
   <section
-    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+    class="animate-fadeIn mt-8 w-full rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
     <div class="mb-6 flex flex-wrap items-baseline justify-between gap-3">
       <h2 class="section-title m-0">博客</h2>

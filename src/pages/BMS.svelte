@@ -36,7 +36,7 @@
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
   <!-- 菜单部分 -->
   <div
-    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+    class="animate-fadeIn mt-8 w-full rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
     <h1 class="page-title text-center">BMS</h1>
     <div class="mt-4 flex flex-wrap items-stretch justify-center gap-4">
@@ -54,7 +54,7 @@
 
   <!-- Markdown内容部分 -->
   <div
-    class="mt-8 w-full animate-fadeIn rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+    class="animate-fadeIn mt-8 w-full rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
   >
     <MarkdownContent>
       <BmsContent />
