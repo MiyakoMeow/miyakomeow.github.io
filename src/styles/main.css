@@ -1,2 +1,106 @@
-@config "../../tailwind.config.ts";
+/* Content paths - tells Tailwind which files to scan */
+@source "../**/*.svelte";
+@source "../**/*.js";
+@source "../**/*.ts";
+@source "../../.temp-html/**/*.html";
+@source "../content/**/*.md";
+
+/* Import Tailwind CSS v4 */
 @import "tailwindcss";
+
+/* Theme customization */
+@theme {
+  --font-family-sans: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --color-background: #24243e;
+  --color-text: rgba(255, 255, 255, 0.87);
+  --color-link: #646cff;
+  --color-link-hover: #535bf2;
+  --color-button-bg: #1a1a1a;
+}
+
+/* Base styles */
+@layer base {
+  :root {
+    font-family: var(--font-family-sans);
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: dark;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-width: 320px;
+  }
+
+  a {
+    font-weight: 500;
+    color: var(--color-link);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-link-hover);
+  }
+
+  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.2;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .section-title {
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.35);
+  }
+
+  button {
+    cursor: pointer;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: transparent;
+    background-color: var(--color-button-bg);
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    transition: border-color 0.25s;
+  }
+
+  button:hover {
+    border-color: var(--color-link);
+  }
+
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
