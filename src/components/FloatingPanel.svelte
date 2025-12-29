@@ -239,11 +239,7 @@
         {/if}
       </div>
 
-      <div
-        class=""
-        class:opacity-100={keyedOpen}
-        class:opacity-0={!keyedOpen}
-      >
+      <div class="" class:opacity-100={keyedOpen} class:opacity-0={!keyedOpen}>
         {#if children}
           {@render children()}
         {/if}
