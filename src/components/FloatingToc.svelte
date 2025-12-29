@@ -119,11 +119,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import {
-    createSvelteFloatingPanelBindings,
-    cubicInOut,
-    fade,
-  } from "../utils/floatingPanelVisibility";
+  import FloatingPanel from "./FloatingPanel.svelte";
 
   type TocItem = {
     id: string;
@@ -142,17 +138,8 @@
   export let items: TocItem[] = [];
   export let title: string = "目录";
 
-  const sessionKey = "miyakomeow_floating_toc_seen";
   let activeId: string | null = null;
   let scrollScheduled = false;
-  let tocContainer: HTMLDivElement | undefined;
-
-  const { open, enableTransitions, fadeDurationMs, visibility } = createSvelteFloatingPanelBindings(
-    {
-      sessionKey,
-      getContainer: () => tocContainer,
-    }
-  );
 
   $: flatItems = flattenItems(items);
 
@@ -227,96 +214,40 @@
     };
   });
 
-  onMount(() => visibility.mount());
-
   $: if (flatItems) scheduleUpdateActive();
 </script>
 
 {#if flatItems.length > 0}
-  <div
-    class="fixed top-4 right-4 z-1000"
-    bind:this={tocContainer}
-    role="presentation"
-    on:mouseenter={visibility.onPointerEnter}
-    on:mousemove={visibility.onPointerMove}
-    on:mouseleave={visibility.onPointerLeave}
+  <FloatingPanel
+    sessionKey="miyakomeow_floating_toc_seen"
+    initiallyOpen={false}
+    position="top-right"
+    size="medium"
+    ariaLabel="目录"
   >
-    {#key $open}
-      {@const keyedOpen = $open}
-      <div
-        class="relative overflow-hidden border border-white/20 bg-white/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px] transition-opacity duration-200 ease-in-out"
-        class:max-h-[60vh]={keyedOpen}
-        class:w-[min(320px,calc(100vw-2rem))]={keyedOpen}
-        class:p-4={keyedOpen}
-        class:rounded-2xl={keyedOpen}
-        class:max-h-14={!keyedOpen}
-        class:w-14={!keyedOpen}
-        class:p-2={!keyedOpen}
-        class:rounded-full={!keyedOpen}
-        in:fade={{
-          delay: $enableTransitions ? fadeDurationMs : 0,
-          duration: $enableTransitions ? fadeDurationMs : 0,
-          easing: cubicInOut,
-        }}
-        out:fade={{ duration: $enableTransitions ? fadeDurationMs : 0, easing: cubicInOut }}
-        role="button"
-        aria-label={keyedOpen ? "目录" : "打开目录"}
-        aria-expanded={keyedOpen}
-        tabindex={0}
-        on:click={() => {
-          if (!keyedOpen) visibility.requestOpen();
-        }}
-        on:keydown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            if (!keyedOpen) visibility.requestOpen();
-          }
-        }}
-      >
-        <div
-          class="pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-200 ease-in-out"
-          class:opacity-0={keyedOpen}
-          class:opacity-100={!keyedOpen}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            class="size-9"
-            fill="currentColor"
-          >
-            <path d="M4 6h16v2H4V6zm0 5h10v2H4v-2zm0 5h16v2H4v-2z" />
-          </svg>
-        </div>
-
-        <div
-          class="transition-opacity duration-200 ease-in-out"
-          class:opacity-100={keyedOpen}
-          class:opacity-0={!keyedOpen}
-        >
-          <div class="mb-3 flex items-center justify-between gap-3">
-            <div class="text-[0.95rem] font-semibold text-white/90">{title}</div>
-            <div class="text-[0.8rem] text-white/60">{flatItems.length}</div>
-          </div>
-
-          <nav class="max-h-[calc(60vh-3rem)] overflow-auto pr-1">
-            {#each flatItems as item (item.id)}
-              <a
-                href={item.href}
-                class={[
-                  "block rounded-lg py-2 pr-3 text-[0.9rem] leading-snug transition-colors",
-                  activeId === (item.href.startsWith("#") ? item.href.slice(1) : item.id)
-                    ? "bg-white/10 text-sky-200"
-                    : "text-white/85 hover:bg-white/8 hover:text-white",
-                ].join(" ")}
-                style={`padding-left: ${12 + item.depth * 14}px;`}
-                on:click={(e) => onNavigate(item, e)}
-              >
-                {item.title}
-              </a>
-            {/each}
-          </nav>
-        </div>
+    {#snippet children()}
+      <div class="mb-3 flex items-center justify-between gap-3">
+        <div class="text-[0.95rem] font-semibold text-white/90">{title}</div>
+        <div class="text-[0.8rem] text-white/60">{flatItems.length}</div>
       </div>
-    {/key}
-  </div>
+
+      <nav class="max-h-[calc(60vh-3rem)] overflow-auto pr-1">
+        {#each flatItems as item (item.id)}
+          <a
+            href={item.href}
+            class={[
+              "block rounded-lg py-2 pr-3 text-[0.9rem] leading-snug transition-colors",
+              activeId === (item.href.startsWith("#") ? item.href.slice(1) : item.id)
+                ? "bg-white/10 text-sky-200"
+                : "text-white/85 hover:bg-white/8 hover:text-white",
+            ].join(" ")}
+            style={`padding-left: ${12 + item.depth * 14}px;`}
+            on:click={(e) => onNavigate(item, e)}
+          >
+            {item.title}
+          </a>
+        {/each}
+      </nav>
+    {/snippet}
+  </FloatingPanel>
 {/if}
