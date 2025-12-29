@@ -221,7 +221,7 @@
       }}
     >
       <div
-        class="pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-200 ease-in-out"
+        class="pointer-events-none absolute inset-0 flex items-center justify-center"
         class:opacity-0={keyedOpen}
         class:opacity-100={!keyedOpen}
       >
@@ -240,7 +240,7 @@
       </div>
 
       <div
-        class="transition-opacity duration-200 ease-in-out"
+        class=""
         class:opacity-100={keyedOpen}
         class:opacity-0={!keyedOpen}
       >
