@@ -5,6 +5,7 @@
 
   interface Props {
     sessionKey: string;
+    initiallyOpen: boolean;
     closeDelayMs?: number;
     autoCloseMs?: number;
     position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
@@ -18,6 +19,7 @@
 
   let {
     sessionKey,
+    initiallyOpen,
     closeDelayMs = 500,
     autoCloseMs = 3000,
     position = "top-right",
@@ -40,7 +42,7 @@
     }
   }
 
-  const initialOpen = !getSessionFlag(sessionKey);
+  const initialOpen = initiallyOpen && !getSessionFlag(sessionKey);
   let open = $state(initialOpen);
   let enableTransitions = $state(false);
 

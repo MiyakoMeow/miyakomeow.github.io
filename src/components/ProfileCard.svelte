@@ -4,6 +4,7 @@
 
 <FloatingPanel
   sessionKey="miyakomeow_profile_card_seen"
+  initiallyOpen={true}
   position="top-left"
   size="large"
   ariaLabel="个人信息卡片"

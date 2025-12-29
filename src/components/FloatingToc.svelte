@@ -220,6 +220,7 @@
 {#if flatItems.length > 0}
   <FloatingPanel
     sessionKey="miyakomeow_floating_toc_seen"
+    initiallyOpen={false}
     position="top-right"
     size="medium"
     ariaLabel="目录"
