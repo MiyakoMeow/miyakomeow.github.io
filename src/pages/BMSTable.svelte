@@ -5,8 +5,9 @@
   import LevelRefTable from "./BMSTable/LevelRefTable.svelte";
   import StarryBackground from "@/components/StarryBackground.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
-  import FloatingToc, { type TocItem } from "@/components/FloatingToc.svelte";
+  import FloatingToc from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
+  import BreadcrumbNav from "@/components/BreadcrumbNav.svelte";
 
   interface ChartData {
     title?: string;
@@ -40,29 +41,25 @@
     totalSteps: number;
   }
 
-  interface TableStats {
-    totalCharts: number;
-    difficulties: string[];
-  }
+  const { header, origin_url }: { header: string; origin_url?: string } = $props();
 
-  export let header: string;
-  export let origin_url: string | undefined = undefined;
+  let pageTitle = $state("加载难度表header中");
 
-  let pageTitle = "加载难度表header中";
-
-  let loadingState: LoadingState = {
+  let loadingState = $state<LoadingState>({
     isLoading: true,
     progress: 0,
     currentStep: "正在初始化...",
     totalSteps: 4,
-  };
+  });
 
-  let tableData: ChartData[] | null = null;
-  let headerData: HeaderData | null = null;
-  let dataFetchUrl: string | null = null;
-  let error: string | null = null;
+  let tableData = $state<ChartData[] | null>(null);
+  let headerData = $state<HeaderData | null>(null);
+  let dataFetchUrl = $state<string | null>(null);
+  let error = $state<string | null>(null);
 
-  let copied = false;
+  let copied = $state(false);
+
+  const originUrl = $derived(origin_url ? String(origin_url) : null);
 
   async function copySiteUrl(): Promise<void> {
     try {
@@ -88,9 +85,6 @@
       copied = false;
     }
   }
-
-  let originUrl: string | null = null;
-  $: originUrl = origin_url ? String(origin_url) : null;
 
   function updateProgress(step: string, progress: number): void {
     loadingState = { ...loadingState, currentStep: step, progress };
@@ -160,50 +154,46 @@
     }
   }
 
-  let groupedCharts: DifficultyGroup[] = [];
-  $: {
+  const groupedCharts = $derived(() => {
     if (!tableData || !Array.isArray(tableData)) {
-      groupedCharts = [];
-    } else {
-      const groupsMap = new Map<string, DifficultyGroup>();
-      const charts = tableData;
-      for (const chart of charts) {
-        const level = chart.level || "unknown";
-        if (!groupsMap.has(level)) {
-          groupsMap.set(level, { level, charts: [] });
-        }
-        groupsMap.get(level)?.charts.push(chart);
+      return [];
+    }
+    const groupsMap = new Map<string, DifficultyGroup>();
+    const charts = tableData;
+    for (const chart of charts) {
+      const level = chart.level || "unknown";
+      if (!groupsMap.has(level)) {
+        groupsMap.set(level, { level, charts: [] });
       }
-      groupedCharts = Array.from(groupsMap.values());
+      groupsMap.get(level)?.charts.push(chart);
     }
-  }
+    return Array.from(groupsMap.values());
+  });
 
-  let tableStats: TableStats = { totalCharts: 0, difficulties: [] };
-  $: {
-    const groups = groupedCharts;
+  const tableStats = $derived(() => {
+    const groups = groupedCharts();
     if (!groups || groups.length === 0) {
-      tableStats = { totalCharts: 0, difficulties: [] };
-    } else {
-      const { totalCharts, difficulties } = groups.reduce(
-        (acc, group) => {
-          acc.difficulties.add(group.level);
-          acc.totalCharts += group.charts.length;
-          return acc;
-        },
-        { totalCharts: 0, difficulties: new Set<string>() }
-      );
-      tableStats = { totalCharts, difficulties: Array.from(difficulties) };
+      return { totalCharts: 0, difficulties: [] };
     }
-  }
+    const { totalCharts, difficulties } = groups.reduce(
+      (acc, group) => {
+        acc.difficulties.add(group.level);
+        acc.totalCharts += group.charts.length;
+        return acc;
+      },
+      { totalCharts: 0, difficulties: new Set<string>() }
+    );
+    return { totalCharts, difficulties: Array.from(difficulties) };
+  });
 
-  let sortedDifficultyGroups: DifficultyGroup[] = [];
-  $: {
+  const sortedDifficultyGroups = $derived(() => {
+    const groups = groupedCharts();
     const order = headerData?.level_order ?? [];
     const orderIndex = new Map<string, number>();
     order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
     const defined: DifficultyGroup[] = [];
     const others: DifficultyGroup[] = [];
-    for (const g of groupedCharts) {
+    for (const g of groups) {
       (orderIndex.has(String(g.level)) ? defined : others).push(g);
     }
     defined.sort(
@@ -220,28 +210,26 @@
       if (!ai && bi) return 1;
       return as.localeCompare(bs);
     });
-    sortedDifficultyGroups = [...defined, ...others];
-  }
+    return [...defined, ...others];
+  });
 
-  let difficultyTocItems: TocItem[] = [];
-  $: {
-    if (!sortedDifficultyGroups || sortedDifficultyGroups.length === 0) {
-      difficultyTocItems = [];
-    } else {
-      difficultyTocItems = sortedDifficultyGroups.map((g) => {
-        const id = `difficulty-group-${g.level}`;
-        return {
-          id,
-          title: `难度 ${g.level} (${g.charts.length})`,
-          href: `#${id}`,
-        };
-      });
+  const difficultyTocItems = $derived(() => {
+    const groups = sortedDifficultyGroups();
+    if (!groups || groups.length === 0) {
+      return [];
     }
-  }
+    return groups.map((g) => {
+      const id = `difficulty-group-${g.level}`;
+      return {
+        id,
+        title: `难度 ${g.level} (${g.charts.length})`,
+        href: `#${id}`,
+      };
+    });
+  });
 
-  let tocItems: TocItem[] = [];
-  $: {
-    tocItems = [
+  const tocItems = $derived(() => {
+    return [
       {
         id: "table-info",
         title: "难度表信息",
@@ -249,9 +237,20 @@
         children: [{ id: "table-stats", title: "统计摘要", href: "#table-stats" }],
       },
       { id: "level-ref", title: "等级参考", href: "#level-ref" },
-      { id: "charts-list", title: "谱面列表", href: "#charts-list", children: difficultyTocItems },
+      {
+        id: "charts-list",
+        title: "谱面列表",
+        href: "#charts-list",
+        children: difficultyTocItems(),
+      },
     ];
-  }
+  });
+
+  const breadcrumbs = $derived([
+    { label: "主页", href: "/index.html" },
+    { label: "BMS", href: "/bms/index.html" },
+    { label: (headerData as HeaderData | null)?.name || "加载难度表header中" },
+  ]);
 
   onMount(() => {
     setTimeout(() => {
@@ -262,6 +261,11 @@
 
 <StarryBackground />
 <ProfileCard />
+<BreadcrumbNav
+  items={breadcrumbs}
+  sessionKey={`breadcrumb-bms-table-${header}`}
+  initiallyOpen={false}
+/>
 <div
   class="mx-auto my-8 max-w-375 rounded-[20px] border border-white/10 bg-white/5 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-[10px]"
 >
@@ -277,7 +281,7 @@
       <button
         class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
         type="button"
-        on:click={copySiteUrl}
+        onclick={copySiteUrl}
       >
         点击复制
       </button>
@@ -366,7 +370,7 @@
         <button
           class="mt-4 cursor-pointer rounded-[25px] border-none bg-[#64b5f6] px-8 py-3 text-[1rem] font-semibold text-white transition-colors duration-300 ease-out hover:bg-[#42a5f5]"
           type="button"
-          on:click={lazyLoadTableData}
+          onclick={lazyLoadTableData}
         >
           重新加载
         </button>
@@ -395,13 +399,13 @@
             <div class="grid grid-cols-3 gap-4">
               <div class="rounded-[10px] border border-white/10 bg-white/5 p-4 text-center">
                 <div class="mb-2 text-[2rem] font-bold text-[#64b5f6]">
-                  {tableStats.totalCharts}
+                  {tableStats().totalCharts}
                 </div>
                 <div class="text-[0.9rem] text-white/70">总谱面数</div>
               </div>
               <div class="rounded-[10px] border border-white/10 bg-white/5 p-4 text-center">
                 <div class="mb-2 text-[2rem] font-bold text-[#64b5f6]">
-                  {tableStats.difficulties.length}
+                  {tableStats().difficulties.length}
                 </div>
                 <div class="text-[0.9rem] text-white/70">难度等级数</div>
               </div>
@@ -414,9 +418,9 @@
         </div>
 
         <div id="charts-list" class="scroll-mt-5">
-          {#if sortedDifficultyGroups.length > 0}
+          {#if sortedDifficultyGroups().length > 0}
             <ChartsTableSection
-              groups={sortedDifficultyGroups}
+              groups={sortedDifficultyGroups()}
               totalCharts={tableData?.length || 0}
               levelOrder={headerData?.level_order || []}
             />
@@ -432,5 +436,5 @@
     {/if}
   </div>
 </div>
-<FloatingToc items={tocItems} />
+<FloatingToc items={tocItems()} />
 <QuickActions />

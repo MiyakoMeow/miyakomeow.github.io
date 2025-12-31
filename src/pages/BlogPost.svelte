@@ -7,10 +7,17 @@
   import StarryBackground from "@/components/StarryBackground.svelte";
   import MarkdownContent from "@/components/MarkdownContent.svelte";
   import { getBlogPost } from "@/defines/blog-posts";
+  import BreadcrumbNav from "@/components/BreadcrumbNav.svelte";
 
   export let slug: string;
 
   const post = getBlogPost(slug);
+
+  const breadcrumbs = [
+    { label: "主页", href: "/index.html" },
+    { label: "博客", href: "/index.html#blog" },
+    { label: post?.title || "文章未找到" },
+  ];
 
   let tocItems: TocItem[] = [];
 
@@ -22,6 +29,7 @@
 
 <StarryBackground />
 <ProfileCard />
+<BreadcrumbNav items={breadcrumbs} sessionKey={`breadcrumb-blog-${slug}`} initiallyOpen={false} />
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
   {#if !post}
     <section

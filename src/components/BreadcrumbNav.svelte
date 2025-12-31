@@ -3,32 +3,51 @@
   import { cubicInOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
-  interface Props {
-    sessionKey: string;
-    initiallyOpen: boolean;
-    closeDelayMs?: number;
-    autoCloseMs?: number;
-    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    size?: "small" | "medium" | "large";
-    ariaLabel?: string;
-    containerClass?: string;
-    panelClass?: string;
-    children?: import("svelte").Snippet;
+  interface BreadcrumbItem {
+    /** 显示文本 */
+    label: string;
+    /** 跳转链接（可选，最后一项通常不提供） */
+    href?: string;
+    /** 图标（可选） */
     icon?: import("svelte").Snippet;
+    /** 是否禁用点击 */
+    disabled?: boolean;
+  }
+
+  interface Props {
+    /** 面包屑数据数组 */
+    items: BreadcrumbItem[];
+    /** sessionStorage 键名（用于记住已展开状态） */
+    sessionKey: string;
+    /** 初始是否展开 */
+    initiallyOpen?: boolean;
+    /** 延迟关闭时间（毫秒） */
+    closeDelayMs?: number;
+    /** 自动关闭时间（毫秒） */
+    autoCloseMs?: number;
+    /** 自定义容器类名 */
+    containerClass?: string;
+    /** 自定义面板类名 */
+    panelClass?: string;
+    /** 面包屑图标（收起状态显示） */
+    icon?: import("svelte").Snippet;
+    /** 无障碍标签 */
+    ariaLabel?: string;
+    /** 分隔符（默认为 "→"） */
+    separator?: string;
   }
 
   const {
+    items,
     sessionKey,
-    initiallyOpen,
+    initiallyOpen = false,
     closeDelayMs = 500,
     autoCloseMs = 3000,
-    position = "top-right",
-    size = "medium",
-    ariaLabel = "面板",
     containerClass = "",
     panelClass = "",
-    children,
     icon,
+    ariaLabel = "面包屑导航",
+    separator = "→",
   }: Props = $props();
 
   const fadeDurationMs = 200;
@@ -153,48 +172,24 @@
     };
   });
 
-  const positionConfig = {
-    "top-left": "top-4 left-4",
-    "top-right": "top-4 right-4",
-    "bottom-left": "bottom-4 left-4",
-    "bottom-right": "bottom-4 right-4",
-  };
-
-  const sizeConfig = {
-    small: {
-      maxHeightClass: "max-h-[50vh]",
-      widthClass: "w-[min(280px,calc(100vw-2rem))]",
-      paddingClass: "p-4",
-    },
-    medium: {
-      maxHeightClass: "max-h-[60vh]",
-      widthClass: "w-[min(320px,calc(100vw-2rem))]",
-      paddingClass: "p-4",
-    },
-    large: {
-      maxHeightClass: "max-h-[600px]",
-      widthClass: "w-[min(380px,calc(100vw-2rem))]",
-      paddingClass: "p-8",
-    },
-  };
-
-  const currentPosition = $derived(positionConfig[position]);
+  const basePanelClass =
+    "relative overflow-hidden border border-white/20 bg-white/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px] transition-all duration-200 ease-in-out";
 
   function getPanelClasses(isOpen: boolean): string {
-    const base =
-      "relative overflow-hidden border border-white/20 bg-white/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px] transition-opacity duration-200 ease-in-out";
-    const sizeSetting = sizeConfig[size];
     if (isOpen) {
-      return `${base} ${sizeSetting.maxHeightClass} ${sizeSetting.widthClass} ${sizeSetting.paddingClass} rounded-2xl`;
+      return `${basePanelClass} max-h-16 py-3 px-6 rounded-2xl`;
     }
-    return `${base} max-h-14 w-14 p-2 rounded-full`;
+    return `${basePanelClass} max-h-7 w-14 p-1 rounded-xl cursor-pointer`;
   }
+
+  const lastItemIndex = $derived(items.length - 1);
 </script>
 
 <div
-  class="fixed z-1000 {currentPosition} {containerClass}"
+  class="fixed top-4 left-1/2 z-1000 -translate-x-1/2 {containerClass}"
   bind:this={container}
-  role="presentation"
+  role="navigation"
+  aria-label={ariaLabel}
   onmouseenter={onPointerEnter}
   onmousemove={onPointerMove}
   onmouseleave={onPointerLeave}
@@ -211,7 +206,6 @@
       }}
       out:fade={{ duration: enableTransitions ? fadeDurationMs : 0, easing: cubicInOut }}
       role="button"
-      aria-label={keyedOpen ? ariaLabel : `打开${ariaLabel}`}
       aria-expanded={keyedOpen}
       tabindex={0}
       onclick={() => {
@@ -235,18 +229,46 @@
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            class="size-9"
+            class="size-4"
             fill="currentColor"
           >
-            <path d="M4 6h16v2H4V6zm0 5h10v2H4v-2zm0 5h16v2H4v-2z" />
+            <circle cx="5" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
+            <circle cx="12" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
+            <circle cx="19" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
           </svg>
         {/if}
       </div>
 
-      <div class="" class:opacity-100={keyedOpen} class:opacity-0={!keyedOpen}>
-        {#if children}
-          {@render children()}
-        {/if}
+      <div
+        class="flex items-center gap-2"
+        class:opacity-100={keyedOpen}
+        class:opacity-0={!keyedOpen}
+      >
+        {#each items as item, index (index)}
+          {#if index > 0}
+            <span class="mx-2 text-white/40 select-none">{separator}</span>
+          {/if}
+
+          {#if index === lastItemIndex || item.disabled}
+            <span class="flex cursor-default items-center gap-2 font-medium text-white">
+              {#if item.icon}
+                <span class="inline-flex">{@render item.icon()}</span>
+              {/if}
+              {item.label}
+            </span>
+          {:else}
+            <a
+              href={item.href}
+              class="flex items-center gap-2 text-white/90 no-underline transition-colors duration-150 hover:text-white"
+              onclick={(event) => event.stopPropagation()}
+            >
+              {#if item.icon}
+                <span class="inline-flex">{@render item.icon()}</span>
+              {/if}
+              {item.label}
+            </a>
+          {/if}
+        {/each}
       </div>
     </div>
   {/key}

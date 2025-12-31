@@ -3,6 +3,7 @@
   import * as OpenCC from "opencc-js";
   import GroupedTablesSection from "./BMSTableMirror/GroupedTablesSection.svelte";
   import SelectedTablesPanel from "./BMSTableMirror/SelectedTablesPanel.svelte";
+  import BreadcrumbNav from "@/components/BreadcrumbNav.svelte";
   import ProfileCard from "@/components/ProfileCard.svelte";
   import FloatingToc, { type TocItem } from "@/components/FloatingToc.svelte";
   import QuickActions from "@/components/QuickActions.svelte";
@@ -95,6 +96,12 @@
       title: "镜像仓库",
       desc: "查看镜像项目",
     },
+  ];
+
+  const breadcrumbs = [
+    { label: "主页", href: "/index.html" },
+    { label: "BMS", href: "/bms/index.html" },
+    { label: "难度表镜像" },
   ];
 
   async function copySelected(data: string): Promise<void> {
@@ -239,6 +246,7 @@
 
 <StarryBackground />
 <ProfileCard />
+<BreadcrumbNav items={breadcrumbs} sessionKey="breadcrumb-bms-table-mirror" initiallyOpen={false} />
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
   <section
     class="animate-fadeIn mt-8 w-full rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"

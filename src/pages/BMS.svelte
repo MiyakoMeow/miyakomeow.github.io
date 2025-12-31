@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
 
+  import BreadcrumbNav from "../components/BreadcrumbNav.svelte";
   import ProfileCard from "../components/ProfileCard.svelte";
   import FloatingToc, {
     buildTocFromHeadings,
@@ -23,6 +24,8 @@
     { href: "/bms/table-mirror/", title: "表镜像", desc: "无参数显示导航，有参数跳转" },
   ];
 
+  const breadcrumbs = [{ label: "主页", href: "/index.html" }, { label: "BMS" }];
+
   let tocItems: TocItem[] = [];
 
   onMount(async () => {
@@ -33,6 +36,7 @@
 
 <StarryBackground />
 <ProfileCard />
+<BreadcrumbNav items={breadcrumbs} sessionKey="breadcrumb-bms-home" initiallyOpen={false} />
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
   <!-- 菜单部分 -->
   <div
