@@ -1,3 +1,28 @@
+/*
+ * ESLint 配置说明
+ *
+ * Tailwind CSS 类名处理分为两个工具：
+ *
+ * 1. prettier-plugin-tailwindcss（Prettier 插件）
+ *    - 功能：类名排序（如：m-4 p-2 → p-2 m-4）
+ *    - 运行时机：执行 `bun format` 或 Prettier 格式化时
+ *    - 配置文件：.prettierrc
+ *
+ * 2. eslint-plugin-svelte-tailwind-canonical（自定义插件）
+ *    - 功能：canonical 规范化（如：p-4px → p-1）
+ *    - 运行时机：执行 `bun run lint` 时
+ *    - 配置：本文件中的 svelteTailwindCanonicalRules
+ *
+ * 为什么需要两个工具？
+ * - prettier-plugin-tailwindcss 官方插件不支持 canonical 规范化
+ * - eslint-plugin-tailwind-canonical-classes 只支持 JSX/TSX，不支持 Svelte
+ * - 因此自定义插件专门为 Svelte 文件提供 canonical 规范化功能
+ *
+ * 未来改进：
+ * - 计划向 eslint-plugin-tailwind-canonical-classes 提交 PR 添加 Svelte 支持
+ * - 合并后可移除自定义插件 eslint-plugin-svelte-tailwind-canonical.ts
+ */
+
 import css from "@eslint/css";
 import { includeIgnoreFile } from "@eslint/compat";
 import js from "@eslint/js";
