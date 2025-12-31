@@ -29,11 +29,7 @@
 
 <StarryBackground />
 <ProfileCard />
-<BreadcrumbNav
-  items={breadcrumbs}
-  sessionKey={`breadcrumb-blog-${slug}`}
-  initiallyOpen={false}
-/>
+<BreadcrumbNav items={breadcrumbs} sessionKey={`breadcrumb-blog-${slug}`} initiallyOpen={false} />
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
   {#if !post}
     <section

@@ -17,7 +17,7 @@
     icon?: import("svelte").Snippet;
   }
 
-  let {
+  const {
     sessionKey,
     initiallyOpen,
     closeDelayMs = 500,
@@ -42,8 +42,12 @@
     }
   }
 
-  const initialOpen = initiallyOpen && !getSessionFlag(sessionKey);
-  let open = $state(initialOpen);
+  // 计算初始打开状态，避免警告
+  const getInitialOpen = () => {
+    const initialFlag = getSessionFlag(sessionKey);
+    return initiallyOpen && !initialFlag;
+  };
+  let open = $state(getInitialOpen());
   let enableTransitions = $state(false);
 
   let container: HTMLDivElement | undefined;

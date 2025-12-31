@@ -225,29 +225,27 @@
     size="medium"
     ariaLabel="目录"
   >
-    {#snippet children()}
-      <div class="mb-3 flex items-center justify-between gap-3">
-        <div class="text-[0.95rem] font-semibold text-white/90">{title}</div>
-        <div class="text-[0.8rem] text-white/60">{flatItems.length}</div>
-      </div>
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <div class="text-[0.95rem] font-semibold text-white/90">{title}</div>
+      <div class="text-[0.8rem] text-white/60">{flatItems.length}</div>
+    </div>
 
-      <nav class="max-h-[calc(60vh-3rem)] overflow-auto pr-1">
-        {#each flatItems as item (item.id)}
-          <a
-            href={item.href}
-            class={[
-              "block rounded-lg py-2 pr-3 text-[0.9rem] leading-snug transition-colors",
-              activeId === (item.href.startsWith("#") ? item.href.slice(1) : item.id)
-                ? "bg-white/10 text-sky-200"
-                : "text-white/85 hover:bg-white/8 hover:text-white",
-            ].join(" ")}
-            style={`padding-left: ${12 + item.depth * 14}px;`}
-            on:click={(e) => onNavigate(item, e)}
-          >
-            {item.title}
-          </a>
-        {/each}
-      </nav>
-    {/snippet}
+    <nav class="max-h-[calc(60vh-3rem)] overflow-auto pr-1">
+      {#each flatItems as item (item.id)}
+        <a
+          href={item.href}
+          class={[
+            "block rounded-lg py-2 pr-3 text-[0.9rem] leading-snug transition-colors",
+            activeId === (item.href.startsWith("#") ? item.href.slice(1) : item.id)
+              ? "bg-white/10 text-sky-200"
+              : "text-white/85 hover:bg-white/8 hover:text-white",
+          ].join(" ")}
+          style={`padding-left: ${12 + item.depth * 14}px;`}
+          on:click={(e) => onNavigate(item, e)}
+        >
+          {item.title}
+        </a>
+      {/each}
+    </nav>
   </FloatingPanel>
 {/if}

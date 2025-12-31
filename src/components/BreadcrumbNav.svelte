@@ -37,7 +37,7 @@
     separator?: string;
   }
 
-  let {
+  const {
     items,
     sessionKey,
     initiallyOpen = false,
@@ -61,7 +61,12 @@
     }
   }
 
-  let open = $state(initiallyOpen && !getSessionFlag(sessionKey));
+  // 计算初始打开状态，避免警告
+  const getInitialOpen = () => {
+    const initialFlag = getSessionFlag(sessionKey);
+    return initiallyOpen && !initialFlag;
+  };
+  let open = $state(getInitialOpen());
   let enableTransitions = $state(false);
 
   let container: HTMLDivElement | undefined;
@@ -181,7 +186,7 @@
 </script>
 
 <div
-  class="fixed left-1/2 top-4 -translate-x-1/2 z-1000 {containerClass}"
+  class="fixed top-4 left-1/2 z-1000 -translate-x-1/2 {containerClass}"
   bind:this={container}
   role="navigation"
   aria-label={ariaLabel}
@@ -227,9 +232,9 @@
             class="size-4"
             fill="currentColor"
           >
-            <circle cx="5" cy="12" r="1.5" fill="currentColor" opacity="0.7"/>
-            <circle cx="12" cy="12" r="1.5" fill="currentColor" opacity="0.7"/>
-            <circle cx="19" cy="12" r="1.5" fill="currentColor" opacity="0.7"/>
+            <circle cx="5" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
+            <circle cx="12" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
+            <circle cx="19" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
           </svg>
         {/if}
       </div>
@@ -245,7 +250,7 @@
           {/if}
 
           {#if index === lastItemIndex || item.disabled}
-            <span class="flex items-center gap-2 text-white font-medium cursor-default">
+            <span class="flex cursor-default items-center gap-2 font-medium text-white">
               {#if item.icon}
                 <span class="inline-flex">{@render item.icon()}</span>
               {/if}
@@ -254,7 +259,7 @@
           {:else}
             <a
               href={item.href}
-              class="flex items-center gap-2 text-white/90 hover:text-white transition-colors duration-150 no-underline"
+              class="flex items-center gap-2 text-white/90 no-underline transition-colors duration-150 hover:text-white"
               onclick={(event) => event.stopPropagation()}
             >
               {#if item.icon}

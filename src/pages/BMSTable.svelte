@@ -41,25 +41,25 @@
     totalSteps: number;
   }
 
-  let { header, origin_url }: { header: string; origin_url?: string } = $props();
+  const { header, origin_url }: { header: string; origin_url?: string } = $props();
 
-  let pageTitle = "加载难度表header中";
+  let pageTitle = $state("加载难度表header中");
 
-  let loadingState: LoadingState = {
+  let loadingState = $state<LoadingState>({
     isLoading: true,
     progress: 0,
     currentStep: "正在初始化...",
     totalSteps: 4,
-  };
+  });
 
-  let tableData: ChartData[] | null = null;
-  let headerData: HeaderData | null = null;
-  let dataFetchUrl: string | null = null;
-  let error: string | null = null;
+  let tableData = $state<ChartData[] | null>(null);
+  let headerData = $state<HeaderData | null>(null);
+  let dataFetchUrl = $state<string | null>(null);
+  let error = $state<string | null>(null);
 
-  let copied = false;
+  let copied = $state(false);
 
-  let originUrl = $derived(origin_url ? String(origin_url) : null);
+  const originUrl = $derived(origin_url ? String(origin_url) : null);
 
   async function copySiteUrl(): Promise<void> {
     try {
@@ -154,7 +154,7 @@
     }
   }
 
-  let groupedCharts = $derived(() => {
+  const groupedCharts = $derived(() => {
     if (!tableData || !Array.isArray(tableData)) {
       return [];
     }
@@ -170,7 +170,7 @@
     return Array.from(groupsMap.values());
   });
 
-  let tableStats = $derived(() => {
+  const tableStats = $derived(() => {
     const groups = groupedCharts();
     if (!groups || groups.length === 0) {
       return { totalCharts: 0, difficulties: [] };
@@ -186,7 +186,7 @@
     return { totalCharts, difficulties: Array.from(difficulties) };
   });
 
-  let sortedDifficultyGroups = $derived(() => {
+  const sortedDifficultyGroups = $derived(() => {
     const groups = groupedCharts();
     const order = headerData?.level_order ?? [];
     const orderIndex = new Map<string, number>();
@@ -213,7 +213,7 @@
     return [...defined, ...others];
   });
 
-  let difficultyTocItems = $derived(() => {
+  const difficultyTocItems = $derived(() => {
     const groups = sortedDifficultyGroups();
     if (!groups || groups.length === 0) {
       return [];
@@ -228,7 +228,7 @@
     });
   });
 
-  let tocItems = $derived(() => {
+  const tocItems = $derived(() => {
     return [
       {
         id: "table-info",
@@ -237,7 +237,12 @@
         children: [{ id: "table-stats", title: "统计摘要", href: "#table-stats" }],
       },
       { id: "level-ref", title: "等级参考", href: "#level-ref" },
-      { id: "charts-list", title: "谱面列表", href: "#charts-list", children: difficultyTocItems() },
+      {
+        id: "charts-list",
+        title: "谱面列表",
+        href: "#charts-list",
+        children: difficultyTocItems(),
+      },
     ];
   });
 
@@ -276,7 +281,7 @@
       <button
         class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
         type="button"
-        on:click={copySiteUrl}
+        onclick={copySiteUrl}
       >
         点击复制
       </button>
@@ -365,7 +370,7 @@
         <button
           class="mt-4 cursor-pointer rounded-[25px] border-none bg-[#64b5f6] px-8 py-3 text-[1rem] font-semibold text-white transition-colors duration-300 ease-out hover:bg-[#42a5f5]"
           type="button"
-          on:click={lazyLoadTableData}
+          onclick={lazyLoadTableData}
         >
           重新加载
         </button>
