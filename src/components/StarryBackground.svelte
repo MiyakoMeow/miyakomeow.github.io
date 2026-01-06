@@ -116,8 +116,8 @@
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
-      const trailX = this.x - this.speedX * 5;
-      const trailY = this.y - this.speedY * 5;
+      const trailX = this.x - this.speedX * 100;
+      const trailY = this.y - this.speedY * 100;
 
       const gradient = ctx.createLinearGradient(trailX, trailY, this.x, this.y);
 
