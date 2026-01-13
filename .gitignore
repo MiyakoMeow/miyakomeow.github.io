@@ -28,3 +28,6 @@ project.inlang/cache/
 
 # Vite
 .vite
+
+# Legacy Page
+/legacy
