@@ -396,6 +396,21 @@
     "dir_name": "[akred.web.fc2.com] BAECON難易度表"
   },
   {
+    "name": "BAECON難易度表",
+    "symbol": "■",
+    "url": "https://miyakomeow.github.io/bms/table-mirror/%5Bdarksabun%2Eclub%5D%20BAECON%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8/",
+    "comment": "Mirror by DARKSABUN",
+    "date": "Tue Jan 13 2026 00:00:00 GMT+0900 (日本标准时间)",
+    "state": "2",
+    "tag1": "SP",
+    "tag2": "Self-made Chart Only",
+    "tag_order": "1",
+    "url_data_json": "https://darksabun.club/mirror/akred/baecon-data28.json",
+    "url_header_json": "https://darksabun.club/mirror/akred/baecon-header.json",
+    "url_ori": "https://darksabun.club/mirror/akred/baecon-new.html",
+    "dir_name": "[darksabun.club] BAECON難易度表"
+  },
+  {
     "name": "BKANOTHER",
     "symbol": "BK",
     "url": "https://miyakomeow.github.io/bms/table-mirror/%5Bbms%2Ehexlataia%2Exyz%5D%20BKANOTHER/",
@@ -6109,6 +6124,21 @@
     "url_header_json": "http://akred.web.fc2.com/header.json",
     "url_ori": "http://akred.web.fc2.com/ak-red-new.html",
     "dir_name": "[akred.web.fc2.com] 赤い人難易度表"
+  },
+  {
+    "name": "赤い人難易度表",
+    "symbol": "Lv",
+    "url": "https://miyakomeow.github.io/bms/table-mirror/%5Bdarksabun%2Eclub%5D%20%E8%B5%A4%E3%81%84%E4%BA%BA%E9%9B%A3%E6%98%93%E5%BA%A6%E8%A1%A8/",
+    "comment": "Mirror by DARKSABUN",
+    "date": "Tue Jan 13 2026 00:00:00 GMT+0900 (日本标准时间)",
+    "state": "2",
+    "tag1": "SP",
+    "tag2": "Self-made Chart Only",
+    "tag_order": "1",
+    "url_data_json": "https://darksabun.club/mirror/akred/57data.json",
+    "url_header_json": "https://darksabun.club/mirror/akred/header.json",
+    "url_ori": "https://darksabun.club/mirror/akred/ak-red-new.html",
+    "dir_name": "[darksabun.club] 赤い人難易度表"
   },
   {
     "name": "迷子のやどりぎ表",
