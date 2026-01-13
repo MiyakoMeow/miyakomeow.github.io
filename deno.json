@@ -25,6 +25,9 @@
   },
   "unstable": ["fmt-component"],
   "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "types": ["src/vite-env.d.ts"]
+  },
   "imports": {
     "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.6.0",
     "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static@^3.0.10",
