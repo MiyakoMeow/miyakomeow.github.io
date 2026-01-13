@@ -26,7 +26,10 @@
   "unstable": ["fmt-component"],
   "nodeModulesDir": "auto",
   "compilerOptions": {
-    "types": ["src/vite-env.d.ts"]
+    "types": [
+      "src/vite-env.d.ts",
+      "src/mdsvex.d.ts"
+    ]
   },
   "imports": {
     "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.6.0",
@@ -37,7 +40,10 @@
     "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.19",
     "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.17",
     "cookie": "npm:cookie@^1.1.1",
+    "katex": "npm:katex@^0.16.27",
     "mdsvex": "npm:mdsvex@^0.12.6",
+    "remark-gfm": "npm:remark-gfm@^4.0.1",
+    "remark-math": "npm:remark-math@^6.0.0",
     "svelte": "npm:svelte@^5.45.6",
     "svelte-check": "npm:svelte-check@^4.3.4",
     "tailwindcss": "npm:tailwindcss@^4.1.17",

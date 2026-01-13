@@ -1,5 +1,66 @@
-<h1>Welcome to SvelteKit</h1>
-<p>
-  Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read
-  the documentation
-</p>
+<script lang="ts">
+	import { onMount } from "svelte";
+
+	import ProfileCard from "$lib/components/ProfileCard.svelte";
+	import FloatingToc, { buildTocFromHeadings, type TocItem } from "$lib/components/FloatingToc.svelte";
+	import QuickActions from "$lib/components/QuickActions.svelte";
+	import StarryBackground from "$lib/components/StarryBackground.svelte";
+	import { blogPosts } from "$lib/data/blog-posts-placeholder";
+
+	let tocItems: TocItem[] = [];
+
+	onMount(() => {
+		tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
+	});
+</script>
+
+<StarryBackground />
+<ProfileCard />
+<main class="m-0 mx-auto box-border w-full max-w-350 p-8">
+	<!-- 菜单部分 -->
+	<section
+		id="blog"
+		class="animate-fadeIn mt-8 w-full rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+	>
+		<h1 class="page-title mb-8 text-center">欢迎来到白喵斯的小屋！</h1>
+		<div class="mb-8 flex flex-wrap items-center justify-center gap-4">
+			<a
+				class="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-[0.8rem] text-white no-underline transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-white/20"
+				href="/bms"
+			>
+				BMS 主页
+			</a>
+		</div>
+	</section>
+
+	<section
+		class="animate-fadeIn mt-8 w-full rounded-[20px] border border-white/10 bg-white/10 p-8 text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-[10px]"
+	>
+		<div class="mb-6 flex flex-wrap items-baseline justify-between gap-3">
+			<h2 class="section-title m-0">博客</h2>
+		</div>
+
+		{#if blogPosts.length === 0}
+			<div class="text-center text-white/70">暂无文章（博客系统迁移中）</div>
+		{:else}
+			<div class="flex flex-col gap-4">
+				{#each blogPosts as post (post.slug)}
+					<a
+						class="block rounded-[14px] border border-white/10 bg-black/20 p-6 text-white no-underline transition-[transform,background] duration-300 ease-out hover:-translate-y-0.5 hover:bg-[rgba(255,255,255,0.06)]"
+						href={post.url}
+					>
+						<div class="mb-1 flex flex-wrap items-baseline justify-between gap-3">
+							<div class="text-[1.2rem] font-bold text-[#64b5f6]">{post.title}</div>
+							{#if post.date}
+								<div class="text-[0.85rem] text-white/60">{post.date}</div>
+							{/if}
+						</div>
+						<div class="text-[0.95rem] text-white/80">{post.firstSentence}</div>
+					</a>
+				{/each}
+			</div>
+		{/if}
+	</section>
+</main>
+<FloatingToc items={tocItems} />
+<QuickActions />
