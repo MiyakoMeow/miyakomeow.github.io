@@ -127,31 +127,42 @@
 
     const onOutsidePointerDown = (event: PointerEvent) => {
       if (!container) return;
-      if (event.target instanceof Node && container.contains(event.target)) return;
+      if (
+        event.target instanceof Node && container.contains(event.target)
+      ) return;
       closeImmediately();
     };
 
     const onOutsideKeyDown = (event: KeyboardEvent) => {
       if (!container) return;
-      if (event.target instanceof Node && container.contains(event.target)) return;
+      if (
+        event.target instanceof Node && container.contains(event.target)
+      ) return;
       closeImmediately();
     };
 
     const onOutsideWheel = (event: WheelEvent) => {
       if (!container) return;
-      if (event.target instanceof Node && container.contains(event.target)) return;
+      if (
+        event.target instanceof Node && container.contains(event.target)
+      ) return;
       closeImmediately();
     };
 
     const onOutsideFocusIn = (event: FocusEvent) => {
       if (!container) return;
-      if (event.target instanceof Node && container.contains(event.target)) return;
+      if (
+        event.target instanceof Node && container.contains(event.target)
+      ) return;
       closeImmediately();
     };
 
     document.addEventListener("pointerdown", onOutsidePointerDown, true);
     document.addEventListener("keydown", onOutsideKeyDown, true);
-    document.addEventListener("wheel", onOutsideWheel, { capture: true, passive: true });
+    document.addEventListener("wheel", onOutsideWheel, {
+      capture: true,
+      passive: true,
+    });
     document.addEventListener("focusin", onOutsideFocusIn, true);
 
     enableTransitions = true;
@@ -165,7 +176,11 @@
 
     return () => {
       clearTimers();
-      document.removeEventListener("pointerdown", onOutsidePointerDown, true);
+      document.removeEventListener(
+        "pointerdown",
+        onOutsidePointerDown,
+        true,
+      );
       document.removeEventListener("keydown", onOutsideKeyDown, true);
       document.removeEventListener("wheel", onOutsideWheel, true);
       document.removeEventListener("focusin", onOutsideFocusIn, true);
@@ -204,7 +219,10 @@
         duration: enableTransitions ? fadeDurationMs : 0,
         easing: cubicInOut,
       }}
-      out:fade={{ duration: enableTransitions ? fadeDurationMs : 0, easing: cubicInOut }}
+      out:fade={{
+        duration: enableTransitions ? fadeDurationMs : 0,
+        easing: cubicInOut,
+      }}
       role="button"
       aria-expanded={keyedOpen}
       tabindex={0}
@@ -250,7 +268,9 @@
           {/if}
 
           {#if index === lastItemIndex || item.disabled}
-            <span class="flex cursor-default items-center gap-2 font-medium text-white">
+            <span
+              class="flex cursor-default items-center gap-2 font-medium text-white"
+            >
               {#if item.icon}
                 <span class="inline-flex">{@render item.icon()}</span>
               {/if}

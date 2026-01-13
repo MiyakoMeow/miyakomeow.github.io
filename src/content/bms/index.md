@@ -7,4 +7,5 @@
 
 ## 什么是BMS？
 
-BMS（Be-Music Source）是一种音乐游戏谱面格式，主要用于播放器如Lunatic Rave 2（LR2）和Beatoraja。BMS谱面包含音符数据、音乐文件和背景图像，玩家可以下载并播放这些谱面。
+BMS（Be-Music Source）是一种音乐游戏谱面格式，主要用于播放器如Lunatic Rave
+2（LR2）和Beatoraja。BMS谱面包含音符数据、音乐文件和背景图像，玩家可以下载并播放这些谱面。

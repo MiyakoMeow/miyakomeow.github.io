@@ -28,11 +28,15 @@
   function ensureHeadingAnchors(): void {
     if (!container) return;
 
-    const headings = Array.from(container.querySelectorAll("h1,h2,h3,h4,h5,h6"));
+    const headings = Array.from(
+      container.querySelectorAll("h1,h2,h3,h4,h5,h6"),
+    );
     const usedIds = new Map<string, number>();
 
     for (const heading of headings) {
-      const existingAnchor = heading.querySelector(":scope > a.heading-anchor");
+      const existingAnchor = heading.querySelector(
+        ":scope > a.heading-anchor",
+      );
       if (existingAnchor) continue;
 
       const rawText = (heading.textContent ?? "").trim();
@@ -43,8 +47,8 @@
       const id = heading.id?.trim()
         ? heading.id.trim()
         : currentCount === 0
-          ? baseId
-          : `${baseId}-${currentCount + 1}`;
+        ? baseId
+        : `${baseId}-${currentCount + 1}`;
 
       heading.id = id;
 
