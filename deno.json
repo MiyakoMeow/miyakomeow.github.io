@@ -11,8 +11,9 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "format": "deno fmt",
-    "lint": "deno lint",
-    "lint:fix": "deno lint --fix"
+    "format:check": "deno fmt --check",
+    "lint": "deno lint .",
+    "lint:fix": "deno lint . --fix"
   },
   "fmt": {},
   "lint": {
@@ -32,10 +33,12 @@
     "@tailwindcss/forms": "npm:@tailwindcss/forms@^0.5.10",
     "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.19",
     "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.17",
+    "cookie": "npm:cookie@^1.1.1",
     "mdsvex": "npm:mdsvex@^0.12.6",
     "svelte": "npm:svelte@^5.45.6",
     "svelte-check": "npm:svelte-check@^4.3.4",
     "tailwindcss": "npm:tailwindcss@^4.1.17",
+    "types": "npm:types@^0.1.1",
     "typescript": "npm:typescript@^5.9.3",
     "vite": "npm:vite@^7.2.6"
   },
