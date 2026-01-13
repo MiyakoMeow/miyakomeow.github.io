@@ -2,19 +2,20 @@
   "version": "5",
   "specifiers": {
     "npm:@inlang/paraglide-js@^2.6.0": "2.8.0",
-    "npm:@sveltejs/adapter-static@^3.0.10": "3.0.10_@sveltejs+kit@2.49.4__@sveltejs+vite-plugin-svelte@6.2.4___svelte@5.46.1____acorn@8.15.0___vite@7.3.1____picomatch@4.0.3__svelte@5.46.1___acorn@8.15.0__typescript@5.9.3__vite@7.3.1___picomatch@4.0.3__acorn@8.15.0_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3_vite@7.3.1__picomatch@4.0.3",
-    "npm:@sveltejs/kit@^2.49.1": "2.49.4_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3_vite@7.3.1__picomatch@4.0.3_acorn@8.15.0",
-    "npm:@sveltejs/vite-plugin-svelte@^6.2.1": "6.2.4_svelte@5.46.1__acorn@8.15.0_vite@7.3.1__picomatch@4.0.3",
+    "npm:@sveltejs/adapter-static@^3.0.10": "3.0.10_@sveltejs+kit@2.49.4__@sveltejs+vite-plugin-svelte@6.2.4___svelte@5.46.1____acorn@8.15.0___vite@7.3.1____@types+node@25.0.7____picomatch@4.0.3___@types+node@25.0.7__svelte@5.46.1___acorn@8.15.0__typescript@5.9.3__vite@7.3.1___@types+node@25.0.7___picomatch@4.0.3__acorn@8.15.0__@types+node@25.0.7_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___@types+node@25.0.7___picomatch@4.0.3__@types+node@25.0.7_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_@types+node@25.0.7",
+    "npm:@sveltejs/kit@^2.49.1": "2.49.4_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___@types+node@25.0.7___picomatch@4.0.3__@types+node@25.0.7_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_acorn@8.15.0_@types+node@25.0.7",
+    "npm:@sveltejs/vite-plugin-svelte@^6.2.1": "6.2.4_svelte@5.46.1__acorn@8.15.0_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_@types+node@25.0.7",
     "npm:@tailwindcss/forms@~0.5.10": "0.5.11_tailwindcss@4.1.18",
     "npm:@tailwindcss/typography@~0.5.19": "0.5.19_tailwindcss@4.1.18",
-    "npm:@tailwindcss/vite@^4.1.17": "4.1.18_vite@7.3.1__picomatch@4.0.3",
+    "npm:@tailwindcss/vite@^4.1.17": "4.1.18_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_@types+node@25.0.7",
+    "npm:@types/node@^25.0.7": "25.0.7",
     "npm:mdsvex@~0.12.6": "0.12.6_svelte@5.46.1__acorn@8.15.0",
     "npm:svelte-check@^4.3.4": "4.3.5_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3",
     "npm:svelte@^5.45.6": "5.46.1_acorn@8.15.0",
     "npm:tailwindcss@^4.1.17": "4.1.18",
     "npm:typescript@^5.9.3": "5.9.3",
-    "npm:vite@*": "7.3.1_picomatch@4.0.3",
-    "npm:vite@^7.2.6": "7.3.1_picomatch@4.0.3"
+    "npm:vite@*": "7.3.1_@types+node@25.0.7_picomatch@4.0.3",
+    "npm:vite@^7.2.6": "7.3.1_@types+node@25.0.7_picomatch@4.0.3"
   },
   "npm": {
     "@esbuild/aix-ppc64@0.27.2": {
@@ -428,14 +429,14 @@
       ],
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/@sveltejs/acorn-typescript/-/acorn-typescript-1.0.8.tgz"
     },
-    "@sveltejs/adapter-static@3.0.10_@sveltejs+kit@2.49.4__@sveltejs+vite-plugin-svelte@6.2.4___svelte@5.46.1____acorn@8.15.0___vite@7.3.1____picomatch@4.0.3__svelte@5.46.1___acorn@8.15.0__typescript@5.9.3__vite@7.3.1___picomatch@4.0.3__acorn@8.15.0_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3_vite@7.3.1__picomatch@4.0.3": {
+    "@sveltejs/adapter-static@3.0.10_@sveltejs+kit@2.49.4__@sveltejs+vite-plugin-svelte@6.2.4___svelte@5.46.1____acorn@8.15.0___vite@7.3.1____@types+node@25.0.7____picomatch@4.0.3___@types+node@25.0.7__svelte@5.46.1___acorn@8.15.0__typescript@5.9.3__vite@7.3.1___@types+node@25.0.7___picomatch@4.0.3__acorn@8.15.0__@types+node@25.0.7_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___@types+node@25.0.7___picomatch@4.0.3__@types+node@25.0.7_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_@types+node@25.0.7": {
       "integrity": "sha512-7D9lYFWJmB7zxZyTE/qxjksvMqzMuYrrsyh1f4AlZqeZeACPRySjbC3aFiY55wb1tWUaKOQG9PVbm74JcN2Iew==",
       "dependencies": [
         "@sveltejs/kit"
       ],
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/@sveltejs/adapter-static/-/adapter-static-3.0.10.tgz"
     },
-    "@sveltejs/kit@2.49.4_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3_vite@7.3.1__picomatch@4.0.3_acorn@8.15.0": {
+    "@sveltejs/kit@2.49.4_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___@types+node@25.0.7___picomatch@4.0.3__@types+node@25.0.7_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_acorn@8.15.0_@types+node@25.0.7": {
       "integrity": "sha512-JFtOqDoU0DI/+QSG8qnq5bKcehVb3tCHhOG4amsSYth5/KgO4EkJvi42xSAiyKmXAAULW1/Zdb6lkgGEgSxdZg==",
       "dependencies": [
         "@standard-schema/spec",
@@ -462,7 +463,7 @@
       "bin": true,
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/@sveltejs/kit/-/kit-2.49.4.tgz"
     },
-    "@sveltejs/vite-plugin-svelte-inspector@5.0.2_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_vite@7.3.1__picomatch@4.0.3": {
+    "@sveltejs/vite-plugin-svelte-inspector@5.0.2_@sveltejs+vite-plugin-svelte@6.2.4__svelte@5.46.1___acorn@8.15.0__vite@7.3.1___@types+node@25.0.7___picomatch@4.0.3__@types+node@25.0.7_svelte@5.46.1__acorn@8.15.0_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_@types+node@25.0.7": {
       "integrity": "sha512-TZzRTcEtZffICSAoZGkPSl6Etsj2torOVrx6Uw0KpXxrec9Gg6jFWQ60Q3+LmNGfZSxHRCZL7vXVZIWmuV50Ig==",
       "dependencies": [
         "@sveltejs/vite-plugin-svelte",
@@ -472,7 +473,7 @@
       ],
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/@sveltejs/vite-plugin-svelte-inspector/-/vite-plugin-svelte-inspector-5.0.2.tgz"
     },
-    "@sveltejs/vite-plugin-svelte@6.2.4_svelte@5.46.1__acorn@8.15.0_vite@7.3.1__picomatch@4.0.3": {
+    "@sveltejs/vite-plugin-svelte@6.2.4_svelte@5.46.1__acorn@8.15.0_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_@types+node@25.0.7": {
       "integrity": "sha512-ou/d51QSdTyN26D7h6dSpusAKaZkAiGM55/AKYi+9AGZw7q85hElbjK3kEyzXHhLSnRISHOYzVge6x0jRZ7DXA==",
       "dependencies": [
         "@sveltejs/vite-plugin-svelte-inspector",
@@ -603,7 +604,7 @@
       ],
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/@tailwindcss/typography/-/typography-0.5.19.tgz"
     },
-    "@tailwindcss/vite@4.1.18_vite@7.3.1__picomatch@4.0.3": {
+    "@tailwindcss/vite@4.1.18_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_@types+node@25.0.7": {
       "integrity": "sha512-jVA+/UpKL1vRLg6Hkao5jldawNmRo7mQYrZtNHMIVpLfLhDml5nMRUo/8MwoX2vNXvnaXNNMedrMfMugAVX1nA==",
       "dependencies": [
         "@tailwindcss/node",
@@ -627,6 +628,13 @@
         "@types/unist"
       ],
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/@types/mdast/-/mdast-4.0.4.tgz"
+    },
+    "@types/node@25.0.7": {
+      "integrity": "sha512-C/er7DlIZgRJO7WtTdYovjIFzGsz0I95UlMyR9anTb4aCpBSRWe5Jc1/RvLKUfzmOxHPGjSE5+63HgLtndxU4w==",
+      "dependencies": [
+        "undici-types"
+      ],
+      "tarball": "https://mirrors.huaweicloud.com/repository/npm/@types/node/-/node-25.0.7.tgz"
     },
     "@types/unist@2.0.11": {
       "integrity": "sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==",
@@ -1115,6 +1123,10 @@
       "bin": true,
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/typescript/-/typescript-5.9.3.tgz"
     },
+    "undici-types@7.16.0": {
+      "integrity": "sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==",
+      "tarball": "https://mirrors.huaweicloud.com/repository/npm/undici-types/-/undici-types-7.16.0.tgz"
+    },
     "unist-util-is@4.1.0": {
       "integrity": "sha512-ZOQSsnce92GrxSqlnEEseX0gi7GH9zTJZ0p9dtu87WRb/37mMPO2Ilx1s/t9vBHrFhbgweUwb+t7cIn5dxPhZg==",
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/unist-util-is/-/unist-util-is-4.1.0.tgz"
@@ -1179,9 +1191,10 @@
       ],
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/vfile-message/-/vfile-message-2.0.4.tgz"
     },
-    "vite@7.3.1_picomatch@4.0.3": {
+    "vite@7.3.1_@types+node@25.0.7_picomatch@4.0.3": {
       "integrity": "sha512-w+N7Hifpc3gRjZ63vYBXA56dvvRlNWRczTdmCBBa+CotUzAPf5b7YMdMR/8CQoeYE5LX3W4wj6RYTgonm1b9DA==",
       "dependencies": [
+        "@types/node",
         "esbuild",
         "fdir",
         "picomatch",
@@ -1192,10 +1205,13 @@
       "optionalDependencies": [
         "fsevents"
       ],
+      "optionalPeers": [
+        "@types/node"
+      ],
       "bin": true,
       "tarball": "https://mirrors.huaweicloud.com/repository/npm/vite/-/vite-7.3.1.tgz"
     },
-    "vitefu@1.1.1_vite@7.3.1__picomatch@4.0.3": {
+    "vitefu@1.1.1_vite@7.3.1__@types+node@25.0.7__picomatch@4.0.3_@types+node@25.0.7": {
       "integrity": "sha512-B/Fegf3i8zh0yFbpzZ21amWzHmuNlLlmJT6n7bu5e+pCHUKQIfXSYokrqOBGEMMe9UG2sostKQF9mml/vYaWJQ==",
       "dependencies": [
         "vite"
@@ -1223,6 +1239,7 @@
       "npm:@tailwindcss/forms@~0.5.10",
       "npm:@tailwindcss/typography@~0.5.19",
       "npm:@tailwindcss/vite@^4.1.17",
+      "npm:@types/node@^25.0.7",
       "npm:mdsvex@~0.12.6",
       "npm:svelte-check@^4.3.4",
       "npm:svelte@^5.45.6",

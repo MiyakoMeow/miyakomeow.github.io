@@ -12,4 +12,9 @@ export default defineConfig({
       outdir: "./src/lib/paraglide",
     }),
   ],
+  resolve: {
+    alias: {
+      "async_hooks": "node:async_hooks",
+    },
+  },
 });
