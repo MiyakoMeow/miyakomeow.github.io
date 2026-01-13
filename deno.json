@@ -32,7 +32,6 @@
     "@tailwindcss/forms": "npm:@tailwindcss/forms@^0.5.10",
     "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.19",
     "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.17",
-    "@types/node": "npm:@types/node@^25.0.7",
     "mdsvex": "npm:mdsvex@^0.12.6",
     "svelte": "npm:svelte@^5.45.6",
     "svelte-check": "npm:svelte-check@^4.3.4",
