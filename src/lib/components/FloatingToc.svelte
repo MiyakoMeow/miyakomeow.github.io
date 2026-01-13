@@ -119,6 +119,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
+  import { browser } from "$app/environment";
   import FloatingPanel from "./FloatingPanel.svelte";
 
   type TocItem = {
@@ -214,7 +215,7 @@
     };
   });
 
-  $: if (flatItems) scheduleUpdateActive();
+  $: if (browser && flatItems) scheduleUpdateActive();
 </script>
 
 {#if flatItems.length > 0}
