@@ -188,8 +188,7 @@
     };
   });
 
-  const basePanelClass =
-    "relative overflow-hidden border border-white/20 bg-white/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[10px] transition-all duration-200 ease-in-out";
+  const basePanelClass = "glass-panel";
 
   function getPanelClasses(isOpen: boolean): string {
     if (isOpen) {
