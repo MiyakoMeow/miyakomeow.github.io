@@ -1,0 +1,27 @@
+name: Build Check
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: denoland/setup-deno@v2
+        with:
+          cache: true
+          deno-version: latest
+      - name: Install dependencies
+        run: |
+          deno install
+      - name: Run development server check
+        run: |
+          deno task dev --host &
+          sleep 10  # Wait for server to start
+      - name: Build project
+        run: deno task build
+      - name: Run preview
+        run: |
+          deno task build
