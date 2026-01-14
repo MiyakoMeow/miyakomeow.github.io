@@ -278,7 +278,7 @@
             </span>
           {:else}
             <a
-              href={resolve(item.href)}
+              href={item.href ?? "#"}
               class="flex items-center gap-2 text-white/90 no-underline transition-colors duration-150 hover:text-white"
               onclick={(event) => event.stopPropagation()}
             >
