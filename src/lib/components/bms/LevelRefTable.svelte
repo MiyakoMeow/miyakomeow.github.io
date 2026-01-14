@@ -12,7 +12,8 @@
   let leftTableData: LevelRefItem[] = [];
   let rightTableData: LevelRefItem[] = [];
 
-  let tableHalves: Array<{ id: "left" | "right"; items: LevelRefItem[] }> = [];
+  let tableHalves: Array<{ id: "left" | "right"; items: LevelRefItem[] }> =
+    [];
 
   $: {
     const data = levelRefData;
@@ -41,7 +42,9 @@
 
   let requestToken = 0;
 
-  async function loadLevelRefData(header: string | undefined): Promise<void> {
+  async function loadLevelRefData(
+    header: string | undefined,
+  ): Promise<void> {
     if (!header) {
       shouldShow = false;
       return;
@@ -74,7 +77,9 @@
       } else if (response.status === 404) {
         shouldShow = false;
       } else {
-        throw new Error(`加载失败: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `加载失败: ${response.status} ${response.statusText}`,
+        );
       }
     } catch (err) {
       console.error("加载难度对照表数据失败:", err);
@@ -104,16 +109,21 @@
                 {#each ["难度等级", "对应难度"] as label (label)}
                   <th
                     class="border-b-2 border-white/10 bg-[rgba(100,181,246,0.3)] px-4 py-3 text-left font-semibold text-white"
-                    >{label}</th
                   >
+                    {label}
+                  </th>
                 {/each}
               </tr>
             </thead>
             <tbody>
               {#each half.items as item (item.level)}
                 <tr class="hover:bg-white/5 last:[&>td]:border-b-0">
-                  <td class="border-b border-white/5 px-4 py-3 text-white/90">{item.level}</td>
-                  <td class="border-b border-white/5 px-4 py-3 text-white/90">{item.ref}</td>
+                  <td class="border-b border-white/5 px-4 py-3 text-white/90">
+                    {item.level}
+                  </td>
+                  <td class="border-b border-white/5 px-4 py-3 text-white/90">
+                    {item.ref}
+                  </td>
                 </tr>
               {/each}
             </tbody>

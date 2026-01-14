@@ -53,22 +53,28 @@
           BMS 难度表镜像列表（支持多语言搜索）
         </div>
       </a>
-      <div
-        class="flex w-80 flex-col rounded-[14px] border border-white/10 bg-black/20 p-5 text-white/50"
+      <a
+        href="/bms/table/self-sp"
+        class="flex w-80 flex-col rounded-[14px] border border-white/10 bg-black/20 p-5 text-white no-underline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
       >
-        <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]/50">
+        <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]">
           谱面合集（SP）
         </div>
-        <div class="text-[0.95rem] text-white/50">暂未迁移</div>
-      </div>
-      <div
-        class="flex w-80 flex-col rounded-[14px] border border-white/10 bg-black/20 p-5 text-white/50"
+        <div class="text-[0.95rem] text-white/80">
+          个人 SP 难度表
+        </div>
+      </a>
+      <a
+        href="/bms/table/self-dp"
+        class="flex w-80 flex-col rounded-[14px] border border-white/10 bg-black/20 p-5 text-white no-underline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
       >
-        <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]/50">
+        <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]">
           谱面合集（DP）
         </div>
-        <div class="text-[0.95rem] text-white/50">暂未迁移</div>
-      </div>
+        <div class="text-[0.95rem] text-white/80">
+          个人 DP 难度表
+        </div>
+      </a>
     </div>
   </div>
 

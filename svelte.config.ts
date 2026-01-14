@@ -41,8 +41,8 @@ const config: Config = {
       $content: path.resolve("./src/content"),
     },
     prerender: {
-      handleMissingId: 'ignore',
-      handleUnseenRoutes: 'ignore',
+      handleMissingId: "ignore",
+      handleUnseenRoutes: "ignore",
     },
   },
 

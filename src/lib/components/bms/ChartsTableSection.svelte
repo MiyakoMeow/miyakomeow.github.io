@@ -47,7 +47,9 @@
       (orderIndex.has(String(g.level)) ? defined : others).push(g);
     }
     defined.sort(
-      (a, b) => (orderIndex.get(String(a.level)) ?? 0) - (orderIndex.get(String(b.level)) ?? 0)
+      (a, b) =>
+        (orderIndex.get(String(a.level)) ?? 0) -
+        (orderIndex.get(String(b.level)) ?? 0),
     );
     others.sort((a, b) => {
       const as = String(a.level).trim();
@@ -64,7 +66,14 @@
   }
 
   function segmentColor(index: number, total: number): string {
-    const palette = ["#4caf50", "#2196f3", "#ff9800", "#f44336", "#ce50d8", "#9c27b0"];
+    const palette = [
+      "#4caf50",
+      "#2196f3",
+      "#ff9800",
+      "#f44336",
+      "#ce50d8",
+      "#9c27b0",
+    ];
     if (total <= 0) return palette[1];
     const bins = palette.length;
     const size = Math.ceil(total / bins);
@@ -76,10 +85,19 @@
     const md5 = typeof chart.md5 === "string" ? chart.md5.trim() : "";
     const sha = typeof chart.sha256 === "string" ? chart.sha256.trim() : "";
     return {
-      bmsScoreViewer: `https://bms-score-viewer.pages.dev/view?md5=${encodeURIComponent(md5)}`,
-      lr2ir: `http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=${encodeURIComponent(md5)}`,
-      mocha: `https://mocha-repository.info/song.php?sha256=${encodeURIComponent(sha)}`,
-      minir: `https://www.gaftalk.com/minir/#/viewer/song/${encodeURIComponent(sha)}/0`,
+      bmsScoreViewer: `https://bms-score-viewer.pages.dev/view?md5=${
+        encodeURIComponent(md5)
+      }`,
+      lr2ir:
+        `http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=${
+          encodeURIComponent(md5)
+        }`,
+      mocha: `https://mocha-repository.info/song.php?sha256=${
+        encodeURIComponent(sha)
+      }`,
+      minir: `https://www.gaftalk.com/minir/#/viewer/song/${
+        encodeURIComponent(sha)
+      }/0`,
     };
   }
 
@@ -138,10 +156,14 @@
                 class="flex cursor-pointer items-center justify-center gap-2 rounded-[25px] border-2 border-transparent px-6 py-3 text-[1.1rem] font-bold text-white opacity-70 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] active:-translate-y-px active:opacity-90"
                 type="button"
                 on:click={() => scrollToDifficultyGroup(group.level)}
-                style={`background-color:${segmentColor(idx, displayGroups.length)};border-color:${segmentColor(idx, displayGroups.length)};`}
+                style={`background-color:${
+                  segmentColor(idx, displayGroups.length)
+                };border-color:${segmentColor(idx, displayGroups.length)};`}
               >
                 {group.level}
-                <span class="rounded-[10px] bg-black/20 px-2 py-[0.1rem] text-[0.9rem] opacity-90">
+                <span
+                  class="rounded-[10px] bg-black/20 px-2 py-[0.1rem] text-[0.9rem] opacity-90"
+                >
                   ({group.charts.length})
                 </span>
               </button>
@@ -161,11 +183,16 @@
               >
                 难度 {group.level}
               </span>
-              <span class="text-[1.1rem] text-white/80"> {group.charts.length} 个谱面 </span>
+              <span class="text-[1.1rem] text-white/80">
+                {group.charts.length} 个谱面
+              </span>
             </div>
           </div>
 
-          <div class="overflow-x-auto rounded-[10px] border border-white/10 bg-black/20" use:setRef>
+          <div
+            class="overflow-x-auto rounded-[10px] border border-white/10 bg-black/20"
+            use:setRef
+          >
             <table class="w-full min-w-225 table-fixed border-collapse">
               <colgroup>
                 <col style="width: 7%" />
@@ -214,9 +241,11 @@
                   {@const bundleUrl = resolvedBundleUrl(chart)}
                   {@const diffUrl = resolvedDiffUrl(chart)}
                   {@const bmsLinks = getBmsLinks(chart)}
-                  {@const chartJson = { ...chart, groupLevel: group.level }}
+                  {@const               chartJson = { ...chart, groupLevel: group.level }}
                   <tr class="hover:bg-white/5">
-                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
+                    <td
+                      class="border-b border-white/5 p-4 wrap-break-word text-white/90"
+                    >
                       <span
                         class="inline-block min-w-7.5 rounded-xl px-2 py-1 text-center text-[0.85rem] font-semibold text-white"
                         style={`background-color:${groupColor};`}
@@ -224,7 +253,9 @@
                         {group.level}
                       </span>
                     </td>
-                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
+                    <td
+                      class="border-b border-white/5 p-4 wrap-break-word text-white/90"
+                    >
                       <div class="flex flex-row flex-wrap gap-[0.3rem]">
                         {#if bundleUrl}
                           <a
@@ -250,7 +281,9 @@
                         {/if}
                       </div>
                     </td>
-                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
+                    <td
+                      class="border-b border-white/5 p-4 wrap-break-word text-white/90"
+                    >
                       <div class="flex flex-wrap justify-center gap-[0.4rem]">
                         {#if hasMd5(chart)}
                           <a
@@ -302,21 +335,31 @@
                         {/if}
                       </div>
                     </td>
-                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
+                    <td
+                      class="border-b border-white/5 p-4 wrap-break-word text-white/90"
+                    >
                       <strong
                         class="cursor-default"
                         use:jsonPreview={{
                           preview: chartPreview,
-                          options: { value: chartJson, label: "谱面 JSON", maxHeightRem: 14 },
+                          options: {
+                            value: chartJson,
+                            label: "谱面 JSON",
+                            maxHeightRem: 14,
+                          },
                         }}
                       >
                         {chart.title || "未知标题"}
                       </strong>
                     </td>
-                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
+                    <td
+                      class="border-b border-white/5 p-4 wrap-break-word text-white/90"
+                    >
                       {chart.artist || "未知艺术家"}
                     </td>
-                    <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
+                    <td
+                      class="border-b border-white/5 p-4 wrap-break-word text-white/90"
+                    >
                       {chart.comment || ""}
                     </td>
                   </tr>

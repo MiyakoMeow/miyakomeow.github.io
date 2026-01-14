@@ -9,7 +9,6 @@
   } from "$lib/components/FloatingToc.svelte";
   import QuickActions from "$lib/components/QuickActions.svelte";
   import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
-  import type { PageData } from "./$types";
 
   interface ChartData {
     title?: string;
@@ -43,10 +42,8 @@
     totalSteps: number;
   }
 
-  let { data }: { data: PageData } = $props();
-
-  let headerUrl = $derived(data.headerUrl);
-  let originUrl = $derived(data.originUrl);
+  const headerUrl = "/bms/table/self-sp/header.json";
+  let originUrl = $derived(null);
 
   let pageTitle = $state("加载难度表header中");
 
@@ -278,7 +275,7 @@
 <ProfileCard />
 <BreadcrumbNav
   items={breadcrumbs}
-  sessionKey={`breadcrumb-bms-table-${headerUrl}`}
+  sessionKey="breadcrumb-bms-table-self-sp"
   initiallyOpen={false}
 />
 <div
@@ -305,44 +302,6 @@
       ），然后在BeMusicSeeker或beatoraja中，粘贴至对应选项处。
       {#if copied}
         <span class="ml-2 text-[#4caf50]">已复制</span>
-      {/if}
-    </div>
-    <div class="mt-2 text-[1.2rem] text-white/70 italic">
-      {#if originUrl}
-        <a
-          class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
-          href={originUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          原链接
-        </a>
-      {/if}
-      {#if originUrl && headerUrl}
-        <span class="mx-2"> | </span>
-      {/if}
-      {#if headerUrl}
-        <a
-          class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
-          href={headerUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          查看header.json
-        </a>
-      {/if}
-      {#if (headerUrl || originUrl) && dataFetchUrl}
-        <span class="mx-2">|</span>
-      {/if}
-      {#if dataFetchUrl}
-        <a
-          class="m-0 cursor-pointer border-0 bg-transparent p-0 font-medium text-[#64b5f6] underline hover:text-[#42a5f5]"
-          href={dataFetchUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          查看data.json
-        </a>
       {/if}
     </div>
   </div>

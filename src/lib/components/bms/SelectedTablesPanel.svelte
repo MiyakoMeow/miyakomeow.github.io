@@ -30,7 +30,9 @@
       if (!t.url) continue;
       const mirrorAbs = new URL(t.url, window.location.origin).toString();
       const rawOri = String(t.url_ori || "").trim();
-      const oriAbs = rawOri.length > 0 ? new URL(rawOri, window.location.origin).toString() : "";
+      const oriAbs = rawOri.length > 0
+        ? new URL(rawOri, window.location.origin).toString()
+        : "";
       m.set(mirrorAbs, oriAbs);
     }
     return m;
@@ -59,7 +61,11 @@
           type="button"
           use:jsonPreview={{
             preview: mirrorPreview,
-            options: { value: selectedMirrorArray, label: "镜像链接 JSON", maxHeightRem: 12 },
+            options: {
+              value: selectedMirrorArray,
+              label: "镜像链接 JSON",
+              maxHeightRem: 12,
+            },
           }}
         >
           镜像链接 JSON
@@ -69,7 +75,11 @@
           type="button"
           use:jsonPreview={{
             preview: originPreview,
-            options: { value: selectedOriginArray, label: "原链接 JSON", maxHeightRem: 12 },
+            options: {
+              value: selectedOriginArray,
+              label: "原链接 JSON",
+              maxHeightRem: 12,
+            },
           }}
         >
           原链接 JSON
