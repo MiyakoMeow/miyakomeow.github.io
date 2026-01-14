@@ -42,14 +42,17 @@
   >
     <h1 class="page-title text-center">BMS</h1>
     <div class="mt-4 flex flex-wrap items-stretch justify-center gap-4">
-      <div
-        class="flex w-80 flex-col rounded-[14px] border border-white/10 bg-black/20 p-5 text-white/50"
+      <a
+        href="/bms/table-mirror"
+        class="flex w-80 flex-col rounded-[14px] border border-white/10 bg-black/20 p-5 text-white no-underline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
       >
-        <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]/50">
+        <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]">
           难度表镜像
         </div>
-        <div class="text-[0.95rem] text-white/50">暂未迁移</div>
-      </div>
+        <div class="text-[0.95rem] text-white/80">
+          BMS 难度表镜像列表（支持多语言搜索）
+        </div>
+      </a>
       <div
         class="flex w-80 flex-col rounded-[14px] border border-white/10 bg-black/20 p-5 text-white/50"
       >
