@@ -16,6 +16,9 @@ jobs:
       - name: Install dependencies
         run: |
           deno install
+      - name: Check
+        run: |
+          deno task check
       - name: Run development server check
         run: |
           deno task dev --host &

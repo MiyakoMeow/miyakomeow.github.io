@@ -15,6 +15,9 @@ jobs:
       - name: Install dependencies
         run: |
           deno install
+      - name: Check
+        run: |
+          deno check
       - name: Build
         run: |
           deno task build
