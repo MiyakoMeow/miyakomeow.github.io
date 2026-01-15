@@ -271,6 +271,10 @@
   });
 </script>
 
+<svelte:head>
+  <meta name="bmstable" content="https://miyakomeow.github.io/bms/table/self-sp/header.json" />
+</svelte:head>
+
 <StarryBackground />
 <ProfileCard />
 <BreadcrumbNav
