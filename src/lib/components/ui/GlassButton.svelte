@@ -51,7 +51,6 @@
     Object.entries({
       backgroundColor: "rgba(255, 255, 255, 0.1)",
       border: "1px solid rgba(255, 255, 255, 0.2)",
-      backdropFilter: "blur(10px)",
       boxShadow: "none",
       transition:
         "background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease",
@@ -88,7 +87,7 @@
     {href}
     {target}
     {rel}
-    class="relative inline-block rounded-xl font-medium text-white no-underline cursor-pointer {sizeConfig[size]} {className}"
+    class="backdrop-blur relative inline-block rounded-xl font-medium text-white no-underline cursor-pointer {sizeConfig[size]} {className}"
     class:hover:-translate-y-0.5={hoverLift}
     class:active:translate-y-0={clickShrink}
     class:active:scale-95={clickShrink}
@@ -105,7 +104,7 @@
     {type}
     {disabled}
     {onclick}
-    class="relative inline-block rounded-xl font-medium text-white cursor-pointer {sizeConfig[size]} {className}"
+    class="backdrop-blur relative inline-block rounded-xl font-medium text-white cursor-pointer {sizeConfig[size]} {className}"
     class:opacity-50={disabled}
     class:cursor-not-allowed={disabled}
     class:hover:-translate-y-0.5={hoverLift && !disabled}

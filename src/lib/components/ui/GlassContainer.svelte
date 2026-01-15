@@ -60,7 +60,6 @@
 
   const containerStyleString = $derived(
     Object.entries({
-      backdropFilter: "blur(10px)",
       boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
       transition:
         "background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
@@ -74,7 +73,7 @@
 
 <div
   {id}
-  class="relative block text-white {paddingConfig[padding]} {roundedConfig[rounded]} {className}"
+  class="backdrop-blur relative block text-white {paddingConfig[padding]} {roundedConfig[rounded]} {className}"
   class:animate-fadeIn={animate}
   style={containerStyleString}
 >

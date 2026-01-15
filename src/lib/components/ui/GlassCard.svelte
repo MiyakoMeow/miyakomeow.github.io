@@ -49,9 +49,8 @@
 
   const baseStyleString = $derived(
     Object.entries({
-      backgroundColor: "rgba(0, 0, 0, 0.2)",
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
       border: "1px solid rgba(255, 255, 255, 0.1)",
-      backdropFilter: "blur(10px)",
       boxShadow: "none",
       transition:
         "transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
@@ -86,7 +85,7 @@
     {href}
     {target}
     {rel}
-    class="relative block text-white no-underline {paddingConfig[padding]} {roundedConfig[rounded]} {className}"
+    class="backdrop-blur relative block text-white no-underline {paddingConfig[padding]} {roundedConfig[rounded]} {className}"
     class:hover:-translate-y-0.5={hoverLift}
     class:active:translate-y-0={clickShrink}
     class:active:scale-95={clickShrink}
@@ -102,7 +101,7 @@
   <div
     role="button"
     tabindex="0"
-    class="relative text-white {paddingConfig[padding]} {roundedConfig[rounded]} {className}"
+    class="backdrop-blur relative text-white {paddingConfig[padding]} {roundedConfig[rounded]} {className}"
     class:hover:-translate-y-0.5={hoverLift}
     class:active:translate-y-0={clickShrink}
     class:active:scale-95={clickShrink}
