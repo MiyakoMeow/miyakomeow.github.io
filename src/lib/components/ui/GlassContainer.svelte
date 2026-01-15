@@ -45,23 +45,23 @@
 
   const variantStyles = {
     default: {
-      backgroundColor: "rgb(var(--glass-white-10))",
-      borderColor: "rgb(var(--glass-white-10))",
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      borderColor: "rgba(255, 255, 255, 0.1)",
     },
     light: {
-      backgroundColor: "rgb(var(--glass-white-15))",
-      borderColor: "rgb(var(--glass-white-15))",
+      backgroundColor: "rgba(255, 255, 255, 0.15)",
+      borderColor: "rgba(255, 255, 255, 0.15)",
     },
     dark: {
-      backgroundColor: "rgb(var(--glass-black-20))",
-      borderColor: "rgb(var(--glass-white-05))",
+      backgroundColor: "rgba(0, 0, 0, 0.2)",
+      borderColor: "rgba(255, 255, 255, 0.05)",
     },
   };
 
   const containerStyleString = $derived(
     Object.entries({
       backdropFilter: "blur(10px)",
-      boxShadow: "0 8px 32px rgb(var(--glass-black-30))",
+      boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
       transition:
         "background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
       ...variantStyles[variant],

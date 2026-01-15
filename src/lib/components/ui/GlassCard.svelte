@@ -49,8 +49,8 @@
 
   const baseStyleString = $derived(
     Object.entries({
-      backgroundColor: "rgb(var(--glass-black-20))",
-      borderColor: "rgb(var(--glass-white-10))",
+      backgroundColor: "rgba(0, 0, 0, 0.2)",
+      borderColor: "rgba(255, 255, 255, 0.1)",
       backdropFilter: "blur(10px)",
       boxShadow: "none",
       transition:
@@ -64,7 +64,7 @@
   const hoverStyleString = $derived(
     Object.entries({
       backgroundColor: "rgba(255, 255, 255, 0.06)",
-      boxShadow: "0 4px 12px rgb(var(--glass-black-20))",
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
     })
       .map(([key, value]) => `${key}:${value}`)
       .join(";"),
