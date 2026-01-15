@@ -45,22 +45,22 @@
 
   const variantStyles = {
     default: {
-      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      "background-color": "rgba(255, 255, 255, 0.1)",
       border: "1px solid rgba(255, 255, 255, 0.1)",
     },
     light: {
-      backgroundColor: "rgba(255, 255, 255, 0.15)",
+      "background-color": "rgba(255, 255, 255, 0.15)",
       border: "1px solid rgba(255, 255, 255, 0.15)",
     },
     dark: {
-      backgroundColor: "rgba(0, 0, 0, 0.2)",
+      "background-color": "rgba(0, 0, 0, 0.2)",
       border: "1px solid rgba(255, 255, 255, 0.05)",
     },
   };
 
   const containerStyleString = $derived(
     Object.entries({
-      boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+      "box-shadow": "0 8px 32px rgba(0, 0, 0, 0.3)",
       transition:
         "background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
       ...variantStyles[variant],
