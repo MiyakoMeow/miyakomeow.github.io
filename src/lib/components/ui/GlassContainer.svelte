@@ -46,15 +46,15 @@
   const variantStyles = {
     default: {
       backgroundColor: "rgba(255, 255, 255, 0.1)",
-      borderColor: "rgba(255, 255, 255, 0.1)",
+      border: "1px solid rgba(255, 255, 255, 0.1)",
     },
     light: {
       backgroundColor: "rgba(255, 255, 255, 0.15)",
-      borderColor: "rgba(255, 255, 255, 0.15)",
+      border: "1px solid rgba(255, 255, 255, 0.15)",
     },
     dark: {
       backgroundColor: "rgba(0, 0, 0, 0.2)",
-      borderColor: "rgba(255, 255, 255, 0.05)",
+      border: "1px solid rgba(255, 255, 255, 0.05)",
     },
   };
 
