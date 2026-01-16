@@ -271,6 +271,10 @@
   });
 </script>
 
+<svelte:head>
+  <meta name="bmstable" content="./header.json" />
+</svelte:head>
+
 <StarryBackground />
 <ProfileCard />
 <BreadcrumbNav
