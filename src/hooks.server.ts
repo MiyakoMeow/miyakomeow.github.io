@@ -28,9 +28,15 @@ export const handle: Handle = async ({ event, resolve }) => {
   let modifiedHtml = html;
 
   if (isBmsTablePath(pathname)) {
-    // BMS表格页面，注入bmstable meta
-    const bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
-    modifiedHtml = html.replace("%bmstable.meta%", bmstableMeta);
+    // BMS表格页面 - 检查是否已通过 <svelte:head> 注入 meta 标签
+    if (!html.includes('<meta name="bmstable"')) {
+      // 如果没有，使用相对路径作为后备
+      const bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
+      modifiedHtml = html.replace("%bmstable.meta%", bmstableMeta);
+    } else {
+      // 已有 meta 标签，移除占位符
+      modifiedHtml = html.replace("%bmstable.meta%", "");
+    }
   } else {
     // 非BMS表格页面，移除占位符
     modifiedHtml = html.replace("%bmstable.meta%", "");
