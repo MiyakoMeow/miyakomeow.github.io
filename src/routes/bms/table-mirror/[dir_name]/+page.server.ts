@@ -41,7 +41,7 @@ export async function entries() {
  * 服务端加载数据
  * 在构建时（预渲染）和运行时都会执行
  */
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
   const { dir_name } = params;
 
   try {
@@ -60,6 +60,9 @@ export const load: PageServerLoad = async ({ params }) => {
     if (!tableItem) {
       throw error(404, `Table not found: ${dir_name}`);
     }
+
+    // 设置 locals，告诉 hooks 需要注入完整的 headerUrl
+    locals.bmstableMeta = tableItem.url;
 
     return {
       dir_name,
