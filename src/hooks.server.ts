@@ -1,4 +1,6 @@
 import type { Handle } from "@sveltejs/kit";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 // BMS表格路径模式
 const BMS_TABLE_PATTERNS = [
@@ -10,6 +12,24 @@ const BMS_TABLE_PATTERNS = [
 // 检查是否为BMS表格页面
 function isBmsTablePath(pathname: string): boolean {
   return BMS_TABLE_PATTERNS.some((pattern) => pattern.test(pathname));
+}
+
+/**
+ * 从 tables_proxy.json 获取 dir_name 对应的 headerUrl
+ */
+function getHeaderUrlForDirName(dirName: string): string | null {
+  try {
+    const proxyPath = join("static", "bms", "table-mirror", "tables_proxy.json");
+    const tablesProxy = JSON.parse(
+      readFileSync(proxyPath, "utf-8")
+    ) as Array<{ dir_name: string; url: string }>;
+
+    const table = tablesProxy.find((t) => t.dir_name === dirName);
+    return table?.url || null;
+  } catch (error) {
+    console.error(`Failed to load headerUrl for ${dirName}:`, error);
+    return null;
+  }
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -28,19 +48,29 @@ export const handle: Handle = async ({ event, resolve }) => {
   let modifiedHtml = html;
 
   if (isBmsTablePath(pathname)) {
-    // BMS表格页面 - 对于 table-mirror 路径，不在这里处理（由 Vite 插件处理）
-    // 只处理 self-sp 和 self-dp
-    const isSelfTable =
-      /^\/bms\/table\/self-sp\/?$/.test(pathname) ||
-      /^\/bms\/table\/self-dp\/?$/.test(pathname);
+    let bmstableMeta: string;
 
-    if (isSelfTable) {
-      const bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
-      modifiedHtml = html.replace("%bmstable.meta%", bmstableMeta);
+    // 检查是否为 table-mirror 路径
+    const tableMirrorMatch = pathname.match(/^\/bms\/table-mirror\/([^/]+)\/?$/);
+
+    if (tableMirrorMatch) {
+      // table-mirror 路径，从 tables_proxy.json 获取完整的 headerUrl
+      const dirName = decodeURIComponent(tableMirrorMatch[1]);
+      const headerUrl = getHeaderUrlForDirName(dirName);
+
+      if (headerUrl) {
+        bmstableMeta = `<meta name="bmstable" content="${headerUrl}" />`;
+      } else {
+        // 找不到对应的 URL，使用相对路径作为后备
+        console.warn(`No headerUrl found for ${dirName}, using relative path`);
+        bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
+      }
     } else {
-      // table-mirror 路径，完全保留占位符让 Vite 插件处理
-      modifiedHtml = html;
+      // self-sp 或 self-dp，使用相对路径
+      bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
     }
+
+    modifiedHtml = html.replace("%bmstable.meta%", bmstableMeta);
   } else {
     // 非BMS表格页面，移除占位符
     modifiedHtml = html.replace("%bmstable.meta%", "");

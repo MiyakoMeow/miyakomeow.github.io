@@ -16,9 +16,8 @@ function isBmsTablePath(pathname: string): boolean {
   return BMS_TABLE_PATTERNS.some((pattern) => pattern.test(pathname));
 }
 
-// 注意：SvelteKit的静态构建不会执行server hooks
-// 因此我们主要依赖Vite插件来处理构建时的HTML修改
-// 这个hook主要用于开发模式
+// 注意：这个hook主要用于开发模式
+// 构建时由 hooks.server.ts 处理，它会读取 tables_proxy.json 并注入完整的 headerUrl
 export const handle = async ({ event, resolve }: any) => {
   const response = await resolve(event);
 
@@ -35,17 +34,11 @@ export const handle = async ({ event, resolve }: any) => {
   let modifiedHtml = html;
 
   if (isBmsTablePath(pathname)) {
-    // BMS表格页面 - 对于 table-mirror 路径，保留占位符（由 Vite 插件处理）
-    const isTableMirror = /^\/bms\/table-mirror\//.test(pathname);
-
-    if (isTableMirror) {
-      // table-mirror 路径，完全保留占位符让 Vite 插件处理
-      modifiedHtml = html;
-    } else {
-      // self-sp 和 self-dp，替换为相对路径
-      const bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
-      modifiedHtml = html.replace("%bmstable.meta%", bmstableMeta);
-    }
+    // BMS表格页面 - 统一使用相对路径
+    // 注意：开发模式下 table-mirror 也使用相对路径
+    // 构建时由 hooks.server.ts 处理并注入完整的 headerUrl
+    const bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
+    modifiedHtml = html.replace("%bmstable.meta%", bmstableMeta);
   } else {
     // 非BMS表格页面，移除占位符
     modifiedHtml = html.replace("%bmstable.meta%", "");
