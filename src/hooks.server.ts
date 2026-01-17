@@ -2,14 +2,15 @@ import type { Handle } from "@sveltejs/kit";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-// BMS表格路径模式
 const BMS_TABLE_PATTERNS = [
   /^\/bms\/table\/self-sp\/?$/,
   /^\/bms\/table\/self-dp\/?$/,
   /^\/bms\/table-mirror\/[^/]+\/?$/,
 ];
 
-// 检查是否为BMS表格页面
+/**
+ * 检查是否为BMS表格页面
+ */
 function isBmsTablePath(pathname: string): boolean {
   return BMS_TABLE_PATTERNS.some((pattern) => pattern.test(pathname));
 }
@@ -32,51 +33,51 @@ function getHeaderUrlForDirName(dirName: string): string | null {
   }
 }
 
+/**
+ * 生成 bmstable meta 标签内容
+ */
+function generateBmstableMeta(pathname: string): string {
+  // self-sp 或 self-dp，使用相对路径
+  const tableMirrorMatch = pathname.match(/^\/bms\/table-mirror\/([^/]+)\/?$/);
+  if (!tableMirrorMatch) {
+    return `<meta name="bmstable" content="./header.json" />`;
+  }
+
+  // table-mirror 路径，从 tables_proxy.json 获取完整的 headerUrl
+  const dirName = decodeURIComponent(tableMirrorMatch[1]);
+  const headerUrl = getHeaderUrlForDirName(dirName);
+
+  if (headerUrl) {
+    return `<meta name="bmstable" content="${headerUrl}" />`;
+  }
+
+  // 找不到对应的 URL，使用相对路径作为后备
+  console.warn(`No headerUrl found for ${dirName}, using relative path`);
+  return `<meta name="bmstable" content="./header.json" />`;
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
   const response = await resolve(event);
 
-  // 只处理HTML响应
+  // 非HTML响应，直接返回
   const contentType = response.headers.get("content-type");
   if (!contentType?.includes("text/html")) {
     return response;
   }
 
+  const html = await response.text();
   const pathname = event.url.pathname;
 
-  // 读取并修改HTML
-  const html = await response.text();
-  let modifiedHtml = html;
-
+  // BMS表格页面，注入 bmstable meta 标签
   if (isBmsTablePath(pathname)) {
-    let bmstableMeta: string;
-
-    // 检查是否为 table-mirror 路径
-    const tableMirrorMatch = pathname.match(/^\/bms\/table-mirror\/([^/]+)\/?$/);
-
-    if (tableMirrorMatch) {
-      // table-mirror 路径，从 tables_proxy.json 获取完整的 headerUrl
-      const dirName = decodeURIComponent(tableMirrorMatch[1]);
-      const headerUrl = getHeaderUrlForDirName(dirName);
-
-      if (headerUrl) {
-        bmstableMeta = `<meta name="bmstable" content="${headerUrl}" />`;
-      } else {
-        // 找不到对应的 URL，使用相对路径作为后备
-        console.warn(`No headerUrl found for ${dirName}, using relative path`);
-        bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
-      }
-    } else {
-      // self-sp 或 self-dp，使用相对路径
-      bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
-    }
-
-    modifiedHtml = html.replace("%bmstable.meta%", bmstableMeta);
-  } else {
-    // 非BMS表格页面，移除占位符
-    modifiedHtml = html.replace("%bmstable.meta%", "");
+    const bmstableMeta = generateBmstableMeta(pathname);
+    return new Response(html.replace("%bmstable.meta%", bmstableMeta), {
+      headers: response.headers,
+    });
   }
 
-  return new Response(modifiedHtml, {
+  // 非BMS表格页面，移除占位符
+  return new Response(html.replace("%bmstable.meta%", ""), {
     headers: response.headers,
   });
 };
