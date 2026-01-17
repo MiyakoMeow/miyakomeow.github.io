@@ -28,14 +28,18 @@ export const handle: Handle = async ({ event, resolve }) => {
   let modifiedHtml = html;
 
   if (isBmsTablePath(pathname)) {
-    // BMS表格页面 - 检查是否已通过 <svelte:head> 注入 meta 标签
-    if (!html.includes('<meta name="bmstable"')) {
-      // 如果没有，使用相对路径作为后备
+    // BMS表格页面 - 对于 table-mirror 路径，不在这里处理（由 Vite 插件处理）
+    // 只处理 self-sp 和 self-dp
+    const isSelfTable =
+      /^\/bms\/table\/self-sp\/?$/.test(pathname) ||
+      /^\/bms\/table\/self-dp\/?$/.test(pathname);
+
+    if (isSelfTable) {
       const bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
       modifiedHtml = html.replace("%bmstable.meta%", bmstableMeta);
     } else {
-      // 已有 meta 标签，移除占位符
-      modifiedHtml = html.replace("%bmstable.meta%", "");
+      // table-mirror 路径，完全保留占位符让 Vite 插件处理
+      modifiedHtml = html;
     }
   } else {
     // 非BMS表格页面，移除占位符

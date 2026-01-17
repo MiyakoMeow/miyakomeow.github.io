@@ -35,12 +35,16 @@ export const handle = async ({ event, resolve }: any) => {
   let modifiedHtml = html;
 
   if (isBmsTablePath(pathname)) {
-    // BMS表格页面 - 检查是否已注入 meta 标签
-    if (!html.includes('<meta name="bmstable"')) {
+    // BMS表格页面 - 对于 table-mirror 路径，保留占位符（由 Vite 插件处理）
+    const isTableMirror = /^\/bms\/table-mirror\//.test(pathname);
+
+    if (isTableMirror) {
+      // table-mirror 路径，完全保留占位符让 Vite 插件处理
+      modifiedHtml = html;
+    } else {
+      // self-sp 和 self-dp，替换为相对路径
       const bmstableMeta = `<meta name="bmstable" content="./header.json" />`;
       modifiedHtml = html.replace("%bmstable.meta%", bmstableMeta);
-    } else {
-      modifiedHtml = html.replace("%bmstable.meta%", "");
     }
   } else {
     // 非BMS表格页面，移除占位符
