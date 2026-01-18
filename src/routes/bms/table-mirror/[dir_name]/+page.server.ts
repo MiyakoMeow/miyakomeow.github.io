@@ -22,7 +22,7 @@ export async function entries() {
 
     // 过滤出有效的 dir_name
     const validTables = tables_proxy.filter(
-      (item) => item.dir_name && item.dir_name.trim().length > 0
+      (item) => item.dir_name && item.dir_name.trim().length > 0,
     );
 
     console.log(`[Prerender] Found ${validTables.length} tables to prerender`);

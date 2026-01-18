@@ -19,7 +19,8 @@ export const handle = async ({ event, resolve }: any) => {
   // 检查是否设置了 bmstableMeta
   if (event.locals.bmstableMeta) {
     const html = await response.text();
-    const bmstableMeta = `<meta name="bmstable" content="${event.locals.bmstableMeta}" />`;
+    const bmstableMeta =
+      `<meta name="bmstable" content="${event.locals.bmstableMeta}" />`;
     return new Response(html.replace("%bmstable.meta%", bmstableMeta), {
       headers: response.headers,
     });
