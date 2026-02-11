@@ -16,7 +16,7 @@ const gitignorePath = path.resolve(__dirname, '.gitignore');
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
   {
-    ignores: ['.svelte-kit/', 'build/'],
+    ignores: ['.svelte-kit/', 'build/', '**/*.generated.ts'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
