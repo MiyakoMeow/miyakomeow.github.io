@@ -1,4 +1,4 @@
-import matter from "gray-matter";
+import matter from 'gray-matter';
 
 export interface BlogPostMetadata {
   title: string;
@@ -32,10 +32,10 @@ export function parseFrontmatter(content: string): {
  */
 export function extractFirstSentence(markdown: string): string {
   // 移除 frontmatter
-  const withoutFrontmatter = markdown.replace(/^---[\s\S]*?---\s*/, "");
+  const withoutFrontmatter = markdown.replace(/^---[\s\S]*?---\s*/, '');
 
   // 移除标题行
-  const withoutHeadings = withoutFrontmatter.replace(/^#+\s+.*$/gm, "");
+  const withoutHeadings = withoutFrontmatter.replace(/^#+\s+.*$/gm, '');
 
   // 按换行符分割,取第一个非空行
   const lines = withoutHeadings.split(/\n/);
@@ -45,12 +45,12 @@ export function extractFirstSentence(markdown: string): string {
     const trimmed = firstLine.trim();
     // 如果第一行过长(超过 150 字符),截取并添加省略号
     if (trimmed.length > 150) {
-      return trimmed.slice(0, 150) + "...";
+      return trimmed.slice(0, 150) + '...';
     }
     return trimmed;
   }
 
   // 如果没有找到有效行,返回前 100 个字符
   const fallback = withoutHeadings.slice(0, 100).trim();
-  return fallback.length > 0 ? fallback + "..." : "暂无预览";
+  return fallback.length > 0 ? fallback + '...' : '暂无预览';
 }

@@ -1,4 +1,4 @@
-import type { Config } from 'prettier'
+import type { Config } from 'prettier';
 
 const config: Config = {
   // 基础格式化选项
@@ -23,6 +23,6 @@ const config: Config = {
   useTabs: false,
   trailingComma: 'es5',
   printWidth: 100
-}
+};
 
-export default config
+export default config;

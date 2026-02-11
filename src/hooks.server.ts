@@ -1,4 +1,4 @@
-import type { Handle } from "@sveltejs/kit";
+import type { Handle } from '@sveltejs/kit';
 
 /**
  * SvelteKit 服务器端 hooks
@@ -8,8 +8,8 @@ export const handle: Handle = async ({ event, resolve }) => {
   const response = await resolve(event);
 
   // 非HTML响应，直接返回
-  const contentType = response.headers.get("content-type");
-  if (!contentType?.includes("text/html")) {
+  const contentType = response.headers.get('content-type');
+  if (!contentType?.includes('text/html')) {
     return response;
   }
 
@@ -18,14 +18,14 @@ export const handle: Handle = async ({ event, resolve }) => {
     const html = await response.text();
     const bmstableMeta =
       `<meta name="bmstable" content="${event.locals.bmstableMeta}" />`;
-    return new Response(html.replace("%bmstable.meta%", bmstableMeta), {
+    return new Response(html.replace('%bmstable.meta%', bmstableMeta), {
       headers: response.headers,
     });
   }
 
   // 否则移除占位符
   const html = await response.text();
-  return new Response(html.replace("%bmstable.meta%", ""), {
+  return new Response(html.replace('%bmstable.meta%', ''), {
     headers: response.headers,
   });
 };

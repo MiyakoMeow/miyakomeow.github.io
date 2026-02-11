@@ -1,4 +1,4 @@
-declare module "opencc-js" {
+declare module 'opencc-js' {
   export interface ConverterOptions {
     from: string;
     to: string;
