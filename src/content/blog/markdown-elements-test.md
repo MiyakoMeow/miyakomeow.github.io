@@ -1,6 +1,6 @@
 ---
-title: "Markdown 元素测试页"
-date: "2025-12-26"
+title: 'Markdown 元素测试页'
+date: '2025-12-26'
 order: 1
 ---
 
@@ -32,7 +32,7 @@ order: 1
 
 > 这是一段引用。
 >
->> 这是嵌套引用。
+> > 这是嵌套引用。
 
 ## 列表
 
@@ -82,12 +82,12 @@ order: 1
 
 ```ts
 type User = {
-  id: number;
-  name: string;
-};
+  id: number
+  name: string
+}
 
 export function greet(user: User): string {
-  return `Hello, ${user.name}`;
+  return `Hello, ${user.name}`
 }
 ```
 

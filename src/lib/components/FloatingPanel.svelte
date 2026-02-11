@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { cubicInOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
-  import { GlassPanel } from "$lib/components/ui";
+  import { onMount } from 'svelte'
+  import { cubicInOut } from 'svelte/easing'
+  import { fade } from 'svelte/transition'
+  import { GlassPanel } from '$lib/components/ui'
 
   interface Props {
-    sessionKey: string;
-    initiallyOpen: boolean;
-    closeDelayMs?: number;
-    autoCloseMs?: number;
-    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    size?: "small" | "medium" | "large";
-    ariaLabel?: string;
-    containerClass?: string;
-    panelClass?: string;
-    children?: import("svelte").Snippet;
-    icon?: import("svelte").Snippet;
+    sessionKey: string
+    initiallyOpen: boolean
+    closeDelayMs?: number
+    autoCloseMs?: number
+    position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+    size?: 'small' | 'medium' | 'large'
+    ariaLabel?: string
+    containerClass?: string
+    panelClass?: string
+    children?: import('svelte').Snippet
+    icon?: import('svelte').Snippet
   }
 
   const {
@@ -23,185 +23,173 @@
     initiallyOpen,
     closeDelayMs = 500,
     autoCloseMs = 3000,
-    position = "top-right",
-    size = "medium",
-    ariaLabel = "面板",
-    containerClass = "",
-    panelClass = "",
+    position = 'top-right',
+    size = 'medium',
+    ariaLabel = '面板',
+    containerClass = '',
+    panelClass = '',
     children,
     icon,
-  }: Props = $props();
+  }: Props = $props()
 
-  const fadeDurationMs = 200;
+  const fadeDurationMs = 200
 
   function getSessionFlag(key: string): boolean {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false
     try {
-      return window.sessionStorage.getItem(key) === "1";
+      return window.sessionStorage.getItem(key) === '1'
     } catch {
-      return false;
+      return false
     }
   }
 
   // 计算初始打开状态，避免警告
   const getInitialOpen = () => {
-    const initialFlag = getSessionFlag(sessionKey);
-    return initiallyOpen && !initialFlag;
-  };
-  let open = $state(getInitialOpen());
-  let enableTransitions = $state(false);
+    const initialFlag = getSessionFlag(sessionKey)
+    return initiallyOpen && !initialFlag
+  }
+  let open = $state(getInitialOpen())
+  let enableTransitions = $state(false)
 
-  let container: HTMLDivElement | undefined;
+  let container: HTMLDivElement | undefined
 
-  let closeTimer: ReturnType<typeof setTimeout> | undefined;
-  let autoCloseTimer: ReturnType<typeof setTimeout> | undefined;
-  let isPointerInside = false;
+  let closeTimer: ReturnType<typeof setTimeout> | undefined
+  let autoCloseTimer: ReturnType<typeof setTimeout> | undefined
+  let isPointerInside = false
 
   function clearTimers(): void {
-    if (closeTimer) clearTimeout(closeTimer);
-    closeTimer = undefined;
-    if (autoCloseTimer) clearTimeout(autoCloseTimer);
-    autoCloseTimer = undefined;
+    if (closeTimer) clearTimeout(closeTimer)
+    closeTimer = undefined
+    if (autoCloseTimer) clearTimeout(autoCloseTimer)
+    autoCloseTimer = undefined
   }
 
   function openNow(): void {
-    if (closeTimer) clearTimeout(closeTimer);
-    closeTimer = undefined;
-    if (open) return;
-    open = true;
+    if (closeTimer) clearTimeout(closeTimer)
+    closeTimer = undefined
+    if (open) return
+    open = true
   }
 
   function scheduleClose(): void {
-    if (closeTimer) clearTimeout(closeTimer);
-    if (!open) return;
+    if (closeTimer) clearTimeout(closeTimer)
+    if (!open) return
     closeTimer = setTimeout(() => {
-      open = false;
-      closeTimer = undefined;
-    }, closeDelayMs);
+      open = false
+      closeTimer = undefined
+    }, closeDelayMs)
   }
 
   function closeImmediately(): void {
-    clearTimers();
-    isPointerInside = false;
-    open = false;
+    clearTimers()
+    isPointerInside = false
+    open = false
   }
 
   function onPointerEnter(): void {
-    isPointerInside = true;
-    openNow();
+    isPointerInside = true
+    openNow()
   }
 
   function onPointerMove(): void {
-    openNow();
+    openNow()
   }
 
   function onPointerLeave(): void {
-    isPointerInside = false;
-    scheduleClose();
+    isPointerInside = false
+    scheduleClose()
   }
 
   onMount(() => {
     try {
-      window.sessionStorage.setItem(sessionKey, "1");
+      window.sessionStorage.setItem(sessionKey, '1')
     } catch (e) {
-      void e;
+      void e
     }
 
     const onOutsidePointerDown = (event: PointerEvent) => {
-      if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
-      closeImmediately();
-    };
+      if (!container) return
+      if (event.target instanceof Node && container.contains(event.target)) return
+      closeImmediately()
+    }
 
     const onOutsideKeyDown = (event: KeyboardEvent) => {
-      if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
-      closeImmediately();
-    };
+      if (!container) return
+      if (event.target instanceof Node && container.contains(event.target)) return
+      closeImmediately()
+    }
 
     const onOutsideWheel = (event: WheelEvent) => {
-      if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
-      closeImmediately();
-    };
+      if (!container) return
+      if (event.target instanceof Node && container.contains(event.target)) return
+      closeImmediately()
+    }
 
     const onOutsideFocusIn = (event: FocusEvent) => {
-      if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
-      closeImmediately();
-    };
+      if (!container) return
+      if (event.target instanceof Node && container.contains(event.target)) return
+      closeImmediately()
+    }
 
-    document.addEventListener("pointerdown", onOutsidePointerDown, true);
-    document.addEventListener("keydown", onOutsideKeyDown, true);
-    document.addEventListener("wheel", onOutsideWheel, {
+    document.addEventListener('pointerdown', onOutsidePointerDown, true)
+    document.addEventListener('keydown', onOutsideKeyDown, true)
+    document.addEventListener('wheel', onOutsideWheel, {
       capture: true,
       passive: true,
-    });
-    document.addEventListener("focusin", onOutsideFocusIn, true);
+    })
+    document.addEventListener('focusin', onOutsideFocusIn, true)
 
-    enableTransitions = true;
+    enableTransitions = true
 
     if (open) {
       autoCloseTimer = setTimeout(() => {
-        if (!isPointerInside && open) open = false;
-        autoCloseTimer = undefined;
-      }, autoCloseMs);
+        if (!isPointerInside && open) open = false
+        autoCloseTimer = undefined
+      }, autoCloseMs)
     }
 
     return () => {
-      clearTimers();
-      document.removeEventListener(
-        "pointerdown",
-        onOutsidePointerDown,
-        true,
-      );
-      document.removeEventListener("keydown", onOutsideKeyDown, true);
-      document.removeEventListener("wheel", onOutsideWheel, true);
-      document.removeEventListener("focusin", onOutsideFocusIn, true);
-    };
-  });
+      clearTimers()
+      document.removeEventListener('pointerdown', onOutsidePointerDown, true)
+      document.removeEventListener('keydown', onOutsideKeyDown, true)
+      document.removeEventListener('wheel', onOutsideWheel, true)
+      document.removeEventListener('focusin', onOutsideFocusIn, true)
+    }
+  })
 
   const positionConfig = {
-    "top-left": "top-4 left-4",
-    "top-right": "top-4 right-4",
-    "bottom-left": "bottom-4 left-4",
-    "bottom-right": "bottom-4 right-4",
-  };
+    'top-left': 'top-4 left-4',
+    'top-right': 'top-4 right-4',
+    'bottom-left': 'bottom-4 left-4',
+    'bottom-right': 'bottom-4 right-4',
+  }
 
   const sizeConfig = {
     small: {
-      maxHeightClass: "max-h-[50vh]",
-      widthClass: "w-[min(280px,calc(100vw-2rem))]",
-      paddingClass: "p-4",
+      maxHeightClass: 'max-h-[50vh]',
+      widthClass: 'w-[min(280px,calc(100vw-2rem))]',
+      paddingClass: 'p-4',
     },
     medium: {
-      maxHeightClass: "max-h-[60vh]",
-      widthClass: "w-[min(320px,calc(100vw-2rem))]",
-      paddingClass: "p-4",
+      maxHeightClass: 'max-h-[60vh]',
+      widthClass: 'w-[min(320px,calc(100vw-2rem))]',
+      paddingClass: 'p-4',
     },
     large: {
-      maxHeightClass: "max-h-[600px]",
-      widthClass: "w-[min(380px,calc(100vw-2rem))]",
-      paddingClass: "p-8",
+      maxHeightClass: 'max-h-[600px]',
+      widthClass: 'w-[min(380px,calc(100vw-2rem))]',
+      paddingClass: 'p-8',
     },
-  };
+  }
 
-  const currentPosition = $derived(positionConfig[position]);
+  const currentPosition = $derived(positionConfig[position])
 
   function getPanelClasses(isOpen: boolean): string {
-    const sizeSetting = sizeConfig[size];
+    const sizeSetting = sizeConfig[size]
     if (isOpen) {
-      return `${sizeSetting.maxHeightClass} ${sizeSetting.widthClass} ${sizeSetting.paddingClass} rounded-2xl`;
+      return `${sizeSetting.maxHeightClass} ${sizeSetting.widthClass} ${sizeSetting.paddingClass} rounded-2xl`
     }
-    return `max-h-14 w-14 p-2 rounded-full`;
+    return `max-h-14 w-14 p-2 rounded-full`
   }
 </script>
 
@@ -232,12 +220,12 @@
       aria-expanded={keyedOpen}
       tabindex={0}
       onclick={() => {
-        if (!keyedOpen) openNow();
+        if (!keyedOpen) openNow()
       }}
       onkeydown={(event: KeyboardEvent) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          if (!keyedOpen) openNow();
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          if (!keyedOpen) openNow()
         }
       }}
     >
@@ -266,11 +254,7 @@
           {/if}
         </div>
 
-        <div
-          class=""
-          class:opacity-100={keyedOpen}
-          class:opacity-0={!keyedOpen}
-        >
+        <div class="" class:opacity-100={keyedOpen} class:opacity-0={!keyedOpen}>
           {#if children}
             {@render children()}
           {/if}

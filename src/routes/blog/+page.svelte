@@ -1,12 +1,12 @@
 <script lang="ts">
-  import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
-  import ProfileCard from "$lib/components/ProfileCard.svelte";
-  import StarryBackground from "$lib/components/StarryBackground.svelte";
+  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte'
+  import ProfileCard from '$lib/components/ProfileCard.svelte'
+  import StarryBackground from '$lib/components/StarryBackground.svelte'
 
-  export let data;
-  const { posts } = data;
+  export let data
+  const { posts } = data
 
-  const breadcrumbs = [{ label: "主页", href: "/" }, { label: "博客" }];
+  const breadcrumbs = [{ label: '主页', href: '/' }, { label: '博客' }]
 </script>
 
 <StarryBackground />
@@ -14,9 +14,7 @@
 <BreadcrumbNav items={breadcrumbs} sessionKey="blog-nav" />
 
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
-  <section
-    class="animate-fadeIn mt-8 rounded-[20px] border border-white/10 bg-white/10 p-8"
-  >
+  <section class="animate-fadeIn mt-8 rounded-[20px] border border-white/10 bg-white/10 p-8">
     <h1 class="page-title mb-8 text-center">博客文章</h1>
 
     {#if posts.length === 0}

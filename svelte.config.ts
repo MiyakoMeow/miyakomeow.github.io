@@ -1,11 +1,11 @@
-import { mdsvex } from 'mdsvex';
-import adapter from '@sveltejs/adapter-static';
-import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-import type { Config } from '@sveltejs/kit';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import path from 'node:path';
+import { mdsvex } from 'mdsvex'
+import adapter from '@sveltejs/adapter-static'
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
+import type { Config } from '@sveltejs/kit'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import path from 'node:path'
 
 const config: Config = {
   // Consult https://svelte.dev/docs/kit/integrations
@@ -14,14 +14,19 @@ const config: Config = {
     mdsvex({
       extensions: ['.svx', '.md'],
       remarkPlugins: [remarkGfm, remarkMath],
-      rehypePlugins: [[rehypeKatex, {
-        strict: 'warn',
-        throwOnError: false,
-        macros: {
-          '\\N': '\\mathbb{N}',
-          '\\Z': '\\mathbb{Z}',
-        },
-      }]],
+      rehypePlugins: [
+        [
+          rehypeKatex,
+          {
+            strict: 'warn',
+            throwOnError: false,
+            macros: {
+              '\\N': '\\mathbb{N}',
+              '\\Z': '\\mathbb{Z}',
+            },
+          },
+        ],
+      ],
     }),
     vitePreprocess(),
   ],
@@ -46,6 +51,6 @@ const config: Config = {
   },
 
   extensions: ['.svelte', '.svx', '.md'],
-};
+}
 
-export default config;
+export default config

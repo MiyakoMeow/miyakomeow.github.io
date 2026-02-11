@@ -1,9 +1,9 @@
-import type { PageLoad } from './$types';
-import { formatBlogPostTitle } from '$lib/utils/title';
+import type { PageLoad } from './$types'
+import { formatBlogPostTitle } from '$lib/utils/title'
 
 export const load: PageLoad = async ({ params }) => {
   try {
-    const post = await import(`$content/blog/${params.slug}.md`);
+    const post = await import(`$content/blog/${params.slug}.md`)
 
     return {
       post: {
@@ -14,8 +14,8 @@ export const load: PageLoad = async ({ params }) => {
       },
       component: post.default,
       title: formatBlogPostTitle(post.title || '文章'),
-    };
+    }
   } catch (_e) {
-    throw new Error(`Post not found: ${params.slug}`);
+    throw new Error(`Post not found: ${params.slug}`)
   }
-};
+}

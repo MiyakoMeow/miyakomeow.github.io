@@ -1,18 +1,18 @@
 <script lang="ts">
-  import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
-  import ProfileCard from "$lib/components/ProfileCard.svelte";
-  import FloatingToc from "$lib/components/FloatingToc.svelte";
-  import MarkdownContent from "$lib/components/MarkdownContent.svelte";
-  import StarryBackground from "$lib/components/StarryBackground.svelte";
+  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte'
+  import ProfileCard from '$lib/components/ProfileCard.svelte'
+  import FloatingToc from '$lib/components/FloatingToc.svelte'
+  import MarkdownContent from '$lib/components/MarkdownContent.svelte'
+  import StarryBackground from '$lib/components/StarryBackground.svelte'
 
-  export let data;
-  const { post, component } = data;
+  export let data
+  const { post, component } = data
 
   const breadcrumbs = [
-    { label: "主页", href: "/" },
-    { label: "博客", href: "/blog" },
-    { label: post.title || "文章" },
-  ];
+    { label: '主页', href: '/' },
+    { label: '博客', href: '/blog' },
+    { label: post.title || '文章' },
+  ]
 </script>
 
 <StarryBackground />
@@ -21,9 +21,7 @@
 <FloatingToc />
 
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
-  <article
-    class="animate-fadeIn mt-8 rounded-[20px] border border-white/10 bg-white/10 p-8"
-  >
+  <article class="animate-fadeIn mt-8 rounded-[20px] border border-white/10 bg-white/10 p-8">
     <h1 class="page-title mb-4">{post.title}</h1>
     {#if post.date}
       <div class="mb-8 text-white/60">{post.date}</div>

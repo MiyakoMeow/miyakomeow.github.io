@@ -1,5 +1,5 @@
 <script lang="ts">
-  import BmsTablePage from "$lib/components/bms/BmsTablePage.svelte";
+  import BmsTablePage from '$lib/components/bms/BmsTablePage.svelte'
 </script>
 
 <BmsTablePage
