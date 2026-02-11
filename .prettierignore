@@ -1,0 +1,16 @@
+# 依赖
+node_modules/
+.pnpm-store/
+
+# 构建输出
+.svelte-kit/
+build/
+dist/
+
+# 环境文件
+*.log
+.env*
+
+# 其他
+.DS_Store
+coverage/
