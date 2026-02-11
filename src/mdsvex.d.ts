@@ -6,7 +6,7 @@
  */
 
 declare module '*.md' {
-  import type { SvelteComponentTyped } from 'svelte'
+  import type { SvelteComponentTyped } from 'svelte';
 
   // MDSvex 将 Markdown 文件转换为 Svelte 组件
   class MdsvexComponent extends SvelteComponentTyped<
@@ -17,11 +17,11 @@ declare module '*.md' {
     // Markdown 元数据（如果需要可以添加）
   }
 
-  export default MdsvexComponent
+  export default MdsvexComponent;
 }
 
 declare module '*.svx' {
-  import type { SvelteComponentTyped } from 'svelte'
+  import type { SvelteComponentTyped } from 'svelte';
 
   // Svx 文件与 Markdown 文件处理方式相同
   class SvexComponent extends SvelteComponentTyped<
@@ -32,5 +32,5 @@ declare module '*.svx' {
     //
   }
 
-  export default SvexComponent
+  export default SvexComponent;
 }

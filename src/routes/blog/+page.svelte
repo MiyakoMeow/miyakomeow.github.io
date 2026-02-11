@@ -1,12 +1,12 @@
 <script lang="ts">
-  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte'
-  import ProfileCard from '$lib/components/ProfileCard.svelte'
-  import StarryBackground from '$lib/components/StarryBackground.svelte'
+  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte';
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
+  import StarryBackground from '$lib/components/StarryBackground.svelte';
 
-  export let data
-  const { posts } = data
+  export let data;
+  const { posts } = data;
 
-  const breadcrumbs = [{ label: '主页', href: '/' }, { label: '博客' }]
+  const breadcrumbs = [{ label: '主页', href: '/' }, { label: '博客' }];
 </script>
 
 <StarryBackground />

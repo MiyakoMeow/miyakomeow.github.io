@@ -1,25 +1,25 @@
 <script lang="ts">
   interface Props {
     /** 子元素内容 */
-    children?: import('svelte').Snippet
+    children?: import('svelte').Snippet;
     /** 点击链接（可选，提供后变为可点击卡片） */
-    href?: string
+    href?: string;
     /** 自定义类名 */
-    class?: string
+    class?: string;
     /** 内边距变体 */
-    padding?: 'sm' | 'md' | 'lg'
+    padding?: 'sm' | 'md' | 'lg';
     /** 圆角变体 */
-    rounded?: 'md' | 'lg' | 'xl'
+    rounded?: 'md' | 'lg' | 'xl';
     /** 悬停时是否上移 */
-    hoverLift?: boolean
+    hoverLift?: boolean;
     /** 点击时是否缩放 */
-    clickShrink?: boolean
+    clickShrink?: boolean;
     /** 自定义样式对象 */
-    style?: Record<string, string>
+    style?: Record<string, string>;
     /** 链接打开方式 */
-    target?: '_blank' | '_self' | '_parent' | '_top'
+    target?: '_blank' | '_self' | '_parent' | '_top';
     /** rel 属性（用于 target="_blank"） */
-    rel?: string
+    rel?: string;
   }
 
   let {
@@ -33,19 +33,19 @@
     style = {},
     target = undefined,
     rel = undefined,
-  }: Props = $props()
+  }: Props = $props();
 
   const paddingConfig = {
     sm: 'p-4',
     md: 'p-5',
     lg: 'p-6',
-  }
+  };
 
   const roundedConfig = {
     md: 'rounded-[14px]',
     lg: 'rounded-[16px]',
     xl: 'rounded-[18px]',
-  }
+  };
 
   const baseStyleString = $derived(
     Object.entries({
@@ -58,7 +58,7 @@
     })
       .map(([key, value]) => `${key}:${value}`)
       .join(';')
-  )
+  );
 
   const hoverStyleString = $derived(
     Object.entries({
@@ -67,16 +67,16 @@
     })
       .map(([key, value]) => `${key}:${value}`)
       .join(';')
-  )
+  );
 
   function handleMouseEnter(event: MouseEvent) {
-    const target = event.currentTarget as HTMLElement
-    target.setAttribute('style', baseStyleString + ';' + hoverStyleString)
+    const target = event.currentTarget as HTMLElement;
+    target.setAttribute('style', baseStyleString + ';' + hoverStyleString);
   }
 
   function handleMouseLeave(event: MouseEvent) {
-    const target = event.currentTarget as HTMLElement
-    target.setAttribute('style', baseStyleString)
+    const target = event.currentTarget as HTMLElement;
+    target.setAttribute('style', baseStyleString);
   }
 </script>
 

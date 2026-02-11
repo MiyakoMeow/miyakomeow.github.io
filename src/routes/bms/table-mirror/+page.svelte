@@ -1,55 +1,55 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte'
-  import * as OpenCC from 'opencc-js'
-  import GroupedTablesSection from '$lib/components/bms/GroupedTablesSection.svelte'
-  import SelectedTablesPanel from '$lib/components/bms/SelectedTablesPanel.svelte'
-  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte'
-  import ProfileCard from '$lib/components/ProfileCard.svelte'
-  import FloatingToc, { type TocItem } from '$lib/components/FloatingToc.svelte'
-  import QuickActions from '$lib/components/QuickActions.svelte'
-  import StarryBackground from '$lib/components/StarryBackground.svelte'
-  import { GlassCard, GlassContainer } from '$lib/components/ui'
+  import { onMount, tick } from 'svelte';
+  import * as OpenCC from 'opencc-js';
+  import GroupedTablesSection from '$lib/components/bms/GroupedTablesSection.svelte';
+  import SelectedTablesPanel from '$lib/components/bms/SelectedTablesPanel.svelte';
+  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte';
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
+  import FloatingToc, { type TocItem } from '$lib/components/FloatingToc.svelte';
+  import QuickActions from '$lib/components/QuickActions.svelte';
+  import StarryBackground from '$lib/components/StarryBackground.svelte';
+  import { GlassCard, GlassContainer } from '$lib/components/ui';
 
   interface MirrorTableItem {
-    name: string
-    symbol?: string
-    url: string
-    url_ori?: string
-    comment?: string
-    tag1?: string
-    tag2?: string
-    tag_order?: string | number
-    dir_name?: string
+    name: string;
+    symbol?: string;
+    url: string;
+    url_ori?: string;
+    comment?: string;
+    tag1?: string;
+    tag2?: string;
+    tag_order?: string | number;
+    dir_name?: string;
   }
 
   interface Tag2Group {
-    tag2: string
-    items: MirrorTableItem[]
+    tag2: string;
+    items: MirrorTableItem[];
   }
 
   interface Tag1Group {
-    tag1: string
-    order: number
-    subgroups: Tag2Group[]
+    tag1: string;
+    order: number;
+    subgroups: Tag2Group[];
   }
 
   interface LinkItem {
-    href: string
-    title: string
-    desc: string
+    href: string;
+    title: string;
+    desc: string;
   }
 
-  let loading = true
-  let error: string | null = null
+  let loading = true;
+  let error: string | null = null;
 
-  let copied = false
+  let copied = false;
 
-  let tables: MirrorTableItem[] = []
-  let selectedMap: Record<string, boolean> = {}
-  let searchQuery = ''
-  let tocItems: TocItem[] = []
+  let tables: MirrorTableItem[] = [];
+  let selectedMap: Record<string, boolean> = {};
+  let searchQuery = '';
+  let tocItems: TocItem[] = [];
 
-  type StringConverter = (input: string) => string
+  type StringConverter = (input: string) => string;
 
   const searchConverters: StringConverter[] = (() => {
     try {
@@ -58,32 +58,32 @@
         OpenCC.Converter({ from: 'jp', to: 'cn' }),
         OpenCC.Converter({ from: 'cn', to: 'tw' }),
         OpenCC.Converter({ from: 'tw', to: 'cn' }),
-      ]
+      ];
     } catch {
-      return []
+      return [];
     }
-  })()
+  })();
 
   function buildSearchNeedles(raw: string): string[] {
-    const input = raw.trim()
-    if (input.length === 0) return []
+    const input = raw.trim();
+    if (input.length === 0) return [];
 
-    const normalized = input.normalize('NFKC')
-    const needles = new Set<string>()
+    const normalized = input.normalize('NFKC');
+    const needles = new Set<string>();
 
     const add = (value: string) => {
-      const v = value.normalize('NFKC').toLowerCase()
-      if (v.length > 0) needles.add(v)
-    }
+      const v = value.normalize('NFKC').toLowerCase();
+      if (v.length > 0) needles.add(v);
+    };
 
-    add(normalized)
+    add(normalized);
     for (const convert of searchConverters) {
       try {
-        add(convert(normalized))
+        add(convert(normalized));
       } catch {}
     }
 
-    return Array.from(needles)
+    return Array.from(needles);
   }
 
   const links: LinkItem[] = [
@@ -93,28 +93,28 @@
       title: '镜像仓库',
       desc: '查看镜像项目',
     },
-  ]
+  ];
 
   const breadcrumbs = [
     { label: '主页', href: '/' },
     { label: 'BMS', href: '/bms' },
     { label: '难度表镜像' },
-  ]
+  ];
 
   async function copySelected(data: string): Promise<void> {
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(data)
+        await navigator.clipboard.writeText(data);
       } else {
-        const textarea = document.createElement('textarea')
-        textarea.value = data
-        textarea.style.position = 'fixed'
-        textarea.style.opacity = '0'
-        document.body.appendChild(textarea)
-        textarea.focus()
-        textarea.select()
-        await navigator.clipboard.writeText(textarea.value)
-        document.body.removeChild(textarea)
+        const textarea = document.createElement('textarea');
+        textarea.value = data;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        await navigator.clipboard.writeText(textarea.value);
+        document.body.removeChild(textarea);
       }
     } catch {}
   }
@@ -123,16 +123,16 @@
     const tablesJsonPath = new URL(
       '/bms/table-mirror/tables.json',
       window.location.origin
-    ).toString()
-    await copySelected(tablesJsonPath)
-    copied = true
+    ).toString();
+    await copySelected(tablesJsonPath);
+    copied = true;
     setTimeout(() => {
-      copied = false
-    }, 1500)
+      copied = false;
+    }, 1500);
   }
 
-  $: normalizedSearch = searchQuery.trim().toLowerCase()
-  $: searchNeedles = buildSearchNeedles(searchQuery)
+  $: normalizedSearch = searchQuery.trim().toLowerCase();
+  $: searchNeedles = buildSearchNeedles(searchQuery);
   $: filteredTables =
     normalizedSearch.length === 0
       ? tables
@@ -141,37 +141,37 @@
             .filter((v): v is string => typeof v === 'string' && v.length > 0)
             .join('\n')
             .normalize('NFKC')
-            .toLowerCase()
-          return searchNeedles.some((needle) => haystack.includes(needle))
-        })
+            .toLowerCase();
+          return searchNeedles.some((needle) => haystack.includes(needle));
+        });
 
   $: groupedByTags = (() => {
-    const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>()
+    const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>();
 
     filteredTables.forEach((item) => {
-      const tag1 = item.tag1 || '未分类'
-      const tag2 = item.tag2 || '其它'
-      const orderRaw = item.tag_order
+      const tag1 = item.tag1 || '未分类';
+      const tag2 = item.tag2 || '其它';
+      const orderRaw = item.tag_order;
       const order =
-        typeof orderRaw === 'number' ? orderRaw : parseInt(String(orderRaw || '999'), 10)
+        typeof orderRaw === 'number' ? orderRaw : parseInt(String(orderRaw || '999'), 10);
 
       if (!groupsMap.has(tag1)) {
         groupsMap.set(tag1, {
           order,
           tag2Map: new Map<string, MirrorTableItem[]>(),
-        })
+        });
       } else {
-        const existing = groupsMap.get(tag1)!
-        existing.order = Math.min(existing.order, isNaN(order) ? 999 : order)
+        const existing = groupsMap.get(tag1)!;
+        existing.order = Math.min(existing.order, isNaN(order) ? 999 : order);
       }
 
-      const tag2Map = groupsMap.get(tag1)!.tag2Map
+      const tag2Map = groupsMap.get(tag1)!.tag2Map;
       if (!tag2Map.has(tag2)) {
-        tag2Map.set(tag2, [])
+        tag2Map.set(tag2, []);
       }
 
-      tag2Map.get(tag2)!.push(item)
-    })
+      tag2Map.get(tag2)!.push(item);
+    });
 
     const tag1Groups: Tag1Group[] = Array.from(groupsMap.entries()).map(
       ([tag1, { order, tag2Map }]) => {
@@ -180,21 +180,21 @@
           .map(([tag2, items]) => ({
             tag2,
             items: items.sort((x, y) => (x.name || '').localeCompare(y.name || '')),
-          }))
-        return { tag1, order: isNaN(order) ? 999 : order, subgroups }
+          }));
+        return { tag1, order: isNaN(order) ? 999 : order, subgroups };
       }
-    )
+    );
 
-    tag1Groups.sort((a, b) => a.order - b.order || a.tag1.localeCompare(b.tag1))
-    return tag1Groups
-  })()
+    tag1Groups.sort((a, b) => a.order - b.order || a.tag1.localeCompare(b.tag1));
+    return tag1Groups;
+  })();
 
   function slugifyTag(tag: string): string {
     return tag
       .toLowerCase()
       .trim()
       .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '-')
+      .replace(/[^a-z0-9-]/g, '-');
   }
 
   $: {
@@ -207,7 +207,7 @@
         title: `${sg.tag2} (${sg.items.length})`,
         href: `#tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`,
       })),
-    }))
+    }));
 
     tocItems = [
       {
@@ -221,40 +221,40 @@
         href: '#mirror-list',
         children: tagItems,
       },
-    ]
+    ];
   }
 
   async function loadTablesJson(): Promise<void> {
     try {
-      const url = new URL('/bms/table-mirror/tables.json', window.location.origin).toString()
-      const res = await fetch(url, { redirect: 'follow' })
+      const url = new URL('/bms/table-mirror/tables.json', window.location.origin).toString();
+      const res = await fetch(url, { redirect: 'follow' });
       if (!res.ok) {
-        throw new Error(`无法加载tables.json: ${res.status}`)
+        throw new Error(`无法加载tables.json: ${res.status}`);
       }
-      const data = (await res.json()) as unknown
+      const data = (await res.json()) as unknown;
       if (!Array.isArray(data)) {
-        throw new Error('tables.json 格式错误：不是数组')
+        throw new Error('tables.json 格式错误：不是数组');
       }
 
       tables = (data as MirrorTableItem[]).map((item) => {
-        const dir = String(item.dir_name || '').replace(/^\/+|\/+$/g, '')
-        if (!dir) return item
-        return { ...item, url: `/bms/table-mirror/${dir}/` }
-      })
-      error = null
+        const dir = String(item.dir_name || '').replace(/^\/+|\/+$/g, '');
+        if (!dir) return item;
+        return { ...item, url: `/bms/table-mirror/${dir}/` };
+      });
+      error = null;
     } catch (e) {
-      error = e instanceof Error ? e.message : '未知错误'
+      error = e instanceof Error ? e.message : '未知错误';
     } finally {
-      loading = false
+      loading = false;
     }
   }
 
   onMount(() => {
     setTimeout(() => {
-      loadTablesJson()
-    }, 250)
-    tick()
-  })
+      loadTablesJson();
+    }, 250);
+    tick();
+  });
 </script>
 
 <StarryBackground />

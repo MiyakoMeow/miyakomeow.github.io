@@ -1,42 +1,42 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { cubicInOut } from 'svelte/easing'
-  import { fade } from 'svelte/transition'
-  import { resolve } from '$app/paths'
-  import { GlassPanel } from '$lib/components/ui'
+  import { onMount } from 'svelte';
+  import { cubicInOut } from 'svelte/easing';
+  import { fade } from 'svelte/transition';
+  import { resolve } from '$app/paths';
+  import { GlassPanel } from '$lib/components/ui';
 
   interface BreadcrumbItem {
     /** 显示文本 */
-    label: string
+    label: string;
     /** 跳转链接（可选，最后一项通常不提供） */
-    href?: string
+    href?: string;
     /** 图标（可选） */
-    icon?: import('svelte').Snippet
+    icon?: import('svelte').Snippet;
     /** 是否禁用点击 */
-    disabled?: boolean
+    disabled?: boolean;
   }
 
   interface Props {
     /** 面包屑数据数组 */
-    items: BreadcrumbItem[]
+    items: BreadcrumbItem[];
     /** sessionStorage 键名（用于记住已展开状态） */
-    sessionKey: string
+    sessionKey: string;
     /** 初始是否展开 */
-    initiallyOpen?: boolean
+    initiallyOpen?: boolean;
     /** 延迟关闭时间（毫秒） */
-    closeDelayMs?: number
+    closeDelayMs?: number;
     /** 自动关闭时间（毫秒） */
-    autoCloseMs?: number
+    autoCloseMs?: number;
     /** 自定义容器类名 */
-    containerClass?: string
+    containerClass?: string;
     /** 自定义面板类名 */
-    panelClass?: string
+    panelClass?: string;
     /** 面包屑图标（收起状态显示） */
-    icon?: import('svelte').Snippet
+    icon?: import('svelte').Snippet;
     /** 无障碍标签 */
-    ariaLabel?: string
+    ariaLabel?: string;
     /** 分隔符（默认为 "→"） */
-    separator?: string
+    separator?: string;
   }
 
   const {
@@ -50,140 +50,140 @@
     icon,
     ariaLabel = '面包屑导航',
     separator = '→',
-  }: Props = $props()
+  }: Props = $props();
 
-  const fadeDurationMs = 200
+  const fadeDurationMs = 200;
 
   function getSessionFlag(key: string): boolean {
-    if (typeof window === 'undefined') return false
+    if (typeof window === 'undefined') return false;
     try {
-      return window.sessionStorage.getItem(key) === '1'
+      return window.sessionStorage.getItem(key) === '1';
     } catch {
-      return false
+      return false;
     }
   }
 
   // 计算初始打开状态，避免警告
   const getInitialOpen = () => {
-    const initialFlag = getSessionFlag(sessionKey)
-    return initiallyOpen && !initialFlag
-  }
-  let open = $state(getInitialOpen())
-  let enableTransitions = $state(false)
+    const initialFlag = getSessionFlag(sessionKey);
+    return initiallyOpen && !initialFlag;
+  };
+  let open = $state(getInitialOpen());
+  let enableTransitions = $state(false);
 
-  let container: HTMLDivElement | undefined
+  let container: HTMLDivElement | undefined;
 
-  let closeTimer: ReturnType<typeof setTimeout> | undefined
-  let autoCloseTimer: ReturnType<typeof setTimeout> | undefined
-  let isPointerInside = false
+  let closeTimer: ReturnType<typeof setTimeout> | undefined;
+  let autoCloseTimer: ReturnType<typeof setTimeout> | undefined;
+  let isPointerInside = false;
 
   function clearTimers(): void {
-    if (closeTimer) clearTimeout(closeTimer)
-    closeTimer = undefined
-    if (autoCloseTimer) clearTimeout(autoCloseTimer)
-    autoCloseTimer = undefined
+    if (closeTimer) clearTimeout(closeTimer);
+    closeTimer = undefined;
+    if (autoCloseTimer) clearTimeout(autoCloseTimer);
+    autoCloseTimer = undefined;
   }
 
   function openNow(): void {
-    if (closeTimer) clearTimeout(closeTimer)
-    closeTimer = undefined
-    if (open) return
-    open = true
+    if (closeTimer) clearTimeout(closeTimer);
+    closeTimer = undefined;
+    if (open) return;
+    open = true;
   }
 
   function scheduleClose(): void {
-    if (closeTimer) clearTimeout(closeTimer)
-    if (!open) return
+    if (closeTimer) clearTimeout(closeTimer);
+    if (!open) return;
     closeTimer = setTimeout(() => {
-      open = false
-      closeTimer = undefined
-    }, closeDelayMs)
+      open = false;
+      closeTimer = undefined;
+    }, closeDelayMs);
   }
 
   function closeImmediately(): void {
-    clearTimers()
-    isPointerInside = false
-    open = false
+    clearTimers();
+    isPointerInside = false;
+    open = false;
   }
 
   function onPointerEnter(): void {
-    isPointerInside = true
-    openNow()
+    isPointerInside = true;
+    openNow();
   }
 
   function onPointerMove(): void {
-    openNow()
+    openNow();
   }
 
   function onPointerLeave(): void {
-    isPointerInside = false
-    scheduleClose()
+    isPointerInside = false;
+    scheduleClose();
   }
 
   onMount(() => {
     try {
-      window.sessionStorage.setItem(sessionKey, '1')
+      window.sessionStorage.setItem(sessionKey, '1');
     } catch (e) {
-      void e
+      void e;
     }
 
     const onOutsidePointerDown = (event: PointerEvent) => {
-      if (!container) return
-      if (event.target instanceof Node && container.contains(event.target)) return
-      closeImmediately()
-    }
+      if (!container) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
+      closeImmediately();
+    };
 
     const onOutsideKeyDown = (event: KeyboardEvent) => {
-      if (!container) return
-      if (event.target instanceof Node && container.contains(event.target)) return
-      closeImmediately()
-    }
+      if (!container) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
+      closeImmediately();
+    };
 
     const onOutsideWheel = (event: WheelEvent) => {
-      if (!container) return
-      if (event.target instanceof Node && container.contains(event.target)) return
-      closeImmediately()
-    }
+      if (!container) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
+      closeImmediately();
+    };
 
     const onOutsideFocusIn = (event: FocusEvent) => {
-      if (!container) return
-      if (event.target instanceof Node && container.contains(event.target)) return
-      closeImmediately()
-    }
+      if (!container) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
+      closeImmediately();
+    };
 
-    document.addEventListener('pointerdown', onOutsidePointerDown, true)
-    document.addEventListener('keydown', onOutsideKeyDown, true)
+    document.addEventListener('pointerdown', onOutsidePointerDown, true);
+    document.addEventListener('keydown', onOutsideKeyDown, true);
     document.addEventListener('wheel', onOutsideWheel, {
       capture: true,
       passive: true,
-    })
-    document.addEventListener('focusin', onOutsideFocusIn, true)
+    });
+    document.addEventListener('focusin', onOutsideFocusIn, true);
 
-    enableTransitions = true
+    enableTransitions = true;
 
     if (open) {
       autoCloseTimer = setTimeout(() => {
-        if (!isPointerInside && open) open = false
-        autoCloseTimer = undefined
-      }, autoCloseMs)
+        if (!isPointerInside && open) open = false;
+        autoCloseTimer = undefined;
+      }, autoCloseMs);
     }
 
     return () => {
-      clearTimers()
-      document.removeEventListener('pointerdown', onOutsidePointerDown, true)
-      document.removeEventListener('keydown', onOutsideKeyDown, true)
-      document.removeEventListener('wheel', onOutsideWheel, true)
-      document.removeEventListener('focusin', onOutsideFocusIn, true)
-    }
-  })
+      clearTimers();
+      document.removeEventListener('pointerdown', onOutsidePointerDown, true);
+      document.removeEventListener('keydown', onOutsideKeyDown, true);
+      document.removeEventListener('wheel', onOutsideWheel, true);
+      document.removeEventListener('focusin', onOutsideFocusIn, true);
+    };
+  });
 
-  const lastItemIndex = $derived(items.length - 1)
+  const lastItemIndex = $derived(items.length - 1);
 
   function getPanelClasses(isOpen: boolean): string {
     if (isOpen) {
-      return `max-h-16 py-3 px-6 rounded-2xl cursor-default`
+      return `max-h-16 py-3 px-6 rounded-2xl cursor-default`;
     }
-    return `max-h-7 w-14 p-1 rounded-xl cursor-pointer`
+    return `max-h-7 w-14 p-1 rounded-xl cursor-pointer`;
   }
 </script>
 
@@ -214,12 +214,12 @@
       aria-expanded={keyedOpen}
       tabindex={0}
       onclick={() => {
-        if (!keyedOpen) openNow()
+        if (!keyedOpen) openNow();
       }}
       onkeydown={(event: KeyboardEvent) => {
         if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault()
-          if (!keyedOpen) openNow()
+          event.preventDefault();
+          if (!keyedOpen) openNow();
         }
       }}
     >

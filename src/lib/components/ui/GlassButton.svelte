@@ -1,29 +1,29 @@
 <script lang="ts">
   interface Props {
     /** 按钮文本或内容 */
-    children?: import('svelte').Snippet
+    children?: import('svelte').Snippet;
     /** 点击链接（可选，提供后渲染为 <a>） */
-    href?: string
+    href?: string;
     /** 点击类型 */
-    type?: 'button' | 'submit' | 'reset'
+    type?: 'button' | 'submit' | 'reset';
     /** 自定义类名 */
-    class?: string
+    class?: string;
     /** 尺寸变体 */
-    size?: 'sm' | 'md' | 'lg'
+    size?: 'sm' | 'md' | 'lg';
     /** 是否禁用 */
-    disabled?: boolean
+    disabled?: boolean;
     /** 悬停时是否上移 */
-    hoverLift?: boolean
+    hoverLift?: boolean;
     /** 点击时是否缩放 */
-    clickShrink?: boolean
+    clickShrink?: boolean;
     /** 自定义样式对象 */
-    style?: Record<string, string>
+    style?: Record<string, string>;
     /** 点击事件处理 */
-    onclick?: (event: Event) => void
+    onclick?: (event: Event) => void;
     /** 链接打开方式 */
-    target?: '_blank' | '_self' | '_parent' | '_top'
+    target?: '_blank' | '_self' | '_parent' | '_top';
     /** rel 属性 */
-    rel?: string
+    rel?: string;
   }
 
   let {
@@ -39,13 +39,13 @@
     onclick,
     target,
     rel,
-  }: Props = $props()
+  }: Props = $props();
 
   const sizeConfig = {
     sm: 'px-4 py-[0.6rem] text-sm',
     md: 'px-6 py-[0.8rem] text-base',
     lg: 'px-8 py-[1rem] text-lg',
-  }
+  };
 
   const baseStyleString = $derived(
     Object.entries({
@@ -58,7 +58,7 @@
     })
       .map(([key, value]) => `${key}:${value}`)
       .join(';')
-  )
+  );
 
   const hoverStyleString = $derived(
     Object.entries({
@@ -67,18 +67,18 @@
     })
       .map(([key, value]) => `${key}:${value}`)
       .join(';')
-  )
+  );
 
   function handleMouseEnter(event: MouseEvent) {
-    if (disabled) return
-    const target = event.currentTarget as HTMLElement
-    target.setAttribute('style', baseStyleString + ';' + hoverStyleString)
+    if (disabled) return;
+    const target = event.currentTarget as HTMLElement;
+    target.setAttribute('style', baseStyleString + ';' + hoverStyleString);
   }
 
   function handleMouseLeave(event: MouseEvent) {
-    if (disabled) return
-    const target = event.currentTarget as HTMLElement
-    target.setAttribute('style', baseStyleString)
+    if (disabled) return;
+    const target = event.currentTarget as HTMLElement;
+    target.setAttribute('style', baseStyleString);
   }
 </script>
 

@@ -2,56 +2,56 @@
   import JsonPreview, {
     jsonPreview,
     type JsonPreviewHandle,
-  } from '$lib/components/JsonPreview.svelte'
-  import ScrollSyncGroup from '$lib/components/ScrollSyncGroup.svelte'
+  } from '$lib/components/JsonPreview.svelte';
+  import ScrollSyncGroup from '$lib/components/ScrollSyncGroup.svelte';
 
   interface MirrorTableItem {
-    name: string
-    symbol?: string
-    url: string
-    url_ori?: string
-    comment?: string
-    tag1?: string
-    tag2?: string
-    tag_order?: string | number
-    dir_name?: string
+    name: string;
+    symbol?: string;
+    url: string;
+    url_ori?: string;
+    comment?: string;
+    tag1?: string;
+    tag2?: string;
+    tag_order?: string | number;
+    dir_name?: string;
   }
 
   interface Tag2Group {
-    tag2: string
-    items: MirrorTableItem[]
+    tag2: string;
+    items: MirrorTableItem[];
   }
 
   interface Tag1Group {
-    tag1: string
-    order: number
-    subgroups: Tag2Group[]
+    tag1: string;
+    order: number;
+    subgroups: Tag2Group[];
   }
 
   const CheckboxState = {
     Unchecked: 0,
     Indeterminate: 1,
     Checked: 2,
-  } as const
+  } as const;
 
-  type CheckboxState = (typeof CheckboxState)[keyof typeof CheckboxState]
+  type CheckboxState = (typeof CheckboxState)[keyof typeof CheckboxState];
 
-  export let groups: Tag1Group[] = []
-  export let selectedMap: Record<string, boolean> = {}
+  export let groups: Tag1Group[] = [];
+  export let selectedMap: Record<string, boolean> = {};
 
-  let tablePreview: JsonPreviewHandle | undefined
+  let tablePreview: JsonPreviewHandle | undefined;
 
   function compareAscii(a: string, b: string): number {
-    if (a === b) return 0
-    return a < b ? -1 : 1
+    if (a === b) return 0;
+    return a < b ? -1 : 1;
   }
 
   function sortedItems(items: MirrorTableItem[]): MirrorTableItem[] {
     return [...items].sort((a, b) => {
-      const byName = compareAscii(a.name, b.name)
-      if (byName !== 0) return byName
-      return compareAscii(a.url, b.url)
-    })
+      const byName = compareAscii(a.name, b.name);
+      if (byName !== 0) return byName;
+      return compareAscii(a.url, b.url);
+    });
   }
 
   function slugifyTag(tag: string): string {
@@ -59,83 +59,83 @@
       .toLowerCase()
       .trim()
       .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '-')
+      .replace(/[^a-z0-9-]/g, '-');
   }
 
   function scrollToTag1(tag1: string): void {
-    const id = `tag1-group-${slugifyTag(tag1)}`
-    const el = document.getElementById(id)
+    const id = `tag1-group-${slugifyTag(tag1)}`;
+    const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
   function scrollToTag2(tag1: string, tag2: string): void {
-    const id = `tag2-group-${slugifyTag(tag1)}-${slugifyTag(tag2)}`
-    const el = document.getElementById(id)
+    const id = `tag2-group-${slugifyTag(tag1)}-${slugifyTag(tag2)}`;
+    const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
   function getTag1Urls(g: Tag1Group): string[] {
-    const urls: string[] = []
+    const urls: string[] = [];
     for (const sg of g.subgroups) {
       for (const item of sg.items) {
-        urls.push(item.url)
+        urls.push(item.url);
       }
     }
-    return urls
+    return urls;
   }
 
   function getTag2Urls(sg: Tag2Group): string[] {
-    return sg.items.map((item) => item.url)
+    return sg.items.map((item) => item.url);
   }
 
   function aggregateCheckboxState(urls: string[], map: Record<string, boolean>): CheckboxState {
-    if (urls.length === 0) return CheckboxState.Unchecked
-    let selected = 0
-    for (const u of urls) if (map[u]) selected++
-    if (selected === 0) return CheckboxState.Unchecked
-    if (selected === urls.length) return CheckboxState.Checked
-    return CheckboxState.Indeterminate
+    if (urls.length === 0) return CheckboxState.Unchecked;
+    let selected = 0;
+    for (const u of urls) if (map[u]) selected++;
+    if (selected === 0) return CheckboxState.Unchecked;
+    if (selected === urls.length) return CheckboxState.Checked;
+    return CheckboxState.Indeterminate;
   }
 
   function tag1State(g: Tag1Group, map: Record<string, boolean>): CheckboxState {
-    return aggregateCheckboxState(getTag1Urls(g), map)
+    return aggregateCheckboxState(getTag1Urls(g), map);
   }
 
   function tag2State(sg: Tag2Group, map: Record<string, boolean>): CheckboxState {
-    return aggregateCheckboxState(getTag2Urls(sg), map)
+    return aggregateCheckboxState(getTag2Urls(sg), map);
   }
 
   function onTag1Change(checked: boolean, g: Tag1Group): void {
-    const next = { ...selectedMap }
+    const next = { ...selectedMap };
     for (const url of getTag1Urls(g)) {
-      next[url] = checked
+      next[url] = checked;
     }
-    selectedMap = next
+    selectedMap = next;
   }
 
   function onTag2Change(checked: boolean, sg: Tag2Group): void {
-    const next = { ...selectedMap }
+    const next = { ...selectedMap };
     for (const url of getTag2Urls(sg)) {
-      next[url] = checked
+      next[url] = checked;
     }
-    selectedMap = next
+    selectedMap = next;
   }
 
   function onRowChange(checked: boolean, url: string): void {
-    selectedMap = { ...selectedMap, [url]: checked }
+    selectedMap = { ...selectedMap, [url]: checked };
   }
 
   function indeterminate(node: HTMLInputElement, value: boolean) {
-    node.indeterminate = !!value
+    node.indeterminate = !!value;
     return {
       update(v: boolean) {
-        node.indeterminate = !!v
+        node.indeterminate = !!v;
       },
-    }
+    };
   }
 </script>
 

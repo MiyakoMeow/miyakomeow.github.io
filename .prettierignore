@@ -14,3 +14,9 @@ dist/
 # 其他
 .DS_Store
 coverage/
+
+# 锁文件
+pnpm-lock.yaml
+
+# Vite插件文件
+src/lib/vite-plugin/blog-index.ts

@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import ProfileCard from '$lib/components/ProfileCard.svelte'
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
   import FloatingToc, {
     buildTocFromHeadings,
     type TocItem,
-  } from '$lib/components/FloatingToc.svelte'
-  import QuickActions from '$lib/components/QuickActions.svelte'
-  import StarryBackground from '$lib/components/StarryBackground.svelte'
-  import { GlassButton, GlassContainer } from '$lib/components/ui'
-  import { blogPosts } from '$lib/data/blog-posts.generated'
+  } from '$lib/components/FloatingToc.svelte';
+  import QuickActions from '$lib/components/QuickActions.svelte';
+  import StarryBackground from '$lib/components/StarryBackground.svelte';
+  import { GlassButton, GlassContainer } from '$lib/components/ui';
+  import { blogPosts } from '$lib/data/blog-posts.generated';
 
-  let tocItems: TocItem[] = []
+  let tocItems: TocItem[] = [];
 
   onMount(() => {
-    tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 })
-  })
+    tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
+  });
 </script>
 
 <StarryBackground />

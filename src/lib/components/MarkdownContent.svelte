@@ -1,12 +1,12 @@
 <script lang="ts">
-  import 'katex/dist/katex.min.css'
-  import { onDestroy, onMount } from 'svelte'
+  import 'katex/dist/katex.min.css';
+  import { onDestroy, onMount } from 'svelte';
 
-  export let className: string = ''
+  export let className: string = '';
 
-  let container: HTMLDivElement | null = null
-  let observer: MutationObserver | null = null
-  let scheduled = false
+  let container: HTMLDivElement | null = null;
+  let observer: MutationObserver | null = null;
+  let scheduled = false;
 
   function slugifyHeadingText(input: string): string {
     const normalized = input
@@ -14,80 +14,80 @@
       .replace(/\s+/g, ' ')
       .normalize('NFKD')
       .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
+      .toLowerCase();
 
     const slug = normalized
       .replace(/[^a-z0-9\u4e00-\u9fff _-]+/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-      .replace(/^[-_]+|[-_]+$/g, '')
+      .replace(/^[-_]+|[-_]+$/g, '');
 
-    return slug || 'section'
+    return slug || 'section';
   }
 
   function ensureHeadingAnchors(): void {
-    if (!container) return
+    if (!container) return;
 
-    const headings = Array.from(container.querySelectorAll('h1,h2,h3,h4,h5,h6'))
-    const usedIds = new Map<string, number>()
+    const headings = Array.from(container.querySelectorAll('h1,h2,h3,h4,h5,h6'));
+    const usedIds = new Map<string, number>();
 
     for (const heading of headings) {
-      const existingAnchor = heading.querySelector(':scope > a.heading-anchor')
-      if (existingAnchor) continue
+      const existingAnchor = heading.querySelector(':scope > a.heading-anchor');
+      if (existingAnchor) continue;
 
-      const rawText = (heading.textContent ?? '').trim()
-      const baseId = heading.id?.trim() || slugifyHeadingText(rawText)
+      const rawText = (heading.textContent ?? '').trim();
+      const baseId = heading.id?.trim() || slugifyHeadingText(rawText);
 
-      const currentCount = usedIds.get(baseId) ?? 0
-      usedIds.set(baseId, currentCount + 1)
+      const currentCount = usedIds.get(baseId) ?? 0;
+      usedIds.set(baseId, currentCount + 1);
       const id = heading.id?.trim()
         ? heading.id.trim()
         : currentCount === 0
           ? baseId
-          : `${baseId}-${currentCount + 1}`
+          : `${baseId}-${currentCount + 1}`;
 
-      heading.id = id
+      heading.id = id;
 
-      const anchor = document.createElement('a')
+      const anchor = document.createElement('a');
       anchor.className =
-        'heading-anchor absolute -left-7 top-[0.2em] inline-flex size-5 items-center justify-center rounded text-white/40 opacity-0 transition hover:text-white/80 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30'
-      anchor.setAttribute('href', `#${id}`)
-      anchor.setAttribute('aria-label', '跳转到此标题')
+        'heading-anchor absolute -left-7 top-[0.2em] inline-flex size-5 items-center justify-center rounded text-white/40 opacity-0 transition hover:text-white/80 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30';
+      anchor.setAttribute('href', `#${id}`);
+      anchor.setAttribute('aria-label', '跳转到此标题');
       anchor.innerHTML =
-        '<svg viewBox="0 0 24 24" class="size-4" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 1 0-7.07l1.41-1.42a5 5 0 0 1 7.07 7.07L17.07 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 1 0 7.07l-1.41 1.42a5 5 0 0 1-7.07-7.07L6.93 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        '<svg viewBox="0 0 24 24" class="size-4" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 1 0-7.07l1.41-1.42a5 5 0 0 1 7.07 7.07L17.07 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 1 0 7.07l-1.41 1.42a5 5 0 0 1-7.07-7.07L6.93 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-      heading.insertBefore(anchor, heading.firstChild)
+      heading.insertBefore(anchor, heading.firstChild);
     }
   }
 
   function scheduleEnsureHeadingAnchors(): void {
-    if (scheduled) return
-    scheduled = true
+    if (scheduled) return;
+    scheduled = true;
     requestAnimationFrame(() => {
-      scheduled = false
-      ensureHeadingAnchors()
+      scheduled = false;
+      ensureHeadingAnchors();
 
       if (location.hash.length > 1) {
-        const id = decodeURIComponent(location.hash.slice(1))
-        const el = document.getElementById(id)
-        el?.scrollIntoView({ block: 'start' })
+        const id = decodeURIComponent(location.hash.slice(1));
+        const el = document.getElementById(id);
+        el?.scrollIntoView({ block: 'start' });
       }
-    })
+    });
   }
 
   onMount(() => {
-    scheduleEnsureHeadingAnchors()
+    scheduleEnsureHeadingAnchors();
 
-    if (!container) return
+    if (!container) return;
 
-    observer = new MutationObserver(() => scheduleEnsureHeadingAnchors())
-    observer.observe(container, { childList: true, subtree: true })
-  })
+    observer = new MutationObserver(() => scheduleEnsureHeadingAnchors());
+    observer.observe(container, { childList: true, subtree: true });
+  });
 
   onDestroy(() => {
-    observer?.disconnect()
-    observer = null
-  })
+    observer?.disconnect();
+    observer = null;
+  });
 </script>
 
 <div

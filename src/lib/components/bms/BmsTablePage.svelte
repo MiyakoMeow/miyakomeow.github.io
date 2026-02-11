@@ -1,51 +1,51 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import ChartsTableSection from '$lib/components/bms/ChartsTableSection.svelte'
-  import LevelRefTable from '$lib/components/bms/LevelRefTable.svelte'
-  import StarryBackground from '$lib/components/StarryBackground.svelte'
-  import ProfileCard from '$lib/components/ProfileCard.svelte'
-  import FloatingToc, { type TocItem } from '$lib/components/FloatingToc.svelte'
-  import QuickActions from '$lib/components/QuickActions.svelte'
-  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte'
-  import { formatBmsTableTitle } from '$lib/utils/title'
+  import { onMount } from 'svelte';
+  import ChartsTableSection from '$lib/components/bms/ChartsTableSection.svelte';
+  import LevelRefTable from '$lib/components/bms/LevelRefTable.svelte';
+  import StarryBackground from '$lib/components/StarryBackground.svelte';
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
+  import FloatingToc, { type TocItem } from '$lib/components/FloatingToc.svelte';
+  import QuickActions from '$lib/components/QuickActions.svelte';
+  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte';
+  import { formatBmsTableTitle } from '$lib/utils/title';
 
   interface ChartData {
-    title?: string
-    artist?: string
-    level?: string
-    sha256?: string
-    md5?: string
-    comment?: string
-    url?: string
-    url_diff?: string
-    [key: string]: unknown
+    title?: string;
+    artist?: string;
+    level?: string;
+    sha256?: string;
+    md5?: string;
+    comment?: string;
+    url?: string;
+    url_diff?: string;
+    [key: string]: unknown;
   }
 
   interface DifficultyGroup {
-    level: string
-    charts: ChartData[]
+    level: string;
+    charts: ChartData[];
   }
 
   interface HeaderData {
-    name?: string
-    symbol?: string
-    data_url?: string
-    level_order?: string[]
-    [key: string]: unknown
+    name?: string;
+    symbol?: string;
+    data_url?: string;
+    level_order?: string[];
+    [key: string]: unknown;
   }
 
   interface LoadingState {
-    isLoading: boolean
-    progress: number
-    currentStep: string
-    totalSteps: number
+    isLoading: boolean;
+    progress: number;
+    currentStep: string;
+    totalSteps: number;
   }
 
   interface Props {
-    headerUrl: string
-    originUrl?: string | null
-    breadcrumbSessionKey: string
-    showExtraLinks?: boolean
+    headerUrl: string;
+    originUrl?: string | null;
+    breadcrumbSessionKey: string;
+    showExtraLinks?: boolean;
   }
 
   let {
@@ -53,188 +53,188 @@
     originUrl = null,
     breadcrumbSessionKey,
     showExtraLinks = false,
-  }: Props = $props()
+  }: Props = $props();
 
-  let pageTitle = $state('加载难度表header中')
+  let pageTitle = $state('加载难度表header中');
 
   let loadingState = $state<LoadingState>({
     isLoading: true,
     progress: 0,
     currentStep: '正在初始化...',
     totalSteps: 4,
-  })
+  });
 
-  let tableData = $state<ChartData[] | null>(null)
-  let headerData = $state<HeaderData | null>(null)
-  let dataFetchUrl = $state<string | null>(null)
-  let error = $state<string | null>(null)
+  let tableData = $state<ChartData[] | null>(null);
+  let headerData = $state<HeaderData | null>(null);
+  let dataFetchUrl = $state<string | null>(null);
+  let error = $state<string | null>(null);
 
-  let copied = $state(false)
+  let copied = $state(false);
 
   async function copySiteUrl(): Promise<void> {
     try {
-      const url = window.location.href
+      const url = window.location.href;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(url)
+        await navigator.clipboard.writeText(url);
       } else {
-        const textarea = document.createElement('textarea')
-        textarea.value = url
-        textarea.style.position = 'fixed'
-        textarea.style.opacity = '0'
-        document.body.appendChild(textarea)
-        textarea.focus()
-        textarea.select()
-        await navigator.clipboard.writeText(textarea.value)
-        document.body.removeChild(textarea)
+        const textarea = document.createElement('textarea');
+        textarea.value = url;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        await navigator.clipboard.writeText(textarea.value);
+        document.body.removeChild(textarea);
       }
-      copied = true
+      copied = true;
       setTimeout(() => {
-        copied = false
-      }, 1500)
+        copied = false;
+      }, 1500);
     } catch {
-      copied = false
+      copied = false;
     }
   }
 
   function updateProgress(step: string, progress: number): void {
-    loadingState = { ...loadingState, currentStep: step, progress }
+    loadingState = { ...loadingState, currentStep: step, progress };
   }
 
   async function lazyLoadTableData(): Promise<void> {
     try {
-      error = null
-      tableData = null
-      headerData = null
-      dataFetchUrl = null
+      error = null;
+      tableData = null;
+      headerData = null;
+      dataFetchUrl = null;
 
       loadingState = {
         ...loadingState,
         isLoading: true,
         progress: 0,
         currentStep: '正在初始化...',
-      }
+      };
 
-      pageTitle = '加载难度表header中'
-      updateProgress('正在加载表头信息...', 25)
+      pageTitle = '加载难度表header中';
+      updateProgress('正在加载表头信息...', 25);
 
-      const headerUrlBase = new URL(headerUrl, window.location.href).toString()
+      const headerUrlBase = new URL(headerUrl, window.location.href).toString();
 
       const headerResponse = await fetch(headerUrlBase, {
         redirect: 'follow',
-      })
+      });
       if (!headerResponse.ok) {
-        throw new Error(`无法加载表头信息: ${headerResponse.status}`)
+        throw new Error(`无法加载表头信息: ${headerResponse.status}`);
       }
-      headerData = await headerResponse.json()
+      headerData = await headerResponse.json();
 
-      pageTitle = String(headerData?.name || '未命名')
-      updateProgress('表头信息加载完成', 50)
+      pageTitle = String(headerData?.name || '未命名');
+      updateProgress('表头信息加载完成', 50);
 
-      const dataUrl = headerData?.data_url
+      const dataUrl = headerData?.data_url;
       if (!dataUrl) {
-        throw new Error('表头信息中未找到data_url')
+        throw new Error('表头信息中未找到data_url');
       }
 
-      updateProgress('正在加载谱面数据...', 75)
+      updateProgress('正在加载谱面数据...', 75);
 
-      const isAbsolute = (u: string) => /^(https?:)?\/\//i.test(u) || u.startsWith('/')
+      const isAbsolute = (u: string) => /^(https?:)?\/\//i.test(u) || u.startsWith('/');
       dataFetchUrl = isAbsolute(String(dataUrl))
         ? String(dataUrl)
-        : new URL(String(dataUrl), headerUrlBase).toString()
+        : new URL(String(dataUrl), headerUrlBase).toString();
 
       const dataResponse = await fetch(dataFetchUrl, {
         redirect: 'follow',
-      })
+      });
       if (!dataResponse.ok) {
-        throw new Error(`无法加载谱面数据: ${dataResponse.status}`)
+        throw new Error(`无法加载谱面数据: ${dataResponse.status}`);
       }
-      tableData = await dataResponse.json()
+      tableData = await dataResponse.json();
 
-      updateProgress('数据加载完成', 100)
+      updateProgress('数据加载完成', 100);
 
       setTimeout(() => {
-        loadingState = { ...loadingState, isLoading: false }
-      }, 500)
+        loadingState = { ...loadingState, isLoading: false };
+      }, 500);
     } catch (err) {
-      error = err instanceof Error ? err.message : '未知错误'
-      loadingState = { ...loadingState, isLoading: false }
-      console.error('加载BMS难度表数据失败:', err)
+      error = err instanceof Error ? err.message : '未知错误';
+      loadingState = { ...loadingState, isLoading: false };
+      console.error('加载BMS难度表数据失败:', err);
     }
   }
 
   const groupedCharts = $derived(() => {
     if (!tableData || !Array.isArray(tableData)) {
-      return []
+      return [];
     }
-    const groupsMap = new Map<string, DifficultyGroup>()
-    const charts = tableData
+    const groupsMap = new Map<string, DifficultyGroup>();
+    const charts = tableData;
     for (const chart of charts) {
-      const level = chart.level || 'unknown'
+      const level = chart.level || 'unknown';
       if (!groupsMap.has(level)) {
-        groupsMap.set(level, { level, charts: [] })
+        groupsMap.set(level, { level, charts: [] });
       }
-      groupsMap.get(level)?.charts.push(chart)
+      groupsMap.get(level)?.charts.push(chart);
     }
-    return Array.from(groupsMap.values())
-  })
+    return Array.from(groupsMap.values());
+  });
 
   const tableStats = $derived(() => {
-    const groups = groupedCharts()
+    const groups = groupedCharts();
     if (!groups || groups.length === 0) {
-      return { totalCharts: 0, difficulties: [] }
+      return { totalCharts: 0, difficulties: [] };
     }
     const { totalCharts, difficulties } = groups.reduce(
       (acc, group) => {
-        acc.difficulties.add(group.level)
-        acc.totalCharts += group.charts.length
-        return acc
+        acc.difficulties.add(group.level);
+        acc.totalCharts += group.charts.length;
+        return acc;
       },
       { totalCharts: 0, difficulties: new Set<string>() }
-    )
-    return { totalCharts, difficulties: Array.from(difficulties) }
-  })
+    );
+    return { totalCharts, difficulties: Array.from(difficulties) };
+  });
 
   const sortedDifficultyGroups = $derived(() => {
-    const groups = groupedCharts()
-    const order = headerData?.level_order ?? []
-    const orderIndex = new Map<string, number>()
-    order.forEach((lv, idx) => orderIndex.set(String(lv), idx))
-    const defined: DifficultyGroup[] = []
-    const others: DifficultyGroup[] = []
+    const groups = groupedCharts();
+    const order = headerData?.level_order ?? [];
+    const orderIndex = new Map<string, number>();
+    order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
+    const defined: DifficultyGroup[] = [];
+    const others: DifficultyGroup[] = [];
     for (const g of groups) {
-      ;(orderIndex.has(String(g.level)) ? defined : others).push(g)
+      (orderIndex.has(String(g.level)) ? defined : others).push(g);
     }
     defined.sort(
       (a, b) => (orderIndex.get(String(a.level)) ?? 0) - (orderIndex.get(String(b.level)) ?? 0)
-    )
+    );
     others.sort((a, b) => {
-      const as = String(a.level).trim()
-      const bs = String(b.level).trim()
-      const intRe = /^-?\d+$/
-      const ai = intRe.test(as)
-      const bi = intRe.test(bs)
-      if (ai && bi) return parseInt(as, 10) - parseInt(bs, 10)
-      if (ai && !bi) return -1
-      if (!ai && bi) return 1
-      return as.localeCompare(bs)
-    })
-    return [...defined, ...others]
-  })
+      const as = String(a.level).trim();
+      const bs = String(b.level).trim();
+      const intRe = /^-?\d+$/;
+      const ai = intRe.test(as);
+      const bi = intRe.test(bs);
+      if (ai && bi) return parseInt(as, 10) - parseInt(bs, 10);
+      if (ai && !bi) return -1;
+      if (!ai && bi) return 1;
+      return as.localeCompare(bs);
+    });
+    return [...defined, ...others];
+  });
 
   const difficultyTocItems = $derived(() => {
-    const groups = sortedDifficultyGroups()
+    const groups = sortedDifficultyGroups();
     if (!groups || groups.length === 0) {
-      return []
+      return [];
     }
     return groups.map((g) => {
-      const id = `difficulty-group-${g.level}`
+      const id = `difficulty-group-${g.level}`;
       return {
         id,
         title: `难度 ${g.level} (${g.charts.length})`,
         href: `#${id}`,
-      }
-    })
-  })
+      };
+    });
+  });
 
   const tocItems = $derived(() => {
     return [
@@ -257,8 +257,8 @@
         href: '#charts-list',
         children: difficultyTocItems(),
       },
-    ]
-  })
+    ];
+  });
 
   const breadcrumbs = $derived([
     { label: '主页', href: '/' },
@@ -266,13 +266,13 @@
     {
       label: (headerData as HeaderData | null)?.name || '加载难度表header中',
     },
-  ])
+  ]);
 
   onMount(() => {
     setTimeout(() => {
-      void lazyLoadTableData()
-    }, 300)
-  })
+      void lazyLoadTableData();
+    }, 300);
+  });
 </script>
 
 <svelte:head>

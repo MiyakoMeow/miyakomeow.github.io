@@ -1,16 +1,17 @@
-import js from '@eslint/js'
-import { includeIgnoreFile } from '@eslint/compat'
-import svelte from 'eslint-plugin-svelte'
-import globals from 'globals'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import tseslint from 'typescript-eslint'
-import betterTailwindCss from 'eslint-plugin-better-tailwindcss'
-import importPlugin from 'eslint-plugin-import'
+import js from '@eslint/js';
+import { includeIgnoreFile } from '@eslint/compat';
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const gitignorePath = path.resolve(__dirname, '.gitignore')
+// import { configs as svelteConfigs } from 'eslint-plugin-svelte';
+import globals from 'globals';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import tseslint from 'typescript-eslint';
+import betterTailwindCss from 'eslint-plugin-better-tailwindcss';
+import importPlugin from 'eslint-plugin-import';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const gitignorePath = path.resolve(__dirname, '.gitignore');
 
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
@@ -18,8 +19,6 @@ export default tseslint.config(
     ignores: ['.svelte-kit/', 'build/'],
   },
   js.configs.recommended,
-  ...svelte.configs['flat/all'],
-  ...svelte.configs['flat/prettier'],
   ...tseslint.configs.recommended,
   {
     languageOptions: {
@@ -32,9 +31,6 @@ export default tseslint.config(
       import: importPlugin,
     },
     rules: {
-      // Svelte
-      'svelte/no-at-html-tags': 'error',
-
       // TypeScript
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
@@ -55,15 +51,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.svelte'],
-    languageOptions: {
-      parserOptions: {
-        parser: tseslint.parser,
-      },
-    },
-  },
-  {
-    files: ['**/*.{js,jsx,ts,tsx,svelte}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       'better-tailwindcss': betterTailwindCss,
     },
@@ -72,4 +60,4 @@ export default tseslint.config(
       'better-tailwindcss/enforce-consistent-important-position': 'error',
     },
   }
-)
+);

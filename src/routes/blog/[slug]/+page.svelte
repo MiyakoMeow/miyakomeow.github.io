@@ -1,18 +1,18 @@
 <script lang="ts">
-  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte'
-  import ProfileCard from '$lib/components/ProfileCard.svelte'
-  import FloatingToc from '$lib/components/FloatingToc.svelte'
-  import MarkdownContent from '$lib/components/MarkdownContent.svelte'
-  import StarryBackground from '$lib/components/StarryBackground.svelte'
+  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte';
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
+  import FloatingToc from '$lib/components/FloatingToc.svelte';
+  import MarkdownContent from '$lib/components/MarkdownContent.svelte';
+  import StarryBackground from '$lib/components/StarryBackground.svelte';
 
-  export let data
-  const { post, component } = data
+  export let data;
+  const { post, component } = data;
 
   const breadcrumbs = [
     { label: '主页', href: '/' },
     { label: '博客', href: '/blog' },
     { label: post.title || '文章' },
-  ]
+  ];
 </script>
 
 <StarryBackground />

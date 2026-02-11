@@ -1,21 +1,21 @@
 <script lang="ts">
   interface Props {
     /** 子元素内容 */
-    children?: import('svelte').Snippet
+    children?: import('svelte').Snippet;
     /** 自定义类名 */
-    class?: string
+    class?: string;
     /** 内边距变体 */
-    padding?: 'none' | 'sm' | 'md' | 'lg'
+    padding?: 'none' | 'sm' | 'md' | 'lg';
     /** 圆角变体 */
-    rounded?: 'sm' | 'md' | 'lg' | 'xl'
+    rounded?: 'sm' | 'md' | 'lg' | 'xl';
     /** 是否添加动画 */
-    animate?: boolean
+    animate?: boolean;
     /** 背景透明度变体 */
-    variant?: 'default' | 'light' | 'dark'
+    variant?: 'default' | 'light' | 'dark';
     /** 自定义样式对象 */
-    style?: Record<string, string>
+    style?: Record<string, string>;
     /** 元素ID */
-    id?: string
+    id?: string;
   }
 
   let {
@@ -27,21 +27,21 @@
     variant = 'default',
     style = {},
     id,
-  }: Props = $props()
+  }: Props = $props();
 
   const paddingConfig = {
     none: 'p-0',
     sm: 'p-4',
     md: 'p-6',
     lg: 'p-8',
-  }
+  };
 
   const roundedConfig = {
     sm: 'rounded-[10px]',
     md: 'rounded-[14px]',
     lg: 'rounded-[18px]',
     xl: 'rounded-[20px]',
-  }
+  };
 
   const variantStyles = {
     default: {
@@ -56,7 +56,7 @@
       'background-color': 'rgba(0, 0, 0, 0.2)',
       border: '1px solid rgba(255, 255, 255, 0.05)',
     },
-  }
+  };
 
   const containerStyleString = $derived(
     Object.entries({
@@ -67,7 +67,7 @@
     })
       .map(([key, value]) => `${key}:${value}`)
       .join(';')
-  )
+  );
 </script>
 
 <div

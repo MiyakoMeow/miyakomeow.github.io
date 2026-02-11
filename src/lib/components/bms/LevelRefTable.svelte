@@ -1,88 +1,88 @@
 <script lang="ts">
   interface LevelRefItem {
-    level: string
-    ref: string
+    level: string;
+    ref: string;
   }
 
-  export let headerUrl: string | undefined = undefined
+  export let headerUrl: string | undefined = undefined;
 
-  let levelRefData: LevelRefItem[] = []
-  let shouldShow = false
+  let levelRefData: LevelRefItem[] = [];
+  let shouldShow = false;
 
-  let leftTableData: LevelRefItem[] = []
-  let rightTableData: LevelRefItem[] = []
+  let leftTableData: LevelRefItem[] = [];
+  let rightTableData: LevelRefItem[] = [];
 
-  let tableHalves: Array<{ id: 'left' | 'right'; items: LevelRefItem[] }> = []
+  let tableHalves: Array<{ id: 'left' | 'right'; items: LevelRefItem[] }> = [];
 
   $: {
-    const data = levelRefData
-    const midIndex = Math.ceil(data.length / 2)
-    leftTableData = data.slice(0, midIndex)
-    rightTableData = data.slice(midIndex)
+    const data = levelRefData;
+    const midIndex = Math.ceil(data.length / 2);
+    leftTableData = data.slice(0, midIndex);
+    rightTableData = data.slice(midIndex);
   }
 
   $: tableHalves = [
     { id: 'left', items: leftTableData },
     { id: 'right', items: rightTableData },
-  ]
+  ];
 
   function buildLevelRefUrl(headerUrlRaw: string): string {
     try {
-      const baseUrl = new URL(headerUrlRaw, window.location.href)
-      const pathParts = baseUrl.pathname.split('/')
-      pathParts[pathParts.length - 1] = 'level-ref.json'
-      baseUrl.pathname = pathParts.join('/')
-      return baseUrl.toString()
+      const baseUrl = new URL(headerUrlRaw, window.location.href);
+      const pathParts = baseUrl.pathname.split('/');
+      pathParts[pathParts.length - 1] = 'level-ref.json';
+      baseUrl.pathname = pathParts.join('/');
+      return baseUrl.toString();
     } catch (err) {
-      console.error('构建 level-ref.json URL 失败:', err)
-      return ''
+      console.error('构建 level-ref.json URL 失败:', err);
+      return '';
     }
   }
 
-  let requestToken = 0
+  let requestToken = 0;
 
   async function loadLevelRefData(header: string | undefined): Promise<void> {
     if (!header) {
-      shouldShow = false
-      return
+      shouldShow = false;
+      return;
     }
 
-    requestToken += 1
-    const token = requestToken
+    requestToken += 1;
+    const token = requestToken;
 
     try {
-      const levelRefUrl = buildLevelRefUrl(header)
+      const levelRefUrl = buildLevelRefUrl(header);
       if (!levelRefUrl) {
-        shouldShow = false
-        return
+        shouldShow = false;
+        return;
       }
 
-      const response = await fetch(levelRefUrl)
-      if (token !== requestToken) return
+      const response = await fetch(levelRefUrl);
+      if (token !== requestToken) return;
 
       if (response.ok) {
-        const data = await response.json()
-        if (token !== requestToken) return
+        const data = await response.json();
+        if (token !== requestToken) return;
 
         if (Array.isArray(data)) {
-          levelRefData = data
-          shouldShow = true
+          levelRefData = data;
+          shouldShow = true;
         } else {
-          console.warn('level-ref.json 格式不正确，应为数组')
-          shouldShow = false
+          console.warn('level-ref.json 格式不正确，应为数组');
+          shouldShow = false;
         }
       } else if (response.status === 404) {
-        shouldShow = false
+        shouldShow = false;
       } else {
-        throw new Error(`加载失败: ${response.status} ${response.statusText}`)
+        throw new Error(`加载失败: ${response.status} ${response.statusText}`);
       }
     } catch (err) {
-      console.error('加载难度对照表数据失败:', err)
-      shouldShow = false
+      console.error('加载难度对照表数据失败:', err);
+      shouldShow = false;
     }
   }
 
-  $: void loadLevelRefData(headerUrl)
+  $: void loadLevelRefData(headerUrl);
 </script>
 
 {#if shouldShow && levelRefData.length > 0}

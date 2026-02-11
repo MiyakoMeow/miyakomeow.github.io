@@ -2,43 +2,43 @@
   import JsonPreview, {
     jsonPreview,
     type JsonPreviewHandle,
-  } from '$lib/components/JsonPreview.svelte'
-  import { cubicIn, cubicOut } from 'svelte/easing'
-  import { fly } from 'svelte/transition'
+  } from '$lib/components/JsonPreview.svelte';
+  import { cubicIn, cubicOut } from 'svelte/easing';
+  import { fly } from 'svelte/transition';
 
   interface MirrorTableItem {
-    url: string
-    url_ori?: string
+    url: string;
+    url_ori?: string;
   }
 
-  export let tables: MirrorTableItem[] = []
-  export let selectedMap: Record<string, boolean> = {}
+  export let tables: MirrorTableItem[] = [];
+  export let selectedMap: Record<string, boolean> = {};
 
-  let mirrorPreview: JsonPreviewHandle | undefined
-  let originPreview: JsonPreviewHandle | undefined
+  let mirrorPreview: JsonPreviewHandle | undefined;
+  let originPreview: JsonPreviewHandle | undefined;
 
-  $: totalCount = tables.length
-  $: selectedCount = Object.values(selectedMap).filter(Boolean).length
+  $: totalCount = tables.length;
+  $: selectedCount = Object.values(selectedMap).filter(Boolean).length;
 
   $: selectedMirrorArray = Object.entries(selectedMap)
     .filter(([, v]) => !!v)
-    .map(([url]) => new URL(url, window.location.origin).toString())
+    .map(([url]) => new URL(url, window.location.origin).toString());
 
   $: urlToOrigin = (() => {
-    const m = new Map<string, string>()
+    const m = new Map<string, string>();
     for (const t of tables) {
-      if (!t.url) continue
-      const mirrorAbs = new URL(t.url, window.location.origin).toString()
-      const rawOri = String(t.url_ori || '').trim()
-      const oriAbs = rawOri.length > 0 ? new URL(rawOri, window.location.origin).toString() : ''
-      m.set(mirrorAbs, oriAbs)
+      if (!t.url) continue;
+      const mirrorAbs = new URL(t.url, window.location.origin).toString();
+      const rawOri = String(t.url_ori || '').trim();
+      const oriAbs = rawOri.length > 0 ? new URL(rawOri, window.location.origin).toString() : '';
+      m.set(mirrorAbs, oriAbs);
     }
-    return m
-  })()
+    return m;
+  })();
 
   $: selectedOriginArray = selectedMirrorArray
     .map((u) => urlToOrigin.get(u) || '')
-    .filter((v) => v.length > 0)
+    .filter((v) => v.length > 0);
 </script>
 
 {#if selectedCount > 0}

@@ -20,7 +20,7 @@ export function blogIndexPlugin(): Plugin {
     // 开发模式热更新支持
     handleHotUpdate({ file }) {
       // 监听博客文件变化
-      if (file.match(/src[/\\]content[/\\]blog[/\\].*\.(md|svx)$/)) {
+      if (file.match(/src[\]content[\]blog[\].*.(md|svx)$/)) {
         generateIndex();
       }
     },

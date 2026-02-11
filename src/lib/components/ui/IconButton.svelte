@@ -1,42 +1,42 @@
 <script lang="ts">
   interface Props {
     /** 图标内容 */
-    children?: import('svelte').Snippet
+    children?: import('svelte').Snippet;
     /** 点击链接（可选） */
-    href?: string
+    href?: string;
     /** 点击类型 */
-    type?: 'button' | 'submit' | 'reset'
+    type?: 'button' | 'submit' | 'reset';
     /** 颜色变体 */
-    variant?: 'orange' | 'purple' | 'brown' | 'cyan' | 'custom'
+    variant?: 'orange' | 'purple' | 'brown' | 'cyan' | 'custom';
     /** 自定义渐变颜色（仅当 variant="custom" 时使用） */
     customGradient?: {
-      start: string
-      end: string
-      hoverStart?: string
-      hoverEnd?: string
-    }
+      start: string;
+      end: string;
+      hoverStart?: string;
+      hoverEnd?: string;
+    };
     /** 尺寸变体 */
-    size?: 'sm' | 'md' | 'lg'
+    size?: 'sm' | 'md' | 'lg';
     /** 自定义类名 */
-    class?: string
+    class?: string;
     /** 是否禁用 */
-    disabled?: boolean
+    disabled?: boolean;
     /** 悬停时是否放大 */
-    hoverScale?: boolean
+    hoverScale?: boolean;
     /** 点击时是否缩放 */
-    clickShrink?: boolean
+    clickShrink?: boolean;
     /** 自定义样式对象 */
-    style?: Record<string, string>
+    style?: Record<string, string>;
     /** 点击事件处理 */
-    onclick?: (event: Event) => void
+    onclick?: (event: Event) => void;
     /** 无障碍标签 */
-    ariaLabel?: string
+    ariaLabel?: string;
     /** 链接打开方式 */
-    target?: '_blank' | '_self' | '_parent' | '_top'
+    target?: '_blank' | '_self' | '_parent' | '_top';
     /** rel 属性 */
-    rel?: string
+    rel?: string;
     /** title 属性 */
-    title?: string
+    title?: string;
   }
 
   let {
@@ -56,13 +56,13 @@
     target,
     rel,
     title,
-  }: Props = $props()
+  }: Props = $props();
 
   const sizeConfig = {
     sm: 'h-8 w-8 text-[1rem]',
     md: 'h-9 w-9 text-[1.2rem]',
     lg: 'h-10 w-10 text-[1.4rem]',
-  }
+  };
 
   const iconGradientConfig: Record<string, { default: string; hover: string }> = {
     orange: {
@@ -81,7 +81,7 @@
       default: 'linear-gradient(135deg, #00bcd4, #0097a7)',
       hover: 'linear-gradient(135deg, #4dd0e1, #00bcd4)',
     },
-  }
+  };
 
   const currentGradient = $derived(
     variant === 'custom' && customGradient
@@ -92,7 +92,7 @@
           }, ${customGradient.hoverEnd || customGradient.end})`,
         }
       : iconGradientConfig[variant]
-  )
+  );
 
   const baseStyleString = $derived(
     Object.entries({
@@ -103,7 +103,7 @@
     })
       .map(([key, value]) => `${key}:${value}`)
       .join(';')
-  )
+  );
 
   const hoverStyleString = $derived(
     Object.entries({
@@ -112,18 +112,18 @@
     })
       .map(([key, value]) => `${key}:${value}`)
       .join(';')
-  )
+  );
 
   function handleMouseEnter(event: MouseEvent) {
-    if (disabled) return
-    const target = event.currentTarget as HTMLElement
-    target.setAttribute('style', baseStyleString + ';' + hoverStyleString)
+    if (disabled) return;
+    const target = event.currentTarget as HTMLElement;
+    target.setAttribute('style', baseStyleString + ';' + hoverStyleString);
   }
 
   function handleMouseLeave(event: MouseEvent) {
-    if (disabled) return
-    const target = event.currentTarget as HTMLElement
-    target.setAttribute('style', baseStyleString)
+    if (disabled) return;
+    const target = event.currentTarget as HTMLElement;
+    target.setAttribute('style', baseStyleString);
   }
 </script>
 

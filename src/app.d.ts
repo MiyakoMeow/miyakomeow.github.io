@@ -4,7 +4,7 @@ declare global {
   namespace App {
     // interface Error {}
     interface Locals {
-      bmstableMeta?: string
+      bmstableMeta?: string;
     }
     // interface PageData {}
     // interface PageState {}
@@ -12,4 +12,4 @@ declare global {
   }
 }
 
-export {}
+export {};

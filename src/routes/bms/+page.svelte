@@ -1,32 +1,32 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte'
+  import { onMount, tick } from 'svelte';
 
-  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte'
-  import ProfileCard from '$lib/components/ProfileCard.svelte'
+  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte';
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
   import FloatingToc, {
     buildTocFromHeadings,
     type TocItem,
-  } from '$lib/components/FloatingToc.svelte'
-  import QuickActions from '$lib/components/QuickActions.svelte'
-  import StarryBackground from '$lib/components/StarryBackground.svelte'
-  import MarkdownContent from '$lib/components/MarkdownContent.svelte'
-  import { GlassCard, GlassContainer } from '$lib/components/ui'
-  import BmsContent from '$content/bms/index.md'
+  } from '$lib/components/FloatingToc.svelte';
+  import QuickActions from '$lib/components/QuickActions.svelte';
+  import StarryBackground from '$lib/components/StarryBackground.svelte';
+  import MarkdownContent from '$lib/components/MarkdownContent.svelte';
+  import { GlassCard, GlassContainer } from '$lib/components/ui';
+  import BmsContent from '$content/bms/index.md';
 
   interface LinkItem {
-    href: string
-    title: string
-    desc: string
+    href: string;
+    title: string;
+    desc: string;
   }
 
-  const breadcrumbs = [{ label: '主页', href: '/' }, { label: 'BMS' }]
+  const breadcrumbs = [{ label: '主页', href: '/' }, { label: 'BMS' }];
 
-  let tocItems: TocItem[] = []
+  let tocItems: TocItem[] = [];
 
   onMount(async () => {
-    await tick()
-    tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 })
-  })
+    await tick();
+    tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
+  });
 </script>
 
 <StarryBackground />

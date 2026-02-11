@@ -1,72 +1,72 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte'
+  import { onDestroy } from 'svelte';
 
-  export let watchKeys: unknown = undefined
+  export let watchKeys: unknown = undefined;
 
-  const containers = new Set<HTMLDivElement>()
+  const containers = new Set<HTMLDivElement>();
 
-  let isSyncing = false
-  let rafId: number | null = null
+  let isSyncing = false;
+  let rafId: number | null = null;
 
   function onWrapperScroll(e: Event): void {
-    if (isSyncing) return
-    const target = e.currentTarget
-    if (!(target instanceof HTMLDivElement)) return
+    if (isSyncing) return;
+    const target = e.currentTarget;
+    if (!(target instanceof HTMLDivElement)) return;
 
-    const left = target.scrollLeft
-    isSyncing = true
+    const left = target.scrollLeft;
+    isSyncing = true;
     for (const el of containers) {
       if (el !== target) {
-        el.scrollLeft = left
+        el.scrollLeft = left;
       }
     }
 
     if (rafId !== null) {
-      cancelAnimationFrame(rafId)
+      cancelAnimationFrame(rafId);
     }
     rafId = requestAnimationFrame(() => {
-      isSyncing = false
-    })
+      isSyncing = false;
+    });
   }
 
   function attach(el: HTMLDivElement): void {
-    el.addEventListener('scroll', onWrapperScroll, { passive: true })
+    el.addEventListener('scroll', onWrapperScroll, { passive: true });
   }
 
   function detach(el: HTMLDivElement): void {
-    el.removeEventListener('scroll', onWrapperScroll)
+    el.removeEventListener('scroll', onWrapperScroll);
   }
 
   function refresh(): void {
     for (const el of containers) {
-      detach(el)
-      attach(el)
+      detach(el);
+      attach(el);
     }
   }
 
   function setRef(node: HTMLDivElement) {
-    containers.add(node)
-    attach(node)
+    containers.add(node);
+    attach(node);
 
     return {
       destroy() {
-        detach(node)
-        containers.delete(node)
+        detach(node);
+        containers.delete(node);
       },
-    }
+    };
   }
 
-  $: if (watchKeys !== undefined) refresh()
+  $: if (watchKeys !== undefined) refresh();
 
   onDestroy(() => {
     for (const el of containers) {
-      detach(el)
+      detach(el);
     }
-    containers.clear()
+    containers.clear();
     if (rafId !== null) {
-      cancelAnimationFrame(rafId)
+      cancelAnimationFrame(rafId);
     }
-  })
+  });
 </script>
 
 <slot {setRef} />
