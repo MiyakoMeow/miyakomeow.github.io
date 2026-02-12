@@ -3,6 +3,7 @@ import js from '@eslint/js';
 import svelteConfig from './svelte.config.ts';
 import { configs as svelteConfigs } from 'eslint-plugin-svelte';
 import globals from 'globals';
+import importX from 'eslint-plugin-import-x';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import tseslint from 'typescript-eslint';
@@ -41,67 +42,51 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   ...svelteConfigs['flat/recommended'],
 
-  // Svelte文件配置 - 增强parserOptions
+  // 全局配置 - 统一 parserOptions 和全局变量
   {
-    files: ['**/*.svelte'],
     languageOptions: {
       parserOptions: {
         parser: tseslint.parser,
         projectService: true,
+        allowDefaultProject: true,
         extraFileExtensions: ['.svelte', '.svx'],
         svelteConfig,
       },
       globals: {
         ...globals.browser,
         ...globals.node,
+        // SvelteKit 全局变量
+        '$app/stores': 'readonly',
+        '$app/environment': 'readonly',
+        '$app/paths': 'readonly',
+        '$app/navigation': 'readonly',
+        '$app/error': 'readonly',
+        '$app/forms': 'readonly',
       },
+    },
+    plugins: {
+      'import-x': importX,
     },
     rules: {
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    },
-  },
-
-  // MDSvex文件配置
-  {
-    files: ['**/*.svx'],
-    languageOptions: {
-      parserOptions: {
-        parser: tseslint.parser,
-        projectService: true,
-        extraFileExtensions: ['.svelte', '.svx'],
-        svelteConfig,
-      },
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
-  },
-
-  // TypeScript文件配置
-  {
-    files: ['**/*.ts', '**/*.tsx'],
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
-    plugins: {},
-    rules: {
+      // TypeScript 和 Svelte 通用规则
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
 
-      indent: ['error', 2],
-      quotes: ['error', 'single'],
-      semi: ['error', 'always'],
+      // import-x 规则
+      'import-x/no-unused-modules': 'warn',
+      'import-x/no-duplicates': 'error',
+      'import-x/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'parent', 'sibling', 'index', 'object', 'internal'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc' },
+        },
+      ],
     },
   },
+
+  // 所有文件类型配置
   {
     files: ['**/*.{js,jsx,ts,tsx,svelte,svx}'],
     plugins: {

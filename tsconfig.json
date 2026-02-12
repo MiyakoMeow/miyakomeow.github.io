@@ -1,5 +1,13 @@
 {
   "extends": "./.svelte-kit/tsconfig.json",
+  "include": [
+    "eslint.config.ts",
+    "prettier.config.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.svelte",
+    "src/**/*.svx"
+  ],
   "compilerOptions": {
     "rewriteRelativeImportExtensions": true,
     "allowJs": true,
