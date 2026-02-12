@@ -21,36 +21,31 @@
   function slugifyHeadingText(input: string): string {
     const normalized = input
       .trim()
-      .replace(/\s+/g, " ")
-      .normalize("NFKD")
-      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, ' ')
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase();
 
     const slug = normalized
-      .replace(/[^a-z0-9\u4e00-\u9fff _-]+/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^[-_]+|[-_]+$/g, "");
+      .replace(/[^a-z0-9\u4e00-\u9fff _-]+/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^[-_]+|[-_]+$/g, '');
 
-    return slug || "section";
+    return slug || 'section';
   }
 
-  function collectHeadingInfo(
-    root: ParentNode,
-    minLevel: number,
-    maxLevel: number,
-  ): HeadingInfo[] {
-    const headings = Array.from(root.querySelectorAll("h1,h2,h3,h4,h5,h6"))
-      .filter((el) => {
-        if (!(el instanceof HTMLHeadingElement)) return false;
-        const level = Number(el.tagName.slice(1));
-        return level >= minLevel && level <= maxLevel;
-      }) as HTMLHeadingElement[];
+  function collectHeadingInfo(root: ParentNode, minLevel: number, maxLevel: number): HeadingInfo[] {
+    const headings = Array.from(root.querySelectorAll('h1,h2,h3,h4,h5,h6')).filter((el) => {
+      if (!(el instanceof HTMLHeadingElement)) return false;
+      const level = Number(el.tagName.slice(1));
+      return level >= minLevel && level <= maxLevel;
+    }) as HTMLHeadingElement[];
 
-    const usedIds = new Map<string, number>();
+    const usedIds = new SvelteMap<string, number>();
     return headings
       .map((h) => {
-        const text = (h.textContent ?? "").trim();
+        const text = (h.textContent ?? '').trim();
         if (!text) return null;
         const level = Number(h.tagName.slice(1));
 
@@ -59,9 +54,7 @@
         usedIds.set(baseId, currentCount + 1);
 
         if (!h.id?.trim()) {
-          h.id = currentCount === 0
-            ? baseId
-            : `${baseId}-${currentCount + 1}`;
+          h.id = currentCount === 0 ? baseId : `${baseId}-${currentCount + 1}`;
         } else if (currentCount > 0) {
           baseId = h.id.trim();
         }
@@ -73,12 +66,10 @@
 
   function buildTreeFromHeadingInfo(
     headingInfo: HeadingInfo[],
-    minLevel: number,
+    minLevel: number
   ): Array<TocItem & { level: number }> {
     const rootItems: Array<TocItem & { level: number }> = [];
-    const stack: Array<
-      { level: number; children: Array<TocItem & { level: number }> }
-    > = [
+    const stack: Array<{ level: number; children: Array<TocItem & { level: number }> }> = [
       { level: minLevel - 1, children: rootItems },
     ];
 
@@ -86,8 +77,7 @@
       while (stack.length > 0 && h.level <= stack[stack.length - 1].level) {
         stack.pop();
       }
-      const parent = stack[stack.length - 1] ??
-        { level: minLevel - 1, children: rootItems };
+      const parent = stack[stack.length - 1] ?? { level: minLevel - 1, children: rootItems };
       const node: TocItem & { level: number } = {
         id: h.id,
         title: h.title,
@@ -104,31 +94,26 @@
     return rootItems;
   }
 
-  function stripLevel(
-    nodes: Array<TocItem & { level: number }>,
-  ): TocItem[] {
+  function stripLevel(nodes: Array<TocItem & { level: number }>): TocItem[] {
     return nodes.map((n) => ({
       id: n.id,
       title: n.title,
       ...(n.children && n.children.length > 0
         ? {
-          children: stripLevel(
-            n.children as Array<TocItem & { level: number }>,
-          ),
-        }
+            children: stripLevel(n.children as Array<TocItem & { level: number }>),
+          }
         : {}),
     }));
   }
 
-  export function buildTocFromHeadings(
-    options: BuildTocFromHeadingsOptions = {},
-  ): TocItem[] {
-    if (typeof document === "undefined") return [];
+  export function buildTocFromHeadings(options: BuildTocFromHeadingsOptions = {}): TocItem[] {
+    if (typeof document === 'undefined') return [];
 
     const minLevel = options.minLevel ?? 2;
     const maxLevel = options.maxLevel ?? 6;
-    const root = options.root ??
-      (document.querySelector("main") as HTMLElement | null) ??
+    const root =
+      options.root ??
+      (document.querySelector('main') as HTMLElement | null) ??
       (document.body as HTMLElement);
 
     const headingInfo = collectHeadingInfo(root, minLevel, maxLevel);
@@ -138,9 +123,12 @@
 </script>
 
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { browser } from "$app/environment";
-  import FloatingPanel from "./FloatingPanel.svelte";
+  import { onMount } from 'svelte';
+  import { SvelteMap } from 'svelte/reactivity';
+
+  import FloatingPanel from './FloatingPanel.svelte';
+
+  import { browser } from '$app/environment';
 
   type TocItem = {
     id: string;
@@ -157,7 +145,7 @@
   };
 
   export let items: TocItem[] = [];
-  export let title: string = "目录";
+  export let title: string = '目录';
 
   let activeId: string | null = null;
   let scrollScheduled = false;
@@ -189,17 +177,15 @@
     const offset = 120;
     let current: string | null = null;
     for (const item of list) {
-      const id = item.href.startsWith("#") ? item.href.slice(1) : item.id;
+      const id = item.href.startsWith('#') ? item.href.slice(1) : item.id;
       const el = document.getElementById(id);
       if (!el) continue;
       const top = el.getBoundingClientRect().top;
       if (top - offset <= 0) current = id;
     }
 
-    activeId = current ??
-      (list[0]?.href.startsWith("#")
-        ? list[0].href.slice(1)
-        : (list[0]?.id ?? null));
+    activeId =
+      current ?? (list[0]?.href.startsWith('#') ? list[0].href.slice(1) : (list[0]?.id ?? null));
   }
 
   function scheduleUpdateActive(): void {
@@ -216,26 +202,26 @@
   }
 
   function onNavigate(item: FlatTocItem, event: MouseEvent): void {
-    if (!item.href.startsWith("#")) return;
+    if (!item.href.startsWith('#')) return;
     event.preventDefault();
 
     const id = decodeURIComponent(item.href.slice(1));
     const el = document.getElementById(id);
-    el?.scrollIntoView({ behavior: "smooth", block: "start" });
-    history.replaceState(null, "", `#${encodeURIComponent(id)}`);
+    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.replaceState(null, '', `#${encodeURIComponent(id)}`);
   }
 
   onMount(() => {
-    window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize);
-    window.addEventListener("hashchange", onScrollOrResize);
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
+    window.addEventListener('hashchange', onScrollOrResize);
 
     scheduleUpdateActive();
 
     return () => {
-      window.removeEventListener("scroll", onScrollOrResize);
-      window.removeEventListener("resize", onScrollOrResize);
-      window.removeEventListener("hashchange", onScrollOrResize);
+      window.removeEventListener('scroll', onScrollOrResize);
+      window.removeEventListener('resize', onScrollOrResize);
+      window.removeEventListener('hashchange', onScrollOrResize);
     };
   });
 
@@ -260,12 +246,11 @@
         <a
           href={item.href}
           class={[
-            "block rounded-lg py-2 pr-3 text-[0.9rem] leading-snug transition-colors",
-            activeId ===
-                (item.href.startsWith("#") ? item.href.slice(1) : item.id)
-              ? "bg-white/10 text-sky-200"
-              : "text-white/85 hover:bg-white/8 hover:text-white",
-          ].join(" ")}
+            'block rounded-lg py-2 pr-3 text-[0.9rem] leading-snug transition-colors',
+            activeId === (item.href.startsWith('#') ? item.href.slice(1) : item.id)
+              ? 'bg-white/10 text-sky-200'
+              : 'text-white/85 hover:bg-white/8 hover:text-white',
+          ].join(' ')}
           style={`padding-left: ${12 + item.depth * 14}px;`}
           on:click={(e) => onNavigate(item, e)}
         >

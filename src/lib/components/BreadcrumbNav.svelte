@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { cubicInOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
-  import { resolve } from "$app/paths";
-  import { GlassPanel } from "$lib/components/ui";
+  import { onMount } from 'svelte';
+  import { cubicInOut } from 'svelte/easing';
+  import { fade } from 'svelte/transition';
+
+  import { resolve } from '$app/paths';
+  import { GlassPanel } from '$lib/components/ui';
 
   interface BreadcrumbItem {
     /** 显示文本 */
@@ -11,7 +12,7 @@
     /** 跳转链接（可选，最后一项通常不提供） */
     href?: string;
     /** 图标（可选） */
-    icon?: import("svelte").Snippet;
+    icon?: import('svelte').Snippet;
     /** 是否禁用点击 */
     disabled?: boolean;
   }
@@ -32,7 +33,7 @@
     /** 自定义面板类名 */
     panelClass?: string;
     /** 面包屑图标（收起状态显示） */
-    icon?: import("svelte").Snippet;
+    icon?: import('svelte').Snippet;
     /** 无障碍标签 */
     ariaLabel?: string;
     /** 分隔符（默认为 "→"） */
@@ -45,19 +46,19 @@
     initiallyOpen = false,
     closeDelayMs = 500,
     autoCloseMs = 3000,
-    containerClass = "",
-    panelClass = "",
+    containerClass = '',
+    panelClass = '',
     icon,
-    ariaLabel = "面包屑导航",
-    separator = "→",
+    ariaLabel = '面包屑导航',
+    separator = '→',
   }: Props = $props();
 
   const fadeDurationMs = 200;
 
   function getSessionFlag(key: string): boolean {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
     try {
-      return window.sessionStorage.getItem(key) === "1";
+      return window.sessionStorage.getItem(key) === '1';
     } catch {
       return false;
     }
@@ -122,50 +123,42 @@
 
   onMount(() => {
     try {
-      window.sessionStorage.setItem(sessionKey, "1");
+      window.sessionStorage.setItem(sessionKey, '1');
     } catch (e) {
       void e;
     }
 
     const onOutsidePointerDown = (event: PointerEvent) => {
       if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
       closeImmediately();
     };
 
     const onOutsideKeyDown = (event: KeyboardEvent) => {
       if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
       closeImmediately();
     };
 
     const onOutsideWheel = (event: WheelEvent) => {
       if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
       closeImmediately();
     };
 
     const onOutsideFocusIn = (event: FocusEvent) => {
       if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
       closeImmediately();
     };
 
-    document.addEventListener("pointerdown", onOutsidePointerDown, true);
-    document.addEventListener("keydown", onOutsideKeyDown, true);
-    document.addEventListener("wheel", onOutsideWheel, {
+    document.addEventListener('pointerdown', onOutsidePointerDown, true);
+    document.addEventListener('keydown', onOutsideKeyDown, true);
+    document.addEventListener('wheel', onOutsideWheel, {
       capture: true,
       passive: true,
     });
-    document.addEventListener("focusin", onOutsideFocusIn, true);
+    document.addEventListener('focusin', onOutsideFocusIn, true);
 
     enableTransitions = true;
 
@@ -178,14 +171,10 @@
 
     return () => {
       clearTimers();
-      document.removeEventListener(
-        "pointerdown",
-        onOutsidePointerDown,
-        true,
-      );
-      document.removeEventListener("keydown", onOutsideKeyDown, true);
-      document.removeEventListener("wheel", onOutsideWheel, true);
-      document.removeEventListener("focusin", onOutsideFocusIn, true);
+      document.removeEventListener('pointerdown', onOutsidePointerDown, true);
+      document.removeEventListener('keydown', onOutsideKeyDown, true);
+      document.removeEventListener('wheel', onOutsideWheel, true);
+      document.removeEventListener('focusin', onOutsideFocusIn, true);
     };
   });
 
@@ -229,7 +218,7 @@
         if (!keyedOpen) openNow();
       }}
       onkeydown={(event: KeyboardEvent) => {
-        if (event.key === "Enter" || event.key === " ") {
+        if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
           if (!keyedOpen) openNow();
         }
@@ -255,27 +244,9 @@
               class="size-4"
               fill="currentColor"
             >
-              <circle
-                cx="5"
-                cy="12"
-                r="1.5"
-                fill="currentColor"
-                opacity="0.7"
-              />
-              <circle
-                cx="12"
-                cy="12"
-                r="1.5"
-                fill="currentColor"
-                opacity="0.7"
-              />
-              <circle
-                cx="19"
-                cy="12"
-                r="1.5"
-                fill="currentColor"
-                opacity="0.7"
-              />
+              <circle cx="5" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
+              <circle cx="19" cy="12" r="1.5" fill="currentColor" opacity="0.7" />
             </svg>
           {/if}
         </div>
@@ -291,9 +262,7 @@
             {/if}
 
             {#if index === lastItemIndex || item.disabled}
-              <span
-                class="flex cursor-default items-center gap-2 font-medium text-white"
-              >
+              <span class="flex cursor-default items-center gap-2 font-medium text-white">
                 {#if item.icon}
                   <span class="inline-flex">{@render item.icon()}</span>
                 {/if}
@@ -301,7 +270,7 @@
               </span>
             {:else}
               <a
-                href={item.href ?? "#"}
+                href={item.href ?? '#'}
                 class="flex items-center gap-2 text-white/90 no-underline transition-colors duration-150 hover:text-white"
                 onclick={(event) => event.stopPropagation()}
               >

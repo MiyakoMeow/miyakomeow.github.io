@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { SvelteURL } from 'svelte/reactivity';
+
   interface LevelRefItem {
     level: string;
     ref: string;
@@ -12,8 +14,7 @@
   let leftTableData: LevelRefItem[] = [];
   let rightTableData: LevelRefItem[] = [];
 
-  let tableHalves: Array<{ id: "left" | "right"; items: LevelRefItem[] }> =
-    [];
+  let tableHalves: Array<{ id: 'left' | 'right'; items: LevelRefItem[] }> = [];
 
   $: {
     const data = levelRefData;
@@ -23,28 +24,26 @@
   }
 
   $: tableHalves = [
-    { id: "left", items: leftTableData },
-    { id: "right", items: rightTableData },
+    { id: 'left', items: leftTableData },
+    { id: 'right', items: rightTableData },
   ];
 
   function buildLevelRefUrl(headerUrlRaw: string): string {
     try {
-      const baseUrl = new URL(headerUrlRaw, window.location.href);
-      const pathParts = baseUrl.pathname.split("/");
-      pathParts[pathParts.length - 1] = "level-ref.json";
-      baseUrl.pathname = pathParts.join("/");
+      const baseUrl = new SvelteURL(headerUrlRaw, window.location.href);
+      const pathParts = baseUrl.pathname.split('/');
+      pathParts[pathParts.length - 1] = 'level-ref.json';
+      baseUrl.pathname = pathParts.join('/');
       return baseUrl.toString();
     } catch (err) {
-      console.error("构建 level-ref.json URL 失败:", err);
-      return "";
+      console.error('构建 level-ref.json URL 失败:', err);
+      return '';
     }
   }
 
   let requestToken = 0;
 
-  async function loadLevelRefData(
-    header: string | undefined,
-  ): Promise<void> {
+  async function loadLevelRefData(header: string | undefined): Promise<void> {
     if (!header) {
       shouldShow = false;
       return;
@@ -71,18 +70,16 @@
           levelRefData = data;
           shouldShow = true;
         } else {
-          console.warn("level-ref.json 格式不正确，应为数组");
+          console.warn('level-ref.json 格式不正确，应为数组');
           shouldShow = false;
         }
       } else if (response.status === 404) {
         shouldShow = false;
       } else {
-        throw new Error(
-          `加载失败: ${response.status} ${response.statusText}`,
-        );
+        throw new Error(`加载失败: ${response.status} ${response.statusText}`);
       }
     } catch (err) {
-      console.error("加载难度对照表数据失败:", err);
+      console.error('加载难度对照表数据失败:', err);
       shouldShow = false;
     }
   }
@@ -98,13 +95,13 @@
         <div class="min-w-[18rem] flex-1">
           <table class="table-glass">
             <colgroup>
-              {#each ["40%", "60%"] as w (w)}
+              {#each ['40%', '60%'] as w (w)}
                 <col style={`width: ${w}`} />
               {/each}
             </colgroup>
             <thead>
               <tr>
-                {#each ["难度等级", "对应难度"] as label (label)}
+                {#each ['难度等级', '对应难度'] as label (label)}
                   <th class="table-th-glass">
                     {label}
                   </th>

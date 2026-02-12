@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  import { onDestroy } from 'svelte';
+  import { SvelteSet } from 'svelte/reactivity';
 
   export let watchKeys: unknown = undefined;
 
-  const containers = new Set<HTMLDivElement>();
+  const containers = new SvelteSet<HTMLDivElement>();
 
   let isSyncing = false;
   let rafId: number | null = null;
@@ -30,11 +31,11 @@
   }
 
   function attach(el: HTMLDivElement): void {
-    el.addEventListener("scroll", onWrapperScroll, { passive: true });
+    el.addEventListener('scroll', onWrapperScroll, { passive: true });
   }
 
   function detach(el: HTMLDivElement): void {
-    el.removeEventListener("scroll", onWrapperScroll);
+    el.removeEventListener('scroll', onWrapperScroll);
   }
 
   function refresh(): void {

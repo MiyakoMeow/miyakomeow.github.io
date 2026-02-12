@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { cubicIn, cubicOut } from 'svelte/easing';
+  import { SvelteMap } from 'svelte/reactivity';
+  import { fly } from 'svelte/transition';
+
   import JsonPreview, {
     jsonPreview,
     type JsonPreviewHandle,
-  } from "$lib/components/JsonPreview.svelte";
-  import { cubicIn, cubicOut } from "svelte/easing";
-  import { fly } from "svelte/transition";
+  } from '$lib/components/JsonPreview.svelte';
 
   interface MirrorTableItem {
     url: string;
@@ -25,21 +27,19 @@
     .map(([url]) => new URL(url, window.location.origin).toString());
 
   $: urlToOrigin = (() => {
-    const m = new Map<string, string>();
+    const m = new SvelteMap<string, string>();
     for (const t of tables) {
       if (!t.url) continue;
       const mirrorAbs = new URL(t.url, window.location.origin).toString();
-      const rawOri = String(t.url_ori || "").trim();
-      const oriAbs = rawOri.length > 0
-        ? new URL(rawOri, window.location.origin).toString()
-        : "";
+      const rawOri = String(t.url_ori || '').trim();
+      const oriAbs = rawOri.length > 0 ? new URL(rawOri, window.location.origin).toString() : '';
       m.set(mirrorAbs, oriAbs);
     }
     return m;
   })();
 
   $: selectedOriginArray = selectedMirrorArray
-    .map((u) => urlToOrigin.get(u) || "")
+    .map((u) => urlToOrigin.get(u) || '')
     .filter((v) => v.length > 0);
 </script>
 
@@ -63,7 +63,7 @@
             preview: mirrorPreview,
             options: {
               value: selectedMirrorArray,
-              label: "镜像链接 JSON",
+              label: '镜像链接 JSON',
               maxHeightRem: 12,
             },
           }}
@@ -77,7 +77,7 @@
             preview: originPreview,
             options: {
               value: selectedOriginArray,
-              label: "原链接 JSON",
+              label: '原链接 JSON',
               maxHeightRem: 12,
             },
           }}

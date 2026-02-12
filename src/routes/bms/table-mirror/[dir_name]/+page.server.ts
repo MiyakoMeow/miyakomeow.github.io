@@ -1,7 +1,9 @@
-import type { PageServerLoad } from "./$types";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { error } from "@sveltejs/kit";
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { error } from '@sveltejs/kit';
+
+import type { PageServerLoad } from './$types';
 
 export const prerender = true;
 
@@ -12,8 +14,8 @@ export const prerender = true;
 export function entries() {
   try {
     // 读取 tables_proxy.json
-    const jsonPath = join("static", "bms", "table-mirror", "tables_proxy.json");
-    const fileContent = readFileSync(jsonPath, "utf-8");
+    const jsonPath = join('static', 'bms', 'table-mirror', 'tables_proxy.json');
+    const fileContent = readFileSync(jsonPath, 'utf-8');
     const tables_proxy = JSON.parse(fileContent) as Array<{
       dir_name: string;
       url: string;
@@ -22,7 +24,7 @@ export function entries() {
 
     // 过滤出有效的 dir_name
     const validTables = tables_proxy.filter(
-      (item) => item.dir_name && item.dir_name.trim().length > 0,
+      (item) => item.dir_name && item.dir_name.trim().length > 0
     );
 
     console.log(`[Prerender] Found ${validTables.length} tables to prerender`);
@@ -32,7 +34,7 @@ export function entries() {
       dir_name: item.dir_name,
     }));
   } catch (err) {
-    console.error("[Prerender] Failed to load tables_proxy.json:", err);
+    console.error('[Prerender] Failed to load tables_proxy.json:', err);
     return [];
   }
 }
@@ -46,8 +48,8 @@ export const load: PageServerLoad = ({ params, locals }) => {
 
   try {
     // 读取 tables_proxy.json
-    const jsonPath = join("static", "bms", "table-mirror", "tables_proxy.json");
-    const fileContent = readFileSync(jsonPath, "utf-8");
+    const jsonPath = join('static', 'bms', 'table-mirror', 'tables_proxy.json');
+    const fileContent = readFileSync(jsonPath, 'utf-8');
     const tables_proxy = JSON.parse(fileContent) as Array<{
       dir_name: string;
       url: string;

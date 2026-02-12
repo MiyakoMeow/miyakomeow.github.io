@@ -1,21 +1,22 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { cubicInOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
-  import { GlassPanel } from "$lib/components/ui";
+  import { onMount } from 'svelte';
+  import { cubicInOut } from 'svelte/easing';
+  import { fade } from 'svelte/transition';
+
+  import { GlassPanel } from '$lib/components/ui';
 
   interface Props {
     sessionKey: string;
     initiallyOpen: boolean;
     closeDelayMs?: number;
     autoCloseMs?: number;
-    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    size?: "small" | "medium" | "large";
+    position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+    size?: 'small' | 'medium' | 'large';
     ariaLabel?: string;
     containerClass?: string;
     panelClass?: string;
-    children?: import("svelte").Snippet;
-    icon?: import("svelte").Snippet;
+    children?: import('svelte').Snippet;
+    icon?: import('svelte').Snippet;
   }
 
   const {
@@ -23,11 +24,11 @@
     initiallyOpen,
     closeDelayMs = 500,
     autoCloseMs = 3000,
-    position = "top-right",
-    size = "medium",
-    ariaLabel = "面板",
-    containerClass = "",
-    panelClass = "",
+    position = 'top-right',
+    size = 'medium',
+    ariaLabel = '面板',
+    containerClass = '',
+    panelClass = '',
     children,
     icon,
   }: Props = $props();
@@ -35,9 +36,9 @@
   const fadeDurationMs = 200;
 
   function getSessionFlag(key: string): boolean {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
     try {
-      return window.sessionStorage.getItem(key) === "1";
+      return window.sessionStorage.getItem(key) === '1';
     } catch {
       return false;
     }
@@ -102,50 +103,42 @@
 
   onMount(() => {
     try {
-      window.sessionStorage.setItem(sessionKey, "1");
+      window.sessionStorage.setItem(sessionKey, '1');
     } catch (e) {
       void e;
     }
 
     const onOutsidePointerDown = (event: PointerEvent) => {
       if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
       closeImmediately();
     };
 
     const onOutsideKeyDown = (event: KeyboardEvent) => {
       if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
       closeImmediately();
     };
 
     const onOutsideWheel = (event: WheelEvent) => {
       if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
       closeImmediately();
     };
 
     const onOutsideFocusIn = (event: FocusEvent) => {
       if (!container) return;
-      if (
-        event.target instanceof Node && container.contains(event.target)
-      ) return;
+      if (event.target instanceof Node && container.contains(event.target)) return;
       closeImmediately();
     };
 
-    document.addEventListener("pointerdown", onOutsidePointerDown, true);
-    document.addEventListener("keydown", onOutsideKeyDown, true);
-    document.addEventListener("wheel", onOutsideWheel, {
+    document.addEventListener('pointerdown', onOutsidePointerDown, true);
+    document.addEventListener('keydown', onOutsideKeyDown, true);
+    document.addEventListener('wheel', onOutsideWheel, {
       capture: true,
       passive: true,
     });
-    document.addEventListener("focusin", onOutsideFocusIn, true);
+    document.addEventListener('focusin', onOutsideFocusIn, true);
 
     enableTransitions = true;
 
@@ -158,39 +151,35 @@
 
     return () => {
       clearTimers();
-      document.removeEventListener(
-        "pointerdown",
-        onOutsidePointerDown,
-        true,
-      );
-      document.removeEventListener("keydown", onOutsideKeyDown, true);
-      document.removeEventListener("wheel", onOutsideWheel, true);
-      document.removeEventListener("focusin", onOutsideFocusIn, true);
+      document.removeEventListener('pointerdown', onOutsidePointerDown, true);
+      document.removeEventListener('keydown', onOutsideKeyDown, true);
+      document.removeEventListener('wheel', onOutsideWheel, true);
+      document.removeEventListener('focusin', onOutsideFocusIn, true);
     };
   });
 
   const positionConfig = {
-    "top-left": "top-4 left-4",
-    "top-right": "top-4 right-4",
-    "bottom-left": "bottom-4 left-4",
-    "bottom-right": "bottom-4 right-4",
+    'top-left': 'top-4 left-4',
+    'top-right': 'top-4 right-4',
+    'bottom-left': 'bottom-4 left-4',
+    'bottom-right': 'bottom-4 right-4',
   };
 
   const sizeConfig = {
     small: {
-      maxHeightClass: "max-h-[50vh]",
-      widthClass: "w-[min(280px,calc(100vw-2rem))]",
-      paddingClass: "p-4",
+      maxHeightClass: 'max-h-[50vh]',
+      widthClass: 'w-[min(280px,calc(100vw-2rem))]',
+      paddingClass: 'p-4',
     },
     medium: {
-      maxHeightClass: "max-h-[60vh]",
-      widthClass: "w-[min(320px,calc(100vw-2rem))]",
-      paddingClass: "p-4",
+      maxHeightClass: 'max-h-[60vh]',
+      widthClass: 'w-[min(320px,calc(100vw-2rem))]',
+      paddingClass: 'p-4',
     },
     large: {
-      maxHeightClass: "max-h-[600px]",
-      widthClass: "w-[min(380px,calc(100vw-2rem))]",
-      paddingClass: "p-8",
+      maxHeightClass: 'max-h-[600px]',
+      widthClass: 'w-[min(380px,calc(100vw-2rem))]',
+      paddingClass: 'p-8',
     },
   };
 
@@ -235,7 +224,7 @@
         if (!keyedOpen) openNow();
       }}
       onkeydown={(event: KeyboardEvent) => {
-        if (event.key === "Enter" || event.key === " ") {
+        if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
           if (!keyedOpen) openNow();
         }
@@ -266,11 +255,7 @@
           {/if}
         </div>
 
-        <div
-          class=""
-          class:opacity-100={keyedOpen}
-          class:opacity-0={!keyedOpen}
-        >
+        <div class="" class:opacity-100={keyedOpen} class:opacity-0={!keyedOpen}>
           {#if children}
             {@render children()}
           {/if}

@@ -1,7 +1,5 @@
 <script context="module" lang="ts">
-  export type JsonPreviewCopyHandler = (
-    text: string,
-  ) => Promise<void> | void;
+  export type JsonPreviewCopyHandler = (text: string) => Promise<void> | void;
 
   export interface JsonPreviewShowOptions {
     value: unknown;
@@ -14,7 +12,7 @@
     show: (
       options: JsonPreviewShowOptions,
       clientX: number,
-      clientY: number,
+      clientY: number
     ) => void | Promise<void>;
     scheduleHide: () => void;
     hideNow: () => void;
@@ -26,16 +24,11 @@
     disabled?: boolean;
   };
 
-  export function jsonPreview(
-    node: HTMLElement,
-    params: JsonPreviewActionParams,
-  ) {
+  export function jsonPreview(node: HTMLElement, params: JsonPreviewActionParams) {
     let current = params;
 
     function getOptions(): JsonPreviewShowOptions {
-      return typeof current.options === "function"
-        ? current.options()
-        : current.options;
+      return typeof current.options === 'function' ? current.options() : current.options;
     }
 
     function onEnter(event: PointerEvent): void {
@@ -50,34 +43,34 @@
       current.preview?.scheduleHide();
     }
 
-    node.addEventListener("pointerenter", onEnter);
-    node.addEventListener("pointerleave", onLeave);
+    node.addEventListener('pointerenter', onEnter);
+    node.addEventListener('pointerleave', onLeave);
 
     return {
       update(next: JsonPreviewActionParams) {
         current = next;
       },
       destroy() {
-        node.removeEventListener("pointerenter", onEnter);
-        node.removeEventListener("pointerleave", onLeave);
+        node.removeEventListener('pointerenter', onEnter);
+        node.removeEventListener('pointerleave', onLeave);
       },
     };
   }
 </script>
 
 <script lang="ts">
-  import { onDestroy, tick } from "svelte";
-  import { cubicOut } from "svelte/easing";
-  import { fade, fly } from "svelte/transition";
+  import { onDestroy, tick } from 'svelte';
+  import { cubicOut } from 'svelte/easing';
+  import { fade, fly } from 'svelte/transition';
 
   let open = false;
   let value: unknown = undefined;
-  let label = "JSON";
+  let label = 'JSON';
   let maxHeightRem = 14;
   let onCopy: JsonPreviewCopyHandler | undefined = undefined;
 
   let popoverEl: HTMLDivElement | undefined;
-  let popoverStyle = "";
+  let popoverStyle = '';
 
   let hideTimer: ReturnType<typeof setTimeout> | undefined;
   let copied = false;
@@ -89,20 +82,20 @@
       return JSON.stringify(
         input,
         (_key, v) => {
-          if (typeof v === "bigint") return v.toString();
-          if (typeof v === "object" && v !== null) {
-            if (seen.has(v)) return "[Circular]";
+          if (typeof v === 'bigint') return v.toString();
+          if (typeof v === 'object' && v !== null) {
+            if (seen.has(v)) return '[Circular]';
             seen.add(v);
           }
           return v;
         },
-        space,
+        space
       );
     } catch {
       try {
         return String(input);
       } catch {
-        return "[Unserializable]";
+        return '[Unserializable]';
       }
     }
   }
@@ -111,7 +104,7 @@
 
   async function copyText(
     text: string,
-    onCopy: ((text: string) => Promise<void> | void) | undefined,
+    onCopy: ((text: string) => Promise<void> | void) | undefined
   ): Promise<void> {
     if (onCopy) {
       await onCopy(text);
@@ -124,10 +117,10 @@
       }
     } catch {}
 
-    const textarea = document.createElement("textarea");
+    const textarea = document.createElement('textarea');
     textarea.value = text;
-    textarea.style.position = "fixed";
-    textarea.style.opacity = "0";
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
     document.body.appendChild(textarea);
     textarea.focus();
     textarea.select();
@@ -160,16 +153,17 @@
     let el: HTMLElement | null = node.parentElement;
     while (el) {
       const style = getComputedStyle(el);
-      const contain = style.contain ?? "";
-      const willChange = style.willChange ?? "";
+      const contain = style.contain ?? '';
+      const willChange = style.willChange ?? '';
 
-      const createsContainingBlock = style.transform !== "none" ||
-        style.perspective !== "none" ||
-        style.filter !== "none" ||
-        style.backdropFilter !== "none" ||
-        contain.includes("paint") ||
-        willChange.includes("transform") ||
-        willChange.includes("filter");
+      const createsContainingBlock =
+        style.transform !== 'none' ||
+        style.perspective !== 'none' ||
+        style.filter !== 'none' ||
+        style.backdropFilter !== 'none' ||
+        contain.includes('paint') ||
+        willChange.includes('transform') ||
+        willChange.includes('filter');
 
       if (createsContainingBlock) return el.getBoundingClientRect();
       el = el.parentElement;
@@ -196,19 +190,13 @@
     if (left + popRect.width + margin > viewportW) {
       left = localX - offset - popRect.width;
     }
-    left = Math.max(
-      margin,
-      Math.min(left, viewportW - popRect.width - margin),
-    );
+    left = Math.max(margin, Math.min(left, viewportW - popRect.width - margin));
 
     let top = localY + offset;
     if (top + popRect.height + margin > viewportH) {
       top = localY - offset - popRect.height;
     }
-    top = Math.max(
-      margin,
-      Math.min(top, viewportH - popRect.height - margin),
-    );
+    top = Math.max(margin, Math.min(top, viewportH - popRect.height - margin));
 
     popoverStyle = `left:${left}px;top:${top}px;`;
   }
@@ -216,12 +204,12 @@
   export async function show(
     options: JsonPreviewShowOptions,
     clientX: number,
-    clientY: number,
+    clientY: number
   ): Promise<void> {
     cancelHide();
     open = true;
     value = options.value;
-    label = options.label ?? "JSON";
+    label = options.label ?? 'JSON';
     maxHeightRem = options.maxHeightRem ?? 14;
     onCopy = options.onCopy;
 
@@ -248,7 +236,7 @@
 
 <svelte:window
   on:keydown={(event) => {
-    if (event.key === "Escape") hideNow();
+    if (event.key === 'Escape') hideNow();
   }}
 />
 
@@ -262,9 +250,7 @@
     on:pointerenter={cancelHide}
     on:pointerleave={scheduleHide}
   >
-    <div
-      class="flex items-center justify-between gap-3 border-b border-white/10 p-3"
-    >
+    <div class="flex items-center justify-between gap-3 border-b border-white/10 p-3">
       <div class="text-[0.9rem] font-semibold text-white/90">{label}</div>
       <div class="flex gap-2">
         <button
@@ -272,7 +258,7 @@
           type="button"
           on:click={copyJson}
         >
-          {copied ? "已复制" : "复制"}
+          {copied ? '已复制' : '复制'}
         </button>
         <button
           class="cursor-pointer rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-[0.85rem] font-semibold text-white transition-all duration-200 ease-in-out hover:bg-white/15"
@@ -285,7 +271,6 @@
     </div>
     <pre
       class="overflow-auto bg-black/20 p-3 font-mono text-[0.8rem] leading-relaxed text-white/90"
-      style={`max-height:${maxHeightRem}rem;`}
-    ><code>{jsonText}</code></pre>
+      style={`max-height:${maxHeightRem}rem;`}><code>{jsonText}</code></pre>
   </div>
 {/if}
