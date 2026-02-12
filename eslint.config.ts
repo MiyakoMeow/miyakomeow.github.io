@@ -2,6 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import js from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import betterTailwindCss from 'eslint-plugin-better-tailwindcss';
 import importX from 'eslint-plugin-import-x';
 import { configs as svelteConfigs } from 'eslint-plugin-svelte';
@@ -42,6 +43,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...svelteConfigs['flat/recommended'],
+  svelteConfigs['flat/prettier'],
 
   // 全局配置 - 统一 parserOptions 和全局变量
   {
@@ -97,5 +99,7 @@ export default tseslint.config(
       'better-tailwindcss/enforce-consistent-class-order': 'error',
       'better-tailwindcss/enforce-consistent-important-position': 'error',
     },
-  }
+  },
+
+  eslintConfigPrettier
 );
