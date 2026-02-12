@@ -1,9 +1,10 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
+  import { SvelteSet } from 'svelte/reactivity';
 
   export let watchKeys: unknown = undefined;
 
-  const containers = new Set<HTMLDivElement>();
+  const containers = new SvelteSet<HTMLDivElement>();
 
   let isSyncing = false;
   let rafId: number | null = null;

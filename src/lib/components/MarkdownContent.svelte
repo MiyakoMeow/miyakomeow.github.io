@@ -1,6 +1,7 @@
 <script lang="ts">
   import 'katex/dist/katex.min.css';
   import { onDestroy, onMount } from 'svelte';
+  import { SvelteMap } from 'svelte/reactivity';
 
   export let className: string = '';
 
@@ -29,7 +30,7 @@
     if (!container) return;
 
     const headings = Array.from(container.querySelectorAll('h1,h2,h3,h4,h5,h6'));
-    const usedIds = new Map<string, number>();
+    const usedIds = new SvelteMap<string, number>();
 
     for (const heading of headings) {
       const existingAnchor = heading.querySelector(':scope > a.heading-anchor');

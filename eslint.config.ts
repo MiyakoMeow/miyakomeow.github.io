@@ -1,13 +1,14 @@
-import js from '@eslint/js';
-
-import svelteConfig from './svelte.config.ts';
-import { configs as svelteConfigs } from 'eslint-plugin-svelte';
-import globals from 'globals';
-import importX from 'eslint-plugin-import-x';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import tseslint from 'typescript-eslint';
+
+import js from '@eslint/js';
 import betterTailwindCss from 'eslint-plugin-better-tailwindcss';
+import importX from 'eslint-plugin-import-x';
+import { configs as svelteConfigs } from 'eslint-plugin-svelte';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+
+import svelteConfig from './svelte.config.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

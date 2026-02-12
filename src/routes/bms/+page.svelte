@@ -1,17 +1,17 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
 
+  import BmsContent from '$content/bms/index.md';
   import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte';
-  import ProfileCard from '$lib/components/ProfileCard.svelte';
   import FloatingToc, {
     buildTocFromHeadings,
     type TocItem,
   } from '$lib/components/FloatingToc.svelte';
+  import MarkdownContent from '$lib/components/MarkdownContent.svelte';
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
   import QuickActions from '$lib/components/QuickActions.svelte';
   import StarryBackground from '$lib/components/StarryBackground.svelte';
-  import MarkdownContent from '$lib/components/MarkdownContent.svelte';
   import { GlassCard, GlassContainer } from '$lib/components/ui';
-  import BmsContent from '$content/bms/index.md';
 
   interface LinkItem {
     href: string;

@@ -3,6 +3,7 @@
   "include": [
     "eslint.config.ts",
     "prettier.config.ts",
+    "vite.config.ts",
     "src/**/*.ts",
     "src/**/*.js",
     "src/**/*.svelte",

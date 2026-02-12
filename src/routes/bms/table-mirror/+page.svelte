@@ -1,13 +1,15 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
   import * as OpenCC from 'opencc-js';
-  import GroupedTablesSection from '$lib/components/bms/GroupedTablesSection.svelte';
-  import SelectedTablesPanel from '$lib/components/bms/SelectedTablesPanel.svelte';
+  import { onMount, tick } from 'svelte';
+  import { SvelteSet, SvelteMap } from 'svelte/reactivity';
+
   import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte';
-  import ProfileCard from '$lib/components/ProfileCard.svelte';
   import FloatingToc, { type TocItem } from '$lib/components/FloatingToc.svelte';
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
   import QuickActions from '$lib/components/QuickActions.svelte';
   import StarryBackground from '$lib/components/StarryBackground.svelte';
+  import GroupedTablesSection from '$lib/components/bms/GroupedTablesSection.svelte';
+  import SelectedTablesPanel from '$lib/components/bms/SelectedTablesPanel.svelte';
   import { GlassCard, GlassContainer } from '$lib/components/ui';
 
   interface MirrorTableItem {
@@ -69,7 +71,7 @@
     if (input.length === 0) return [];
 
     const normalized = input.normalize('NFKC');
-    const needles = new Set<string>();
+    const needles = new SvelteSet<string>();
 
     const add = (value: string) => {
       const v = value.normalize('NFKC').toLowerCase();
@@ -146,7 +148,10 @@
         });
 
   $: groupedByTags = (() => {
-    const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>();
+    const groupsMap = new SvelteMap<
+      string,
+      { order: number; tag2Map: Map<string, MirrorTableItem[]> }
+    >();
 
     filteredTables.forEach((item) => {
       const tag1 = item.tag1 || '未分类';

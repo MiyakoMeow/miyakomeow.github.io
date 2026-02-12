@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  import ProfileCard from '$lib/components/ProfileCard.svelte';
   import FloatingToc, {
     buildTocFromHeadings,
     type TocItem,
   } from '$lib/components/FloatingToc.svelte';
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
   import QuickActions from '$lib/components/QuickActions.svelte';
   import StarryBackground from '$lib/components/StarryBackground.svelte';
   import { GlassButton, GlassContainer } from '$lib/components/ui';

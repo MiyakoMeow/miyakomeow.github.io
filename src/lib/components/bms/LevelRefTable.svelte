@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { SvelteURL } from 'svelte/reactivity';
+
   interface LevelRefItem {
     level: string;
     ref: string;
@@ -28,7 +30,7 @@
 
   function buildLevelRefUrl(headerUrlRaw: string): string {
     try {
-      const baseUrl = new URL(headerUrlRaw, window.location.href);
+      const baseUrl = new SvelteURL(headerUrlRaw, window.location.href);
       const pathParts = baseUrl.pathname.split('/');
       pathParts[pathParts.length - 1] = 'level-ref.json';
       baseUrl.pathname = pathParts.join('/');

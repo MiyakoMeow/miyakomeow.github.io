@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { SvelteMap } from 'svelte/reactivity';
+
   import JsonPreview, {
     jsonPreview,
     type JsonPreviewHandle,
@@ -40,7 +42,7 @@
 
   $: {
     const order = levelOrder ?? [];
-    const orderIndex = new Map<string, number>();
+    const orderIndex = new SvelteMap<string, number>();
     order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
     const defined: DifficultyGroup[] = [];
     const others: DifficultyGroup[] = [];

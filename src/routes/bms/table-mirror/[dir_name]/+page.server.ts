@@ -1,7 +1,9 @@
-import type { PageServerLoad } from './$types';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+
 import { error } from '@sveltejs/kit';
+
+import type { PageServerLoad } from './$types';
 
 export const prerender = true;
 

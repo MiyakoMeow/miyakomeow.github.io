@@ -1,8 +1,10 @@
-import type { Plugin } from 'vite';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { scanBlogDirectory } from '../utils/blog-scanner';
 import process from 'node:process';
+
+import type { Plugin } from 'vite';
+
+import { scanBlogDirectory } from '../utils/blog-scanner';
 
 /**
  * Vite 插件：自动生成博客索引

@@ -1,12 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { SvelteMap } from 'svelte/reactivity';
+
+  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte';
+  import FloatingToc, { type TocItem } from '$lib/components/FloatingToc.svelte';
+  import ProfileCard from '$lib/components/ProfileCard.svelte';
+  import QuickActions from '$lib/components/QuickActions.svelte';
+  import StarryBackground from '$lib/components/StarryBackground.svelte';
   import ChartsTableSection from '$lib/components/bms/ChartsTableSection.svelte';
   import LevelRefTable from '$lib/components/bms/LevelRefTable.svelte';
-  import StarryBackground from '$lib/components/StarryBackground.svelte';
-  import ProfileCard from '$lib/components/ProfileCard.svelte';
-  import FloatingToc, { type TocItem } from '$lib/components/FloatingToc.svelte';
-  import QuickActions from '$lib/components/QuickActions.svelte';
-  import BreadcrumbNav from '$lib/components/BreadcrumbNav.svelte';
   import { formatBmsTableTitle } from '$lib/utils/title';
 
   interface ChartData {
@@ -166,7 +168,7 @@
     if (!tableData || !Array.isArray(tableData)) {
       return [];
     }
-    const groupsMap = new Map<string, DifficultyGroup>();
+    const groupsMap = new SvelteMap<string, DifficultyGroup>();
     const charts = tableData;
     for (const chart of charts) {
       const level = chart.level || 'unknown';
@@ -197,7 +199,7 @@
   const sortedDifficultyGroups = $derived(() => {
     const groups = groupedCharts();
     const order = headerData?.level_order ?? [];
-    const orderIndex = new Map<string, number>();
+    const orderIndex = new SvelteMap<string, number>();
     order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
     const defined: DifficultyGroup[] = [];
     const others: DifficultyGroup[] = [];

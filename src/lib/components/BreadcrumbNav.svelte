@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { cubicInOut } from 'svelte/easing';
   import { fade } from 'svelte/transition';
+
   import { resolve } from '$app/paths';
   import { GlassPanel } from '$lib/components/ui';
 

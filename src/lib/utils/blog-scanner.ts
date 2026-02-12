@@ -1,7 +1,10 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+
 import matter from 'gray-matter';
+
 import type { BlogPost } from '../types/blog';
+
 import { extractFirstSentence } from './blog-metadata';
 
 export interface BlogPostMetadata {

@@ -42,7 +42,7 @@
       return level >= minLevel && level <= maxLevel;
     }) as HTMLHeadingElement[];
 
-    const usedIds = new Map<string, number>();
+    const usedIds = new SvelteMap<string, number>();
     return headings
       .map((h) => {
         const text = (h.textContent ?? '').trim();
@@ -124,8 +124,11 @@
 
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { browser } from '$app/environment';
+  import { SvelteMap } from 'svelte/reactivity';
+
   import FloatingPanel from './FloatingPanel.svelte';
+
+  import { browser } from '$app/environment';
 
   type TocItem = {
     id: string;

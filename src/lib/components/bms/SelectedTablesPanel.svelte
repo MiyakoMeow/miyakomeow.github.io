@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { cubicIn, cubicOut } from 'svelte/easing';
+  import { SvelteMap } from 'svelte/reactivity';
+  import { fly } from 'svelte/transition';
+
   import JsonPreview, {
     jsonPreview,
     type JsonPreviewHandle,
   } from '$lib/components/JsonPreview.svelte';
-  import { cubicIn, cubicOut } from 'svelte/easing';
-  import { fly } from 'svelte/transition';
 
   interface MirrorTableItem {
     url: string;
@@ -25,7 +27,7 @@
     .map(([url]) => new URL(url, window.location.origin).toString());
 
   $: urlToOrigin = (() => {
-    const m = new Map<string, string>();
+    const m = new SvelteMap<string, string>();
     for (const t of tables) {
       if (!t.url) continue;
       const mirrorAbs = new URL(t.url, window.location.origin).toString();
