@@ -14,9 +14,9 @@ export const load: PageLoad = async ({ params }) => {
         order: post.order,
       },
       component: post.default,
-      title: formatBlogPostTitle(post.title || "文章"),
+      title: formatBlogPostTitle(post.title ?? "文章"),
     };
-  } catch (_e) {
+  } catch {
     throw new Error(`Post not found: ${params.slug}`);
   }
 };

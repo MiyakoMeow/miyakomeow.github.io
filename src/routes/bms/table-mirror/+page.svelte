@@ -150,11 +150,11 @@
     const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>();
 
     filteredTables.forEach((item) => {
-      const tag1 = item.tag1 || "未分类";
-      const tag2 = item.tag2 || "其它";
+      const tag1 = item.tag1 ?? "未分类";
+      const tag2 = item.tag2 ?? "其它";
       const orderRaw = item.tag_order;
       const order =
-        typeof orderRaw === "number" ? orderRaw : parseInt(String(orderRaw || "999"), 10);
+        typeof orderRaw === "number" ? orderRaw : parseInt(String(orderRaw ?? "999"), 10);
 
       if (!groupsMap.has(tag1)) {
         groupsMap.set(tag1, {
@@ -180,7 +180,7 @@
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([tag2, items]) => ({
             tag2,
-            items: items.sort((x, y) => (x.name || "").localeCompare(y.name || "")),
+            items: items.sort((x, y) => (x.name ?? "").localeCompare(y.name ?? "")),
           }));
         return { tag1, order: isNaN(order) ? 999 : order, subgroups };
       }
@@ -238,7 +238,7 @@
       }
 
       tables = (data as MirrorTableItem[]).map((item) => {
-        const dir = String(item.dir_name || "").replace(/^\/+|\/+$/g, "");
+        const dir = String(item.dir_name ?? "").replace(/^\/+|\/+/g, "");
         if (!dir) return item;
         return { ...item, url: `/bms/table-mirror/${dir}/` };
       });

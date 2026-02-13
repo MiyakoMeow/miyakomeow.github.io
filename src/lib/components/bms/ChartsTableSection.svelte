@@ -38,7 +38,7 @@
 
   let displayGroups: DifficultyGroup[] = [];
 
-  $: {
+  $: displayGroups = (() => {
     const order = levelOrder ?? [];
     const orderIndex = new Map<string, number>();
     order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
@@ -61,8 +61,8 @@
       if (!ai && bi) return 1;
       return as.localeCompare(bs);
     });
-    displayGroups = [...defined, ...others];
-  }
+    return [...defined, ...others];
+  })();
 
   function segmentColor(index: number, total: number): string {
     const palette = ["#4caf50", "#2196f3", "#ff9800", "#f44336", "#ce50d8", "#9c27b0"];
@@ -299,14 +299,14 @@
                           },
                         }}
                       >
-                        {chart.title || "未知标题"}
+                        {chart.title ?? "未知标题"}
                       </strong>
                     </td>
                     <td class="table-td-glass wrap-break-word">
-                      {chart.artist || "未知艺术家"}
+                      {chart.artist ?? "未知艺术家"}
                     </td>
                     <td class="table-td-glass wrap-break-word">
-                      {chart.comment || ""}
+                      {chart.comment ?? ""}
                     </td>
                   </tr>
                 {/each}

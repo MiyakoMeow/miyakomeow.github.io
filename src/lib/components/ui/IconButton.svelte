@@ -88,8 +88,8 @@
       ? {
           default: `linear-gradient(135deg, ${customGradient.start}, ${customGradient.end})`,
           hover: `linear-gradient(135deg, ${
-            customGradient.hoverStart || customGradient.start
-          }, ${customGradient.hoverEnd || customGradient.end})`,
+            customGradient.hoverStart ?? customGradient.start
+          }, ${customGradient.hoverEnd ?? customGradient.end})`,
         }
       : iconGradientConfig[variant]
   );

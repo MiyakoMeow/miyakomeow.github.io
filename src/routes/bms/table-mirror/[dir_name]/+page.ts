@@ -21,7 +21,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
   return {
     dir_name,
     headerUrl: tableItem.url,
-    originUrl: tableItem.url_ori || null,
+    originUrl: tableItem.url_ori ?? null,
     title: formatTitle("难度表"),
   };
 };

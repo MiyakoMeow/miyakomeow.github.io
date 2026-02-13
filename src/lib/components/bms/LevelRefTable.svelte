@@ -9,22 +9,14 @@
   let levelRefData: LevelRefItem[] = [];
   let shouldShow = false;
 
-  let leftTableData: LevelRefItem[] = [];
-  let rightTableData: LevelRefItem[] = [];
-
-  let tableHalves: { id: "left" | "right"; items: LevelRefItem[] }[] = [];
-
-  $: {
+  $: tableHalves = (() => {
     const data = levelRefData;
     const midIndex = Math.ceil(data.length / 2);
-    leftTableData = data.slice(0, midIndex);
-    rightTableData = data.slice(midIndex);
-  }
-
-  $: tableHalves = [
-    { id: "left", items: leftTableData },
-    { id: "right", items: rightTableData },
-  ];
+    return [
+      { id: "left" as const, items: data.slice(0, midIndex) },
+      { id: "right" as const, items: data.slice(midIndex) },
+    ];
+  })();
 
   function buildLevelRefUrl(headerUrlRaw: string): string {
     try {

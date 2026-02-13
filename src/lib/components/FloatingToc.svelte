@@ -144,7 +144,7 @@
   export let title = "目录";
 
   let activeId: string | null = null;
-  let scrollScheduled = false;
+  let _scrollScheduled = false;
 
   $: flatItems = flattenItems(items);
 
@@ -185,10 +185,10 @@
   }
 
   function scheduleUpdateActive(): void {
-    if (scrollScheduled) return;
-    scrollScheduled = true;
+    if (_scrollScheduled) return;
+    _scrollScheduled = true;
     requestAnimationFrame(() => {
-      scrollScheduled = false;
+      _scrollScheduled = false;
       updateActive();
     });
   }

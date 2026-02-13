@@ -69,7 +69,7 @@ export const load: PageServerLoad = ({ params, locals }) => {
     return {
       dir_name,
       headerUrl: tableItem.url,
-      originUrl: tableItem.url_ori || null,
+      originUrl: tableItem.url_ori ?? null,
     };
   } catch (err) {
     console.error(`Failed to load table ${dir_name}:`, err);

@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
 
   import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
-  import FloatingToc, { type TocItem } from "$lib/components/FloatingToc.svelte";
+  import FloatingToc from "$lib/components/FloatingToc.svelte";
   import ProfileCard from "$lib/components/ProfileCard.svelte";
   import QuickActions from "$lib/components/QuickActions.svelte";
   import StarryBackground from "$lib/components/StarryBackground.svelte";
@@ -128,7 +128,7 @@
       }
       headerData = await headerResponse.json();
 
-      pageTitle = String(headerData?.name || "未命名");
+      pageTitle = String(headerData?.name ?? "未命名");
       updateProgress("表头信息加载完成", 50);
 
       const dataUrl = headerData?.data_url;
@@ -170,7 +170,7 @@
     const groupsMap = new Map<string, DifficultyGroup>();
     const charts = tableData;
     for (const chart of charts) {
-      const level = chart.level || "unknown";
+      const level = chart.level ?? "unknown";
       if (!groupsMap.has(level)) {
         groupsMap.set(level, { level, charts: [] });
       }
@@ -265,7 +265,7 @@
     { label: "主页", href: "/" },
     { label: "BMS", href: "/bms" },
     {
-      label: headerData?.name || "加载难度表header中",
+      label: headerData?.name ?? "加载难度表header中",
     },
   ]);
 
@@ -403,11 +403,11 @@
               {#if headerData}
                 <p class="my-2 text-white/80">
                   <strong class="text-[#64b5f6]">难度表名称:</strong>
-                  {headerData.name || "未命名"}
+                  {headerData.name ?? "未命名"}
                 </p>
                 <p class="my-2 text-white/80">
                   <strong class="text-[#64b5f6]">难度表符号:</strong>
-                  {headerData.symbol || "未定义"}
+                  {headerData.symbol ?? "未定义"}
                 </p>
               {/if}
             </div>
@@ -440,8 +440,8 @@
           {#if sortedDifficultyGroups().length > 0}
             <ChartsTableSection
               groups={sortedDifficultyGroups()}
-              totalCharts={tableData?.length || 0}
-              levelOrder={headerData?.level_order || []}
+              totalCharts={tableData?.length ?? 0}
+              levelOrder={headerData?.level_order ?? []}
             />
           {:else}
             <div class="p-12 text-center">

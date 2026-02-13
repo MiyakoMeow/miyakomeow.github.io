@@ -13,12 +13,6 @@
   import StarryBackground from "$lib/components/StarryBackground.svelte";
   import { GlassCard, GlassContainer } from "$lib/components/ui";
 
-  interface LinkItem {
-    href: string;
-    title: string;
-    desc: string;
-  }
-
   const breadcrumbs = [{ label: "主页", href: "/" }, { label: "BMS" }];
 
   let tocItems: TocItem[] = [];

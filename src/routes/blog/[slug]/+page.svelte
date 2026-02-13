@@ -11,7 +11,7 @@
   const breadcrumbs = [
     { label: "主页", href: "/" },
     { label: "博客", href: "/blog" },
-    { label: post.title || "文章" },
+    { label: post.title ?? "文章" },
   ];
 </script>
 

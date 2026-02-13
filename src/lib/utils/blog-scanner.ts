@@ -38,14 +38,14 @@ export function scanBlogDirectory(blogDir: string, basePath = ""): BlogPost[] {
 
     // 从文件名提取 slug（不含扩展名）
     const filename = entry.replace(/\.(md|svx)$/, "");
-    const slug = metadata.slug || filename;
+    const slug = metadata.slug ?? filename;
 
     posts.push({
       slug,
       title: metadata.title,
       date: metadata.date,
       order: metadata.order,
-      firstSentence: metadata.description || extractFirstSentence(content),
+      firstSentence: metadata.description ?? extractFirstSentence(content),
       url: `${basePath}/blog/${slug}`,
     });
   }

@@ -262,7 +262,7 @@
                           />
                         </td>
                         <td class="border-b border-white/5 p-4 wrap-break-word text-white/90">
-                          {item.symbol || ""}
+                          {item.symbol ?? ""}
                         </td>
                         <td
                           class="min-w-50 border-b border-white/5 p-4 wrap-break-word text-white/90"
@@ -273,7 +273,7 @@
                               preview: tablePreview,
                               options: {
                                 value: item,
-                                label: `${item.name || "难度表"} JSON`,
+                                label: `${item.name ?? "难度表"} JSON`,
                                 maxHeightRem: 14,
                               },
                             }}
