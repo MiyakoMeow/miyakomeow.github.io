@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { onMount, tick } from "svelte";
   import * as OpenCC from "opencc-js";
-  import GroupedTablesSection from "$lib/components/bms/GroupedTablesSection.svelte";
-  import SelectedTablesPanel from "$lib/components/bms/SelectedTablesPanel.svelte";
+  import { onMount, tick } from "svelte";
+
   import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
+  import FloatingToc, { type TocItem } from "$lib/components/FloatingToc.svelte";
   import ProfileCard from "$lib/components/ProfileCard.svelte";
-  import FloatingToc, {
-    type TocItem,
-  } from "$lib/components/FloatingToc.svelte";
   import QuickActions from "$lib/components/QuickActions.svelte";
   import StarryBackground from "$lib/components/StarryBackground.svelte";
+  import GroupedTablesSection from "$lib/components/bms/GroupedTablesSection.svelte";
+  import SelectedTablesPanel from "$lib/components/bms/SelectedTablesPanel.svelte";
   import { GlassCard, GlassContainer } from "$lib/components/ui";
 
   interface MirrorTableItem {
@@ -124,7 +123,7 @@
   async function copyTables(): Promise<void> {
     const tablesJsonPath = new URL(
       "/bms/table-mirror/tables.json",
-      window.location.origin,
+      window.location.origin
     ).toString();
     await copySelected(tablesJsonPath);
     copied = true;
@@ -135,30 +134,27 @@
 
   $: normalizedSearch = searchQuery.trim().toLowerCase();
   $: searchNeedles = buildSearchNeedles(searchQuery);
-  $: filteredTables = normalizedSearch.length === 0
-    ? tables
-    : tables.filter((item) => {
-      const haystack = [item.name, item.symbol]
-        .filter((v): v is string => typeof v === "string" && v.length > 0)
-        .join("\n")
-        .normalize("NFKC")
-        .toLowerCase();
-      return searchNeedles.some((needle) => haystack.includes(needle));
-    });
+  $: filteredTables =
+    normalizedSearch.length === 0
+      ? tables
+      : tables.filter((item) => {
+          const haystack = [item.name, item.symbol]
+            .filter((v): v is string => typeof v === "string" && v.length > 0)
+            .join("\n")
+            .normalize("NFKC")
+            .toLowerCase();
+          return searchNeedles.some((needle) => haystack.includes(needle));
+        });
 
   $: groupedByTags = (() => {
-    const groupsMap = new Map<
-      string,
-      { order: number; tag2Map: Map<string, MirrorTableItem[]> }
-    >();
+    const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>();
 
     filteredTables.forEach((item) => {
       const tag1 = item.tag1 || "未分类";
       const tag2 = item.tag2 || "其它";
       const orderRaw = item.tag_order;
-      const order = typeof orderRaw === "number"
-        ? orderRaw
-        : parseInt(String(orderRaw || "999"), 10);
+      const order =
+        typeof orderRaw === "number" ? orderRaw : parseInt(String(orderRaw || "999"), 10);
 
       if (!groupsMap.has(tag1)) {
         groupsMap.set(tag1, {
@@ -167,10 +163,7 @@
         });
       } else {
         const existing = groupsMap.get(tag1)!;
-        existing.order = Math.min(
-          existing.order,
-          isNaN(order) ? 999 : order,
-        );
+        existing.order = Math.min(existing.order, isNaN(order) ? 999 : order);
       }
 
       const tag2Map = groupsMap.get(tag1)!.tag2Map;
@@ -187,17 +180,13 @@
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([tag2, items]) => ({
             tag2,
-            items: items.sort((x, y) =>
-              (x.name || "").localeCompare(y.name || "")
-            ),
+            items: items.sort((x, y) => (x.name || "").localeCompare(y.name || "")),
           }));
         return { tag1, order: isNaN(order) ? 999 : order, subgroups };
-      },
+      }
     );
 
-    tag1Groups.sort((a, b) =>
-      a.order - b.order || a.tag1.localeCompare(b.tag1)
-    );
+    tag1Groups.sort((a, b) => a.order - b.order || a.tag1.localeCompare(b.tag1));
     return tag1Groups;
   })();
 
@@ -238,10 +227,7 @@
 
   async function loadTablesJson(): Promise<void> {
     try {
-      const url = new URL(
-        "/bms/table-mirror/tables.json",
-        window.location.origin,
-      ).toString();
+      const url = new URL("/bms/table-mirror/tables.json", window.location.origin).toString();
       const res = await fetch(url, { redirect: "follow" });
       if (!res.ok) {
         throw new Error(`无法加载tables.json: ${res.status}`);
@@ -274,19 +260,10 @@
 
 <StarryBackground />
 <ProfileCard />
-<BreadcrumbNav
-  items={breadcrumbs}
-  sessionKey="breadcrumb-bms-table-mirror"
-  initiallyOpen={false}
-/>
+<BreadcrumbNav items={breadcrumbs} sessionKey="breadcrumb-bms-table-mirror" initiallyOpen={false} />
 <main class="m-0 mx-auto box-border w-full max-w-350 p-8">
-  <GlassContainer
-    animate={true}
-    class="mt-8 w-full"
-  >
-    <h1 id="bms-table-mirror" class="page-title mb-2 scroll-mt-5 text-center">
-      BMS 难度表镜像
-    </h1>
+  <GlassContainer animate={true} class="mt-8 w-full">
+    <h1 id="bms-table-mirror" class="page-title mb-2 scroll-mt-5 text-center">BMS 难度表镜像</h1>
 
     <div class="mt-2 text-center text-[1.1rem] text-white/70 italic">
       对于BeMusicSeeker用户，可以使用tables.json链接（
@@ -313,10 +290,7 @@
 
     <div class="mt-4 flex flex-wrap items-stretch justify-center gap-4">
       {#each links as link (link.href)}
-        <GlassCard
-          href={link.href}
-          class="w-80 flex flex-col"
-        >
+        <GlassCard href={link.href} class="flex w-80 flex-col">
           <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]">
             {link.title}
           </div>
@@ -326,11 +300,7 @@
     </div>
   </GlassContainer>
 
-  <GlassContainer
-    id="mirror-list"
-    animate={true}
-    class="mt-8 w-full scroll-mt-5"
-  >
+  <GlassContainer id="mirror-list" animate={true} class="mt-8 w-full scroll-mt-5">
     <div class="flex flex-col gap-3">
       <div class="relative w-full">
         <input

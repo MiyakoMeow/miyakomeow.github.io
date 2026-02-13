@@ -110,10 +110,7 @@
       this.x += this.speedX;
       this.y += this.speedY;
 
-      if (
-        this.x < -300 || this.x > width + 300 || this.y < -300 ||
-        this.y > height + 300
-      ) {
+      if (this.x < -300 || this.x > width + 300 || this.y < -300 || this.y > height + 300) {
         this.init(width, height);
       }
     }
@@ -122,12 +119,7 @@
       const trailX = this.x - this.speedX * 100;
       const trailY = this.y - this.speedY * 100;
 
-      const gradient = ctx.createLinearGradient(
-        trailX,
-        trailY,
-        this.x,
-        this.y,
-      );
+      const gradient = ctx.createLinearGradient(trailX, trailY, this.x, this.y);
 
       gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
       gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.3)");
@@ -229,8 +221,5 @@
   });
 </script>
 
-<canvas
-  bind:this={canvasRef}
-  class="pointer-events-none fixed top-0 left-0 z-0 h-full w-full"
->
+<canvas bind:this={canvasRef} class="pointer-events-none fixed top-0 left-0 z-0 h-full w-full">
 </canvas>

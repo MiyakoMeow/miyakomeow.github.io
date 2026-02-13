@@ -1,4 +1,5 @@
 import type { PageLoad } from "./$types";
+
 import { formatBlogPostTitle } from "$lib/utils/title";
 
 export const load: PageLoad = async ({ params }) => {

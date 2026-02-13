@@ -12,8 +12,7 @@
   let leftTableData: LevelRefItem[] = [];
   let rightTableData: LevelRefItem[] = [];
 
-  let tableHalves: Array<{ id: "left" | "right"; items: LevelRefItem[] }> =
-    [];
+  let tableHalves: { id: "left" | "right"; items: LevelRefItem[] }[] = [];
 
   $: {
     const data = levelRefData;
@@ -42,9 +41,7 @@
 
   let requestToken = 0;
 
-  async function loadLevelRefData(
-    header: string | undefined,
-  ): Promise<void> {
+  async function loadLevelRefData(header: string | undefined): Promise<void> {
     if (!header) {
       shouldShow = false;
       return;
@@ -77,9 +74,7 @@
       } else if (response.status === 404) {
         shouldShow = false;
       } else {
-        throw new Error(
-          `加载失败: ${response.status} ${response.statusText}`,
-        );
+        throw new Error(`加载失败: ${response.status} ${response.statusText}`);
       }
     } catch (err) {
       console.error("加载难度对照表数据失败:", err);

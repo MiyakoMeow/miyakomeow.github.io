@@ -56,14 +56,9 @@
   };
 
   const hoverClass = $derived(hoverLift ? "-translate-y-0.5" : "");
-  const disabledClass = $derived(
-    disabled ? "opacity-50 cursor-not-allowed" : "",
-  );
+  const disabledClass = $derived(disabled ? "opacity-50 cursor-not-allowed" : "");
 
-  const gradientConfig: Record<
-    string,
-    { default: string; hover: string }
-  > = {
+  const gradientConfig: Record<string, { default: string; hover: string }> = {
     green: {
       default: "linear-gradient(135deg, #4caf50, #2e7d32)",
       hover: "linear-gradient(135deg, #66bb6a, #388e3c)",
@@ -77,13 +72,12 @@
   const currentGradient = $derived(
     variant === "custom" && customGradient
       ? {
-        default:
-          `linear-gradient(135deg, ${customGradient.start}, ${customGradient.end})`,
-        hover: `linear-gradient(135deg, ${
-          customGradient.hoverStart || customGradient.start
-        }, ${customGradient.hoverEnd || customGradient.end})`,
-      }
-      : gradientConfig[variant],
+          default: `linear-gradient(135deg, ${customGradient.start}, ${customGradient.end})`,
+          hover: `linear-gradient(135deg, ${
+            customGradient.hoverStart || customGradient.start
+          }, ${customGradient.hoverEnd || customGradient.end})`,
+        }
+      : gradientConfig[variant]
   );
 
   const baseStyleString = $derived(
@@ -95,7 +89,7 @@
       ...style,
     })
       .map(([key, value]) => `${key}:${value}`)
-      .join(";"),
+      .join(";")
   );
 
   const hoverStyleString = $derived(
@@ -104,7 +98,7 @@
       boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
     })
       .map(([key, value]) => `${key}:${value}`)
-      .join(";"),
+      .join(";")
   );
 
   function handleMouseEnter(event: MouseEvent) {
@@ -125,7 +119,9 @@
     {href}
     {target}
     {rel}
-    class="rounded-md font-semibold text-white no-underline inline-flex items-center justify-center {sizeConfig[size]} {className} {hoverClass} active-translate-y-0"
+    class="inline-flex items-center justify-center rounded-md font-semibold text-white no-underline {sizeConfig[
+      size
+    ]} {className} {hoverClass} active-translate-y-0"
     style={baseStyleString}
     onmouseenter={handleMouseEnter}
     onmouseleave={handleMouseLeave}
@@ -139,7 +135,9 @@
     {type}
     {disabled}
     {onclick}
-    class="rounded-md font-semibold text-white inline-flex items-center justify-center {sizeConfig[size]} {className} {disabledClass} {hoverClass} active-translate-y-0"
+    class="inline-flex items-center justify-center rounded-md font-semibold text-white {sizeConfig[
+      size
+    ]} {className} {disabledClass} {hoverClass} active-translate-y-0"
     style={baseStyleString}
     onmouseenter={handleMouseEnter}
     onmouseleave={handleMouseLeave}

@@ -14,14 +14,19 @@ const config: Config = {
     mdsvex({
       extensions: [".svx", ".md"],
       remarkPlugins: [remarkGfm, remarkMath],
-      rehypePlugins: [[rehypeKatex, {
-        strict: "warn",
-        throwOnError: false,
-        macros: {
-          "\\N": "\\mathbb{N}",
-          "\\Z": "\\mathbb{Z}",
-        },
-      }]],
+      rehypePlugins: [
+        [
+          rehypeKatex,
+          {
+            strict: "warn",
+            throwOnError: false,
+            macros: {
+              "\\N": "\\mathbb{N}",
+              "\\Z": "\\mathbb{Z}",
+            },
+          },
+        ],
+      ],
     }),
     vitePreprocess(),
   ],

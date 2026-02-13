@@ -64,10 +64,7 @@
     lg: "h-10 w-10 text-[1.4rem]",
   };
 
-  const iconGradientConfig: Record<
-    string,
-    { default: string; hover: string }
-  > = {
+  const iconGradientConfig: Record<string, { default: string; hover: string }> = {
     orange: {
       default: "linear-gradient(135deg, #ff9800, #f57c00)",
       hover: "linear-gradient(135deg, #ffb74d, #ff9800)",
@@ -89,13 +86,12 @@
   const currentGradient = $derived(
     variant === "custom" && customGradient
       ? {
-        default:
-          `linear-gradient(135deg, ${customGradient.start}, ${customGradient.end})`,
-        hover: `linear-gradient(135deg, ${
-          customGradient.hoverStart || customGradient.start
-        }, ${customGradient.hoverEnd || customGradient.end})`,
-      }
-      : iconGradientConfig[variant],
+          default: `linear-gradient(135deg, ${customGradient.start}, ${customGradient.end})`,
+          hover: `linear-gradient(135deg, ${
+            customGradient.hoverStart || customGradient.start
+          }, ${customGradient.hoverEnd || customGradient.end})`,
+        }
+      : iconGradientConfig[variant]
   );
 
   const baseStyleString = $derived(
@@ -106,7 +102,7 @@
       ...style,
     })
       .map(([key, value]) => `${key}:${value}`)
-      .join(";"),
+      .join(";")
   );
 
   const hoverStyleString = $derived(
@@ -115,7 +111,7 @@
       boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
     })
       .map(([key, value]) => `${key}:${value}`)
-      .join(";"),
+      .join(";")
   );
 
   function handleMouseEnter(event: MouseEvent) {
@@ -138,7 +134,9 @@
     {rel}
     aria-label={ariaLabel}
     {title}
-    class="flex cursor-pointer items-center justify-center overflow-hidden rounded-full p-0 text-white {sizeConfig[size]} {className}"
+    class="flex cursor-pointer items-center justify-center overflow-hidden rounded-full p-0 text-white {sizeConfig[
+      size
+    ]} {className}"
     class:hover:scale-110={hoverScale}
     class:active:scale-95={clickShrink}
     style={baseStyleString}
@@ -156,7 +154,9 @@
     {onclick}
     aria-label={ariaLabel}
     {title}
-    class="flex cursor-pointer items-center justify-center overflow-hidden rounded-full border-none p-0 text-white {sizeConfig[size]} {className}"
+    class="flex cursor-pointer items-center justify-center overflow-hidden rounded-full border-none p-0 text-white {sizeConfig[
+      size
+    ]} {className}"
     class:opacity-50={disabled}
     class:cursor-not-allowed={disabled}
     class:hover:scale-110={hoverScale && !disabled}
