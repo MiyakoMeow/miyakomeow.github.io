@@ -39,58 +39,30 @@ export default tseslint.config(
       "/legacy",
     ],
   },
+
+  // 基础推荐配置
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  ...svelteConfigs["flat/recommended"],
-  svelteConfigs["flat/prettier"],
 
-  // 全局配置 - 统一 parserOptions 和全局变量
+  // 全局配置
   {
     languageOptions: {
       parserOptions: {
-        parser: tseslint.parser,
         projectService: true,
         allowDefaultProject: true,
-        extraFileExtensions: [".svelte", ".svx"],
-        svelteConfig,
       },
       globals: {
         ...globals.browser,
         ...globals.node,
-        // SvelteKit 全局变量
-        "$app/stores": "readonly",
-        "$app/environment": "readonly",
-        "$app/paths": "readonly",
-        "$app/navigation": "readonly",
-        "$app/error": "readonly",
-        "$app/forms": "readonly",
       },
     },
     plugins: {
       "import-x": importX,
     },
     rules: {
-      // TypeScript 和 Svelte 通用规则
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-
-      // Stylistic 规则覆盖（交给 Prettier）
-      "@typescript-eslint/semi": "off",
-      "@typescript-eslint/quotes": "off",
-      "@typescript-eslint/comma-dangle": "off",
-      "@typescript-eslint/indent": "off",
-      "@typescript-eslint/member-delimiter-style": "off",
-      "@typescript-eslint/brace-style": "off",
-      "@typescript-eslint/object-curly-spacing": "off",
-      "@typescript-eslint/arrow-parens": "off",
-      "@typescript-eslint/space-before-function-paren": "off",
-      "@typescript-eslint/key-spacing": "off",
-      "@typescript-eslint/lines-between-class-members": "off",
-      "@typescript-eslint/consistent-generic-constructors": "off",
-      "@typescript-eslint/consistent-type-imports": "off",
-
-      // import-x 规则
       "import-x/no-unused-modules": "warn",
       "import-x/no-duplicates": "error",
       "import-x/order": [
@@ -104,7 +76,26 @@ export default tseslint.config(
     },
   },
 
-  // 所有文件类型配置
+  // Svelte文件特定配置
+  ...svelteConfigs["flat/recommended"],
+  svelteConfigs["flat/prettier"],
+  {
+    files: ["**/*.svelte", "**/*.svx"],
+    languageOptions: {
+      parserOptions: {
+        parser: tseslint.parser,
+        projectService: true,
+        extraFileExtensions: [".svelte", ".svx"],
+        svelteConfig,
+      },
+    },
+    rules: {
+      // 禁用一些在Svelte文件中可能出错的类型检查规则
+      "@typescript-eslint/consistent-generic-constructors": "off",
+    },
+  },
+
+  // TailwindCSS规则
   {
     files: ["**/*.{js,jsx,ts,tsx,svelte,svx}"],
     plugins: {
@@ -116,5 +107,6 @@ export default tseslint.config(
     },
   },
 
+  // Prettier必须最后
   eslintConfigPrettier
 );
