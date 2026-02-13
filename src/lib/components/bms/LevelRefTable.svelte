@@ -9,23 +9,14 @@
   let levelRefData: LevelRefItem[] = [];
   let shouldShow = false;
 
-  let leftTableData: LevelRefItem[] = [];
-  let rightTableData: LevelRefItem[] = [];
-
-  let tableHalves: Array<{ id: "left" | "right"; items: LevelRefItem[] }> =
-    [];
-
-  $: {
+  $: tableHalves = (() => {
     const data = levelRefData;
     const midIndex = Math.ceil(data.length / 2);
-    leftTableData = data.slice(0, midIndex);
-    rightTableData = data.slice(midIndex);
-  }
-
-  $: tableHalves = [
-    { id: "left", items: leftTableData },
-    { id: "right", items: rightTableData },
-  ];
+    return [
+      { id: "left" as const, items: data.slice(0, midIndex) },
+      { id: "right" as const, items: data.slice(midIndex) },
+    ];
+  })();
 
   function buildLevelRefUrl(headerUrlRaw: string): string {
     try {
@@ -42,9 +33,7 @@
 
   let requestToken = 0;
 
-  async function loadLevelRefData(
-    header: string | undefined,
-  ): Promise<void> {
+  async function loadLevelRefData(header: string | undefined): Promise<void> {
     if (!header) {
       shouldShow = false;
       return;
@@ -77,9 +66,7 @@
       } else if (response.status === 404) {
         shouldShow = false;
       } else {
-        throw new Error(
-          `加载失败: ${response.status} ${response.statusText}`,
-        );
+        throw new Error(`加载失败: ${response.status} ${response.statusText}`);
       }
     } catch (err) {
       console.error("加载难度对照表数据失败:", err);

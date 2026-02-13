@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-  <title>{page.data.title || "白喵斯的小屋"}</title>
+  <title>{page.data.title ?? "白喵斯的小屋"}</title>
   <link rel="icon" href="https://github.com/MiyakoMeow.png" />
 </svelte:head>
 
