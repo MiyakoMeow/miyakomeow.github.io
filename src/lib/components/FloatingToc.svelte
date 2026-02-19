@@ -1,4 +1,6 @@
 <script context="module" lang="ts">
+  import { resolve } from "$app/paths";
+
   export interface TocItem {
     id: string;
     title: string;
@@ -42,7 +44,7 @@
       return level >= minLevel && level <= maxLevel;
     }) as HTMLHeadingElement[];
 
-    const usedIds = new Map<string, number>();
+    const usedIds: Record<string, number> = {};
     return headings
       .map((h) => {
         const text = (h.textContent ?? "").trim();
@@ -50,13 +52,11 @@
         const level = Number(h.tagName.slice(1));
 
         let baseId = h.id?.trim() || slugifyHeadingText(text);
-        const currentCount = usedIds.get(baseId) ?? 0;
-        usedIds.set(baseId, currentCount + 1);
+        const currentCount = usedIds[baseId] ?? 0;
+        usedIds[baseId] = currentCount + 1;
 
         if (!h.id?.trim()) {
           h.id = currentCount === 0 ? baseId : `${baseId}-${currentCount + 1}`;
-        } else if (currentCount > 0) {
-          baseId = h.id.trim();
         }
 
         return { id: h.id, title: text, level };
@@ -240,7 +240,7 @@
     <nav class="max-h-[calc(60vh-3rem)] overflow-auto pr-1">
       {#each flatItems as item (item.id)}
         <a
-          href={item.href}
+          href={resolve(item.href || "", {})}
           class={[
             "block rounded-lg py-2 pr-3 text-[0.9rem] leading-snug transition-colors",
             activeId === (item.href.startsWith("#") ? item.href.slice(1) : item.id)

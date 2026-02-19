@@ -1,8 +1,5 @@
 <script lang="ts">
-  import JsonPreview, {
-    jsonPreview,
-    type JsonPreviewHandle,
-  } from "$lib/components/JsonPreview.svelte";
+  import JsonPreview, { jsonPreview } from "$lib/components/JsonPreview.svelte";
   import ScrollSyncGroup from "$lib/components/ScrollSyncGroup.svelte";
 
   interface MirrorTableItem {
@@ -39,7 +36,17 @@
   export let groups: Tag1Group[] = [];
   export let selectedMap: Record<string, boolean> = {};
 
-  let tablePreview: JsonPreviewHandle | undefined;
+  let tablePreview:
+    | {
+        show: (
+          options: import("$lib/components/JsonPreview.svelte").JsonPreviewShowOptions,
+          clientX: number,
+          clientY: number
+        ) => void | Promise<void>;
+        scheduleHide: () => void;
+        hideNow: () => void;
+      }
+    | undefined;
 
   function compareAscii(a: string, b: string): number {
     if (a === b) return 0;

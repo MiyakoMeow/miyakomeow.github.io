@@ -1,12 +1,13 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
 
   function scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function goHome(): void {
-    goto("/");
+    void goto(resolve("/", {}));
   }
 </script>
 

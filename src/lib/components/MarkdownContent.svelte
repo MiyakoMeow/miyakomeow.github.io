@@ -29,7 +29,7 @@
     if (!container) return;
 
     const headings = Array.from(container.querySelectorAll("h1,h2,h3,h4,h5,h6"));
-    const usedIds = new Map<string, number>();
+    const usedIds: Record<string, number> = {};
 
     for (const heading of headings) {
       const existingAnchor = heading.querySelector(":scope > a.heading-anchor");
@@ -38,8 +38,8 @@
       const rawText = (heading.textContent ?? "").trim();
       const baseId = heading.id?.trim() || slugifyHeadingText(rawText);
 
-      const currentCount = usedIds.get(baseId) ?? 0;
-      usedIds.set(baseId, currentCount + 1);
+      const currentCount = usedIds[baseId] ?? 0;
+      usedIds[baseId] = currentCount + 1;
       const id = heading.id?.trim()
         ? heading.id.trim()
         : currentCount === 0

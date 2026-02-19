@@ -2,9 +2,16 @@ import type { PageLoad } from "./$types";
 
 import { formatBlogPostTitle } from "$lib/utils/title";
 
+interface BlogPostMetadata {
+  title: string;
+  date?: string;
+  order?: number;
+  default: unknown;
+}
+
 export const load: PageLoad = async ({ params }) => {
   try {
-    const post = await import(`$content/blog/${params.slug}.md`);
+    const post = (await import(`$content/blog/${params.slug}.md`)) as BlogPostMetadata;
 
     return {
       post: {

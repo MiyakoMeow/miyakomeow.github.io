@@ -81,11 +81,12 @@
     try {
       return JSON.stringify(
         input,
-        (_key, v) => {
+        (_key, v): unknown => {
           if (typeof v === "bigint") return v.toString();
           if (typeof v === "object" && v !== null) {
-            if (seen.has(v)) return "[Circular]";
-            seen.add(v);
+            const obj = v as object;
+            if (seen.has(obj)) return "[Circular]";
+            seen.add(obj);
           }
           return v;
         },
@@ -111,11 +112,13 @@
       return;
     }
     try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
+      if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(text);
         return;
       }
-    } catch {}
+    } catch {
+      // clipboard API failed, fallback to textarea method
+    }
 
     const textarea = document.createElement("textarea");
     textarea.value = text;
@@ -126,7 +129,9 @@
     textarea.select();
     try {
       await navigator.clipboard.writeText(textarea.value);
-    } catch {}
+    } catch {
+      // clipboard API failed
+    }
     document.body.removeChild(textarea);
   }
 

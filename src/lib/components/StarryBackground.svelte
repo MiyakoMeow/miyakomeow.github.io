@@ -153,9 +153,9 @@
     const canvas = canvasRef;
     if (!canvas) return;
 
-    const rawCtx = canvas.getContext("2d");
-    if (!rawCtx) return;
-    const ctx: CanvasRenderingContext2D = rawCtx;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D | null;
+    if (!ctx) return;
 
     let width = window.innerWidth;
     let height = window.innerHeight;
@@ -180,6 +180,7 @@
     let animationId: number | null = null;
 
     function animate(): void {
+      if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
 
       const gradient = ctx.createLinearGradient(0, 0, 0, height);

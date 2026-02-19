@@ -4,9 +4,14 @@
   import MarkdownContent from "$lib/components/MarkdownContent.svelte";
   import ProfileCard from "$lib/components/ProfileCard.svelte";
   import StarryBackground from "$lib/components/StarryBackground.svelte";
+  import type { BlogPost } from "$lib/types/blog";
 
-  export let data;
-  const { post, component } = data;
+  export let data: {
+    post: Partial<BlogPost>;
+    component: import("svelte").Component;
+    title: string;
+  };
+  const { post, component: Content } = data;
 
   const breadcrumbs = [
     { label: "主页", href: "/" },
@@ -28,7 +33,7 @@
     {/if}
 
     <MarkdownContent>
-      <svelte:component this={component} />
+      <svelte:component this={Content} />
     </MarkdownContent>
   </article>
 </main>

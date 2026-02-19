@@ -75,7 +75,7 @@
   async function copySiteUrl(): Promise<void> {
     try {
       const url = window.location.href;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
+      if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(url);
       } else {
         const textarea = document.createElement("textarea");
@@ -126,7 +126,7 @@
       if (!headerResponse.ok) {
         throw new Error(`无法加载表头信息: ${headerResponse.status}`);
       }
-      headerData = await headerResponse.json();
+      headerData = (await headerResponse.json()) as HeaderData;
 
       pageTitle = String(headerData?.name ?? "未命名");
       updateProgress("表头信息加载完成", 50);
@@ -149,7 +149,7 @@
       if (!dataResponse.ok) {
         throw new Error(`无法加载谱面数据: ${dataResponse.status}`);
       }
-      tableData = await dataResponse.json();
+      tableData = (await dataResponse.json()) as ChartData[];
 
       updateProgress("数据加载完成", 100);
 
@@ -167,16 +167,16 @@
     if (!tableData || !Array.isArray(tableData)) {
       return [];
     }
-    const groupsMap = new Map<string, DifficultyGroup>();
+    const groupsMap: Record<string, DifficultyGroup> = {};
     const charts = tableData;
     for (const chart of charts) {
       const level = chart.level ?? "unknown";
-      if (!groupsMap.has(level)) {
-        groupsMap.set(level, { level, charts: [] });
+      if (!groupsMap[level]) {
+        groupsMap[level] = { level, charts: [] };
       }
-      groupsMap.get(level)?.charts.push(chart);
+      groupsMap[level].charts.push(chart);
     }
-    return Array.from(groupsMap.values());
+    return Object.values(groupsMap);
   });
 
   const tableStats = $derived(() => {
@@ -186,11 +186,13 @@
     }
     const { totalCharts, difficulties } = groups.reduce(
       (acc, group) => {
-        acc.difficulties.add(group.level);
+        if (!acc.difficulties.includes(group.level)) {
+          acc.difficulties.push(group.level);
+        }
         acc.totalCharts += group.charts.length;
         return acc;
       },
-      { totalCharts: 0, difficulties: new Set<string>() }
+      { totalCharts: 0, difficulties: [] as string[] }
     );
     return { totalCharts, difficulties: Array.from(difficulties) };
   });
@@ -198,16 +200,14 @@
   const sortedDifficultyGroups = $derived(() => {
     const groups = groupedCharts();
     const order = headerData?.level_order ?? [];
-    const orderIndex = new Map<string, number>();
-    order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
+    const orderIndex: Record<string, number> = {};
+    order.forEach((lv, idx) => (orderIndex[String(lv)] = idx));
     const defined: DifficultyGroup[] = [];
     const others: DifficultyGroup[] = [];
     for (const g of groups) {
-      (orderIndex.has(String(g.level)) ? defined : others).push(g);
+      (String(g.level) in orderIndex ? defined : others).push(g);
     }
-    defined.sort(
-      (a, b) => (orderIndex.get(String(a.level)) ?? 0) - (orderIndex.get(String(b.level)) ?? 0)
-    );
+    defined.sort((a, b) => (orderIndex[String(a.level)] ?? 0) - (orderIndex[String(b.level)] ?? 0));
     others.sort((a, b) => {
       const as = String(a.level).trim();
       const bs = String(b.level).trim();

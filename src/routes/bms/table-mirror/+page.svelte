@@ -48,7 +48,7 @@
   let tables: MirrorTableItem[] = [];
   let selectedMap: Record<string, boolean> = {};
   let searchQuery = "";
-  let tocItems: TocItem[] = [];
+  let tocItems: TocItem[];
 
   type StringConverter = (input: string) => string;
 
@@ -70,21 +70,25 @@
     if (input.length === 0) return [];
 
     const normalized = input.normalize("NFKC");
-    const needles = new Set<string>();
+    const needles: string[] = [];
 
     const add = (value: string) => {
       const v = value.normalize("NFKC").toLowerCase();
-      if (v.length > 0) needles.add(v);
+      if (v.length > 0 && !needles.includes(v)) {
+        needles.push(v);
+      }
     };
 
     add(normalized);
     for (const convert of searchConverters) {
       try {
         add(convert(normalized));
-      } catch {}
+      } catch {
+        // converter failed, skip
+      }
     }
 
-    return Array.from(needles);
+    return needles;
   }
 
   const links: LinkItem[] = [
@@ -104,7 +108,7 @@
 
   async function copySelected(data: string): Promise<void> {
     try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
+      if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(data);
       } else {
         const textarea = document.createElement("textarea");
@@ -117,7 +121,9 @@
         await navigator.clipboard.writeText(textarea.value);
         document.body.removeChild(textarea);
       }
-    } catch {}
+    } catch {
+      // clipboard API failed
+    }
   }
 
   async function copyTables(): Promise<void> {
@@ -127,7 +133,7 @@
     ).toString();
     await copySelected(tablesJsonPath);
     copied = true;
-    setTimeout(() => {
+    void setTimeout(() => {
       copied = false;
     }, 1500);
   }
@@ -147,7 +153,8 @@
         });
 
   $: groupedByTags = (() => {
-    const groupsMap = new Map<string, { order: number; tag2Map: Map<string, MirrorTableItem[]> }>();
+    const groupsMap: Record<string, { order: number; tag2Map: Record<string, MirrorTableItem[]> }> =
+      {};
 
     filteredTables.forEach((item) => {
       const tag1 = item.tag1 ?? "未分类";
@@ -156,35 +163,33 @@
       const order =
         typeof orderRaw === "number" ? orderRaw : parseInt(String(orderRaw ?? "999"), 10);
 
-      if (!groupsMap.has(tag1)) {
-        groupsMap.set(tag1, {
+      if (!groupsMap[tag1]) {
+        groupsMap[tag1] = {
           order,
-          tag2Map: new Map<string, MirrorTableItem[]>(),
-        });
+          tag2Map: {},
+        };
       } else {
-        const existing = groupsMap.get(tag1)!;
+        const existing = groupsMap[tag1];
         existing.order = Math.min(existing.order, isNaN(order) ? 999 : order);
       }
 
-      const tag2Map = groupsMap.get(tag1)!.tag2Map;
-      if (!tag2Map.has(tag2)) {
-        tag2Map.set(tag2, []);
+      const tag2Map = groupsMap[tag1].tag2Map;
+      if (!tag2Map[tag2]) {
+        tag2Map[tag2] = [];
       }
 
-      tag2Map.get(tag2)!.push(item);
+      tag2Map[tag2].push(item);
     });
 
-    const tag1Groups: Tag1Group[] = Array.from(groupsMap.entries()).map(
-      ([tag1, { order, tag2Map }]) => {
-        const subgroups: Tag2Group[] = Array.from(tag2Map.entries())
-          .sort(([a], [b]) => a.localeCompare(b))
-          .map(([tag2, items]) => ({
-            tag2,
-            items: items.sort((x, y) => (x.name ?? "").localeCompare(y.name ?? "")),
-          }));
-        return { tag1, order: isNaN(order) ? 999 : order, subgroups };
-      }
-    );
+    const tag1Groups: Tag1Group[] = Object.entries(groupsMap).map(([tag1, { order, tag2Map }]) => {
+      const subgroups: Tag2Group[] = Object.entries(tag2Map)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([tag2, items]) => ({
+          tag2,
+          items: items.sort((x, y) => (x.name ?? "").localeCompare(y.name ?? "")),
+        }));
+      return { tag1, order: isNaN(order) ? 999 : order, subgroups };
+    });
 
     tag1Groups.sort((a, b) => a.order - b.order || a.tag1.localeCompare(b.tag1));
     return tag1Groups;
@@ -251,10 +256,10 @@
   }
 
   onMount(() => {
-    setTimeout(() => {
-      loadTablesJson();
+    void setTimeout(() => {
+      void loadTablesJson();
     }, 250);
-    tick();
+    void tick();
   });
 </script>
 

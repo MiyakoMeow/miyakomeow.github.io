@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { resolve } from "$app/paths";
+
   interface Props {
     /** 子元素内容 */
     children?: import("svelte").Snippet;
@@ -82,7 +84,7 @@
 
 {#if href}
   <a
-    {href}
+    href={resolve(href, {})}
     {target}
     {rel}
     class="relative block text-white no-underline backdrop-blur {paddingConfig[

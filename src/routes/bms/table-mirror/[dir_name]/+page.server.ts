@@ -60,7 +60,7 @@ export const load: PageServerLoad = ({ params, locals }) => {
     const tableItem = tables_proxy.find((item) => item.dir_name === dir_name);
 
     if (!tableItem) {
-      throw error(404, `Table not found: ${dir_name}`);
+      error(404, `Table not found: ${dir_name}`);
     }
 
     // 设置 locals，告诉 hooks 需要注入完整的 headerUrl

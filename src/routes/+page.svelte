@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
+  import { resolve } from "$app/paths";
   import FloatingToc, {
     buildTocFromHeadings,
     type TocItem,
@@ -14,6 +15,7 @@
   let tocItems: TocItem[] = [];
 
   onMount(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     tocItems = buildTocFromHeadings({ minLevel: 2, maxLevel: 6 });
   });
 </script>
@@ -35,7 +37,10 @@
   <GlassContainer animate={true} class="mt-8 w-full">
     <div class="mb-6 flex flex-wrap items-baseline justify-between gap-3">
       <h2 class="section-title m-0">博客</h2>
-      <a class="text-sm text-sky-300 no-underline transition hover:text-sky-200" href="/blog">
+      <a
+        class="text-sm text-sky-300 no-underline transition hover:text-sky-200"
+        href={resolve("/blog", {})}
+      >
         查看全部 →
       </a>
     </div>
@@ -47,7 +52,7 @@
         {#each blogPosts as post (post.slug)}
           <a
             class="block rounded-[14px] border border-white/10 bg-black/20 p-6 text-white no-underline transition-[transform,background] duration-300 ease-out hover:-translate-y-0.5 hover:bg-[rgba(255,255,255,0.06)]"
-            href={post.url}
+            href={resolve(post.url, {})}
           >
             <div class="mb-1 flex flex-wrap items-baseline justify-between gap-3">
               <div class="text-[1.2rem] font-bold text-[#64b5f6]">

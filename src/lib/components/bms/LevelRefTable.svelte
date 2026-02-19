@@ -20,11 +20,13 @@
 
   function buildLevelRefUrl(headerUrlRaw: string): string {
     try {
-      const baseUrl = new URL(headerUrlRaw, window.location.href);
-      const pathParts = baseUrl.pathname.split("/");
-      pathParts[pathParts.length - 1] = "level-ref.json";
-      baseUrl.pathname = pathParts.join("/");
-      return baseUrl.toString();
+      let url = headerUrlRaw;
+      if (!/^https?:\/\//i.test(url)) {
+        url = new URL(headerUrlRaw, window.location.href).toString();
+      }
+      const parts = url.split("/");
+      parts[parts.length - 1] = "level-ref.json";
+      return parts.join("/");
     } catch (err) {
       console.error("构建 level-ref.json URL 失败:", err);
       return "";
@@ -53,7 +55,7 @@
       if (token !== requestToken) return;
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as LevelRefItem[];
         if (token !== requestToken) return;
 
         if (Array.isArray(data)) {

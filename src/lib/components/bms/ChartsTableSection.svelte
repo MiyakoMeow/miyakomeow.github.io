@@ -1,12 +1,19 @@
 <script lang="ts">
-  import JsonPreview, {
-    jsonPreview,
-    type JsonPreviewHandle,
-  } from "$lib/components/JsonPreview.svelte";
+  import JsonPreview, { jsonPreview } from "$lib/components/JsonPreview.svelte";
   import ScrollSyncGroup from "$lib/components/ScrollSyncGroup.svelte";
   import { GradientButton, IconButton } from "$lib/components/ui";
 
-  let chartPreview: JsonPreviewHandle | undefined;
+  let chartPreview:
+    | {
+        show: (
+          options: import("$lib/components/JsonPreview.svelte").JsonPreviewShowOptions,
+          clientX: number,
+          clientY: number
+        ) => void | Promise<void>;
+        scheduleHide: () => void;
+        hideNow: () => void;
+      }
+    | undefined;
 
   interface ChartData {
     title?: string;
@@ -36,20 +43,18 @@
   export let totalCharts: number;
   export let levelOrder: string[] | undefined = undefined;
 
-  let displayGroups: DifficultyGroup[] = [];
+  let displayGroups: DifficultyGroup[];
 
   $: displayGroups = (() => {
     const order = levelOrder ?? [];
-    const orderIndex = new Map<string, number>();
-    order.forEach((lv, idx) => orderIndex.set(String(lv), idx));
+    const orderIndex: Record<string, number> = {};
+    order.forEach((lv, idx) => (orderIndex[String(lv)] = idx));
     const defined: DifficultyGroup[] = [];
     const others: DifficultyGroup[] = [];
     for (const g of groups) {
-      (orderIndex.has(String(g.level)) ? defined : others).push(g);
+      (String(g.level) in orderIndex ? defined : others).push(g);
     }
-    defined.sort(
-      (a, b) => (orderIndex.get(String(a.level)) ?? 0) - (orderIndex.get(String(b.level)) ?? 0)
-    );
+    defined.sort((a, b) => (orderIndex[String(a.level)] ?? 0) - (orderIndex[String(b.level)] ?? 0));
     others.sort((a, b) => {
       const as = String(a.level).trim();
       const bs = String(b.level).trim();

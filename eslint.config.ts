@@ -1,6 +1,3 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
 import js from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import betterTailwindCss from "eslint-plugin-better-tailwindcss";
@@ -10,9 +7,6 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 import svelteConfig from "./svelte.config.ts";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export default tseslint.config(
   {
@@ -92,6 +86,16 @@ export default tseslint.config(
     rules: {
       // 禁用一些在Svelte文件中可能出错的类型检查规则
       "@typescript-eslint/consistent-generic-constructors": "off",
+    },
+  },
+  // 对于特定文件，允许外部链接不使用resolve()
+  {
+    files: [
+      "src/lib/components/bms/BmsTablePage.svelte",
+      "src/lib/components/bms/GroupedTablesSection.svelte",
+    ],
+    rules: {
+      "svelte/no-navigation-without-resolve": "off",
     },
   },
 
