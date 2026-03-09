@@ -5,13 +5,6 @@ import type { Handle } from "@sveltejs/kit";
  * 在预渲染和 SSR 模式下执行
  */
 export const handle: Handle = async ({ event, resolve }) => {
-  const path = event.url.pathname;
-
-  if (path === "/bms/table-mirror" || path.startsWith("/bms/table-mirror/")) {
-    const newPath = path.replace("/bms/table-mirror", "/bms/table/mirror-proxy");
-    return Response.redirect(newPath, 301);
-  }
-
   const response = await resolve(event);
 
   // 非HTML响应，直接返回
