@@ -44,10 +44,7 @@ const config: Config = {
     alias: {
       $content: path.resolve("./src/content"),
     },
-    prerender: {
-      handleMissingId: "ignore",
-      handleUnseenRoutes: "ignore",
-    },
+    prerender: {},
   },
 
   extensions: [".svelte", ".svx", ".md"],
