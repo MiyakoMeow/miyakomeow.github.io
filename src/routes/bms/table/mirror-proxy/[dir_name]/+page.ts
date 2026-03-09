@@ -5,7 +5,7 @@ import { formatTitle } from "$lib/utils/title";
 export const load: PageLoad = async ({ params, fetch }) => {
   const { dir_name } = params;
 
-  const res = await fetch("/bms/table-mirror/tables_proxy.json");
+  const res = await fetch("/bms/table/mirror-proxy/tables_proxy.json");
   const tables_proxy = (await res.json()) as {
     dir_name: string;
     url: string;
