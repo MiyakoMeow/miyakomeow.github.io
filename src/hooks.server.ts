@@ -1,5 +1,4 @@
 import type { Handle } from "@sveltejs/kit";
-import { redirect } from "@sveltejs/kit";
 
 /**
  * SvelteKit 服务器端 hooks
@@ -10,7 +9,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   if (path === "/bms/table-mirror" || path.startsWith("/bms/table-mirror/")) {
     const newPath = path.replace("/bms/table-mirror", "/bms/table/mirror-proxy");
-    throw redirect(301, newPath);
+    return Response.redirect(newPath, 301);
   }
 
   const response = await resolve(event);
