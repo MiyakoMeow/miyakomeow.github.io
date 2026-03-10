@@ -43,7 +43,7 @@
     "globals": "^17.3.0",
     "gray-matter": "4.0.3",
     "katex": "0.16.27",
-    "mdsvex": "0.12.6",
+    "mdsvex": "0.12.7",
     "opencc-js": "1.0.5",
     "prettier": "^3.8.1",
     "prettier-plugin-svelte": "^3.4.1",
