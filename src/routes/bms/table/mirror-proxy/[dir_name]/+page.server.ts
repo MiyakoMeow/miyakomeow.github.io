@@ -5,6 +5,18 @@ import { error } from "@sveltejs/kit";
 
 import type { PageServerLoad } from "./$types";
 
+type TableProxyItem = {
+  dir_name: string;
+  url: string;
+  url_ori?: string;
+};
+
+function loadTablesProxy(): TableProxyItem[] {
+  const jsonPath = join("static", "bms", "table", "mirror-proxy", "tables_proxy.json");
+  const fileContent = readFileSync(jsonPath, "utf-8");
+  return JSON.parse(fileContent) as TableProxyItem[];
+}
+
 export const prerender = true;
 
 /**
@@ -13,14 +25,7 @@ export const prerender = true;
  */
 export function entries() {
   try {
-    // 读取 tables_proxy.json
-    const jsonPath = join("static", "bms", "table", "mirror-proxy", "tables_proxy.json");
-    const fileContent = readFileSync(jsonPath, "utf-8");
-    const tables_proxy = JSON.parse(fileContent) as {
-      dir_name: string;
-      url: string;
-      url_ori?: string;
-    }[];
+    const tables_proxy = loadTablesProxy();
 
     // 过滤出有效的 dir_name
     const validTables = tables_proxy.filter(
@@ -47,14 +52,7 @@ export const load: PageServerLoad = ({ params, locals }) => {
   const { dir_name } = params;
 
   try {
-    // 读取 tables_proxy.json
-    const jsonPath = join("static", "bms", "table", "mirror-proxy", "tables_proxy.json");
-    const fileContent = readFileSync(jsonPath, "utf-8");
-    const tables_proxy = JSON.parse(fileContent) as {
-      dir_name: string;
-      url: string;
-      url_ori?: string;
-    }[];
+    const tables_proxy = loadTablesProxy();
 
     // 查找对应的表格配置
     const tableItem = tables_proxy.find((item) => item.dir_name === dir_name);
