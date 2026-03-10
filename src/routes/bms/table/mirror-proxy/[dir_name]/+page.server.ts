@@ -5,11 +5,11 @@ import { error } from "@sveltejs/kit";
 
 import type { PageServerLoad } from "./$types";
 
-type TableProxyItem = {
+interface TableProxyItem {
   dir_name: string;
   url: string;
   url_ori?: string;
-};
+}
 
 function loadTablesProxy(): TableProxyItem[] {
   const jsonPath = join("static", "bms", "table", "mirror-proxy", "tables_proxy.json");
