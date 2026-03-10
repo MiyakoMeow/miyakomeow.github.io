@@ -6,6 +6,9 @@ export const load: PageLoad = async ({ params, fetch }) => {
   const { dir_name } = params;
 
   const res = await fetch("/bms/table/mirror-proxy/tables_proxy.json");
+  if (!res.ok) {
+    throw new Error(`Failed to load tables_proxy.json: ${res.status}`);
+  }
   const tables_proxy = (await res.json()) as {
     dir_name: string;
     url: string;

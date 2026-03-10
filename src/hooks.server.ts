@@ -9,8 +9,11 @@ export const handle: Handle = async ({ event, resolve }) => {
   const path = event.url.pathname;
 
   if (path === "/bms/table-mirror" || path.startsWith("/bms/table-mirror/")) {
-    const newPath = path.replace("/bms/table-mirror", "/bms/table/mirror-proxy");
-    throw redirect(301, newPath);
+    const reqUrl = event.request.url;
+    const searchStart = reqUrl.indexOf("?");
+    const search = searchStart >= 0 ? reqUrl.slice(searchStart) : "";
+    const newPath = path.replace("/bms/table-mirror", "/bms/table/mirror-proxy") + search;
+    redirect(301, newPath);
   }
 
   const response = await resolve(event);
