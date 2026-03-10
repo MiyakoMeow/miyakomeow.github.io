@@ -40,10 +40,17 @@
     </div>
 
     <div class="flex flex-wrap justify-center gap-4">
-      <GlassButton href="https://github.com/MiyakoMeow" target="_blank">GitHub</GlassButton>
-      <GlassButton href="https://space.bilibili.com/215242890" target="_blank">Bilibili</GlassButton
+      <GlassButton href="https://github.com/MiyakoMeow" target="_blank" rel="noopener noreferrer"
+        >GitHub</GlassButton
       >
-      <GlassButton href="https://x.com/MiyakoWoW" target="_blank">X (Twitter)</GlassButton>
+      <GlassButton
+        href="https://space.bilibili.com/215242890"
+        target="_blank"
+        rel="noopener noreferrer">Bilibili</GlassButton
+      >
+      <GlassButton href="https://x.com/MiyakoWoW" target="_blank" rel="noopener noreferrer"
+        >X (Twitter)</GlassButton
+      >
     </div>
   </div>
 </FloatingPanel>
