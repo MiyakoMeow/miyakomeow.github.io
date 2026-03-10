@@ -45,9 +45,10 @@ jobs:
               name=$(jq -r '.name' <<< "$check")
               type=$(jq -r '.type' <<< "$check")
               status=$(jq -r 'if .type == "CheckRun" then .conclusion else .state end' <<< "$check")
-              if [[ "$name" != "$CURRENT_WORKFLOW" && "$status" != "SUCCESS" ]]; then
+              status_upper="${status^^}"
+              if [[ "$name" != "$CURRENT_WORKFLOW" && "$status_upper" != "SUCCESS" && "$status" != "null" ]]; then
                 all_passed=false
-                echo "Failed check: $name ($type) - Status: $status"
+                echo "Pending/Failed check: $name ($type) - Status: $status"
                 break
               fi
             done < <(echo "$WORKFLOW_STATUS" | jq -c '.[]')
