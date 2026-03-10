@@ -297,7 +297,7 @@
     <div class="mt-4 flex flex-wrap items-stretch justify-center gap-4">
       {#each links as link (link.href)}
         <GlassCard
-          href={link.href.startsWith("/") ? resolve(link.href) : link.href}
+          href={link.href.startsWith("/") ? resolve(link.href, {}) : link.href}
           class="flex w-80 flex-col"
         >
           <div class="mb-2 text-[1.2rem] font-bold text-[#64b5f6]">
