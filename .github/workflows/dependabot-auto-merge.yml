@@ -1,13 +1,13 @@
 name: Dependabot auto-merge
 on: pull_request
- 
+
 permissions:
   contents: write
   pull-requests: write
   checks: read
   actions: read
   statuses: read
- 
+
 jobs:
   dependabot:
     runs-on: ubuntu-latest
@@ -33,15 +33,15 @@ jobs:
           RETRY_INTERVAL=300  # 以秒为单位指定5分钟
           ATTEMPT=0
           CURRENT_WORKFLOW="Dependabot auto-merge"
- 
+
           while [ $ATTEMPT -lt $MAX_RETRIES ]; do
             echo "Fetching PR status checks..."
             WORKFLOWS=$(gh pr view "$PR_URL" --json statusCheckRollup -q '.statusCheckRollup')
- 
+
             # 调试：输出所有检查的当前状态
             echo "Debug: Current status of all checks:"
             WORKFLOW_STATUS=$(jq -r '[.[] | {name: (.workflowName // .name // .context), type: .["__typename"], status: .status, state: .state, conclusion: .conclusion}]' <<< "$WORKFLOWS")
- 
+
             # 检查当前工作流以外的所有检查是否成功
             all_passed=true
             while IFS= read -r check; do
@@ -54,7 +54,7 @@ jobs:
                 break
               fi
             done < <(echo "$WORKFLOW_STATUS" | jq -c '.[]')
- 
+
             if $all_passed; then
               echo "All other checks have passed"
               exit 0
