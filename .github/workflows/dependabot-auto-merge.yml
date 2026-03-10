@@ -20,6 +20,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MERGE_LABELS: "dependencies,automated"
+          MERGE_REQUIRED_STATUSES: "CI/*"
           MERGE_METHOD: "squash"
           MERGE_DELETE_BRANCH: true
           MERGE_RETRIES: "10"
