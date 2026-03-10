@@ -1,15 +1,17 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { page } from "$app/stores";
+
+  const targetDirName = $page.params.dir_name;
+  const redirectUrl = resolve(`/bms/table/mirror-proxy/${targetDirName}`, {});
 </script>
 
-<meta
-  http-equiv="refresh"
-  content="0;url={resolve(`/bms/table/mirror-proxy/${$page.params.dir_name}`, {})};"
-/>
+<svelte:head>
+  <meta http-equiv="refresh" content={redirectUrl} />
+</svelte:head>
 
 <p>
-  <a href={resolve(`/bms/table/mirror-proxy/${$page.params.dir_name}`, {})}
-    >Redirecting to /bms/table/mirror-proxy/{$page.params.dir_name}</a
+  <a href={redirectUrl}
+    >Redirecting to /bms/table/mirror-proxy/{decodeURIComponent(targetDirName)}</a
   >...
 </p>

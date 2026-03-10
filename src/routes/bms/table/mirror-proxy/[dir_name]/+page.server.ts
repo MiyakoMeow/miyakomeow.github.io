@@ -33,7 +33,7 @@ export function entries() {
   console.log(`[Prerender] Found ${validTables.length} tables to prerender`);
 
   return validTables.map((item) => ({
-    dir_name: item.dir_name,
+    dir_name: encodeURIComponent(item.dir_name),
   }));
 }
 
@@ -47,7 +47,7 @@ export const load: PageServerLoad = ({ params, locals }) => {
   try {
     const tables_proxy = loadTablesProxy();
 
-    // 查找对应的表格配置
+    // 查找对应的表格配置（dir_name 已经由 SvelteKit 自动解码）
     const tableItem = tables_proxy.find((item) => item.dir_name === dir_name);
 
     if (!tableItem) {
