@@ -5,11 +5,11 @@ import { formatTitle } from "$lib/utils/title";
 
 const BLOG_DIR = "src/content/blog";
 
-export const load: PageServerLoad = () => {
+export const load: PageServerLoad = async () => {
   const posts = scanBlogDirectory(BLOG_DIR);
 
   return {
-    posts,
-    title: formatTitle("博客文章"),
+    recentPosts: posts.slice(0, 5),
+    title: formatTitle("欢迎来到白喵斯的小屋！"),
   };
 };
