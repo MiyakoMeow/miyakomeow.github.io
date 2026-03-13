@@ -1010,6 +1010,246 @@
           "225552f7a4a30610e0ff28671ca7230f"
         ]
       }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl10 selene.",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "591f59636e0056fcdb7edefc52d645bc",
+          "ce78370778b4b717d241cec0b7cdb45f",
+          "aec21fd1d585fdfd67bf93fc1c5c92d9",
+          "010d5e5f5225616215c1b365f68a604b"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl10 べりめとろす",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "4ad0bf593ae8d6f5f503ee8cb27577e6",
+          "d4979e132f60b5abdd413ff8e214e659",
+          "e7df53f94805d0d2a1976855eaded1c4",
+          "023415328aa43c6557e0b6ee6656d16f"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl10 Steve58313_B",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "1ebf61990256b79628c9dee6a926ad39",
+          "861fabc711061a736254b8c140285010",
+          "509178355473f091dea516fcdc3472f7",
+          "216063bc06f7c34b03e8932d54b67dce"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl10 shigeno_aoi",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "c16ad6046d2f0d5f65a66bbbba6aaaa8",
+          "357beb12b713403ee21ac243146c8247",
+          "f1e3b81187d776311556a0b713596ba5",
+          "c7c5bc4ea5f507bb96aa2d2518efb385"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl10 IN",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "08cd57615b032334aea711bff8392254",
+          "f0037658680a91c1d5f54a8773b236bf",
+          "408bf9274bf02b3ae09e3c58a3bc0587",
+          "1ebf61990256b79628c9dee6a926ad39"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl11 べりめとろす",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "7444146c0ea0cd891d6114d2f66b7dc1",
+          "213ce0b43c2b287e5f7d5bb30c8ec44f",
+          "c6e40998c81fbf3ae79484adc8975280",
+          "40245d0384a485fe1a2ffec75095f626"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl11 selene.",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "1020e628e09805b7256ca394e299b45b",
+          "955351c82863ee05c155698bd969f31a",
+          "96af0b0fd5f9e61ed5078494776a951e",
+          "3306e0ad9a72073aaf2cdfbc054d8b9d"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl11 Steve58313_B",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "bd0c636a335988b7848392a500b63e85",
+          "8b3c66f945d041b5df53ba3e292e5c54",
+          "a9e52da28747098fcc9f9a72a14b8a32",
+          "3ca65d64697a61e3a0d705ed05696c22"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl11 shigeno_aoi",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "88684968568f1499a9f0cd68098a6935",
+          "97ac4aa319e5e38381636889a5438133",
+          "1bc3c15a4c40d87dbffa8be429140478",
+          "267fbf20e2f0d04e64525b0dbee0f789"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl11 IN",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "d69d4f8b5183ede4c383d57241f16ba8",
+          "cacb786d3d5faf342426e4246d3729e1",
+          "1fda5d1c3600b1278688ba1f73286cf6",
+          "24c869a51384af113e9271a766e7d4be"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl12 べりめとろす",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "04bd8f404bc86c7254f44a2e4d6a0814",
+          "e4caeb4936707106b95983ebbd028f81",
+          "aec4859fb3a64959fc8812faef30c9a2",
+          "b57e7f1bdca974cd00379e3d1cf84504"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl12 selene.",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "5047486ccd58dba0dc3b545e56a06550",
+          "04bd8f404bc86c7254f44a2e4d6a0814",
+          "abaad8dae6cc9d43310c84f765d3c340",
+          "accc5608f01d6885f164aa8fa4e7d764"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl12 Steve58313_B",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "b53162a6ed6659406cae48612e943faf",
+          "e4caeb4936707106b95983ebbd028f81",
+          "b2d0911f389aab92b4f7b0ff5ca345e0",
+          "bca300b454c8d993060712e8ebdef243"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl12 shigeno_aoi",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "5047486ccd58dba0dc3b545e56a06550",
+          "54e34fd60c312a03378a60a74ce45002",
+          "df995b9011a93b66ed1ad182faff8096",
+          "b57e7f1bdca974cd00379e3d1cf84504"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl12 IN",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "a60bb571272dd486337dd070642b33cc",
+          "71c1d1a5c09eb16dfe722414ed70f658",
+          "54e34fd60c312a03378a60a74ce45002",
+          "84f24615319041873d799faf257d86bf"
+        ]
+      }
     ]
   ]
 }
