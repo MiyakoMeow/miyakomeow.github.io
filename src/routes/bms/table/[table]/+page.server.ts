@@ -9,6 +9,9 @@ export const prerender = true;
 
 export function entries() {
   const tablesDir = join("static", "bms", "table");
+  if (!existsSync(tablesDir)) {
+    return [];
+  }
   const subdirs = readdirSync(tablesDir, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name)

@@ -101,20 +101,28 @@
     loadingState = { ...loadingState, currentStep: step, progress };
   }
 
-  function fetchJsonp(url: string): Promise<unknown> {
+  function fetchJsonp(url: string, timeoutMs = 10000): Promise<unknown> {
     return new Promise((resolve, reject) => {
       const callbackName = "jsonp_callback_" + Math.round(100000 * Math.random());
       const script = document.createElement("script");
       const win = window as unknown as Record<string, unknown>;
+      const cleanup = () => {
+        delete win[callbackName];
+        if (script.parentNode) document.body.removeChild(script);
+      };
+      const timer = window.setTimeout(() => {
+        cleanup();
+        reject(new Error("JSONP request timed out"));
+      }, timeoutMs);
       script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + callbackName;
       win[callbackName] = (data: unknown) => {
-        delete win[callbackName];
-        document.body.removeChild(script);
+        window.clearTimeout(timer);
+        cleanup();
         resolve(data);
       };
       script.onerror = () => {
-        delete win[callbackName];
-        if (script.parentNode) document.body.removeChild(script);
+        window.clearTimeout(timer);
+        cleanup();
         reject(new Error("JSONP request failed"));
       };
       document.body.appendChild(script);
@@ -177,6 +185,18 @@
           throw new Error(`无法加载谱面数据: ${dataResponse.status}`);
         }
         tableDataRaw = await dataResponse.json();
+      }
+      if (!Array.isArray(tableDataRaw)) {
+        let apiError = "谱面数据格式无效";
+        if (typeof tableDataRaw === "object" && tableDataRaw !== null && "error" in tableDataRaw) {
+          const err = (tableDataRaw as Record<string, unknown>).error;
+          if (err !== undefined) {
+            apiError = typeof err === "string" ? err : JSON.stringify(err);
+          } else {
+            apiError = "未知错误";
+          }
+        }
+        throw new Error(`无法解析谱面数据: ${apiError}`);
       }
       tableData = tableDataRaw as ChartData[];
       dataFetchUrl = finalDataUrl;

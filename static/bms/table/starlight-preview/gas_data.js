@@ -96,7 +96,10 @@ function responseJson(data, status) {
  * 入口函数
  */
 function doGet(e) {
-  var callback = e.parameter.callback;
+  var callback = e && e.parameter ? e.parameter.callback : "";
+  if (callback && !/^[A-Za-z_$][0-9A-Za-z_$\.]*$/.test(callback)) {
+    return responseJson({ error: "Invalid callback" }, 400);
+  }
   var result = createJsonHandler(CONFIG);
 
   if (callback) {
