@@ -3,30 +3,30 @@
  * 处理函数定义 (必须在 CONFIG 外部)
  */
 function processLv(val) {
-  return String(val).replace(/^sr/i, '');
+  return String(val).replace(/^sr/i, "");
 }
 
 /**
  * 全局配置对象 (使用 var 而非 const)
  */
 var CONFIG = {
-  spreadsheetId: '1WJVQnOfS5Yb-7zx_KDBBlpdFLlsw1ylAdz4_9nEP0Gk',
-  sheetName: 'sr1-4 Recommendation',
+  spreadsheetId: "1WJVQnOfS5Yb-7zx_KDBBlpdFLlsw1ylAdz4_9nEP0Gk",
+  sheetName: "sr1-4 Recommendation",
 
   fieldMap: {
-    'Title': 'title',
-    'Artist': 'artist',
-    'Lv.': 'level',
-    'Recommender': 'recommender',
-    'MD5': 'md5',
-    'SHA256': 'sha256',
-    'URL': 'url',
-    'URL Diff': 'url_diff'
+    Title: "title",
+    Artist: "artist",
+    "Lv.": "level",
+    Recommender: "recommender",
+    MD5: "md5",
+    SHA256: "sha256",
+    URL: "url",
+    "URL Diff": "url_diff",
   },
 
   processors: {
-    'Lv.': processLv
-  }
+    "Lv.": processLv,
+  },
 };
 
 /**
@@ -37,7 +37,7 @@ function createJsonHandler(config) {
   var sheet = ss.getSheetByName(config.sheetName);
 
   if (!sheet) {
-    return responseJson({ error: 'Sheet not found: ' + config.sheetName }, 404);
+    return responseJson({ error: "Sheet not found: " + config.sheetName }, 404);
   }
 
   var data = sheet.getDataRange().getValues();
@@ -54,7 +54,7 @@ function createJsonHandler(config) {
 
     var isEmpty = true;
     for (var k = 0; k < row.length; k++) {
-      if (row[k] !== '' && row[k] !== null) {
+      if (row[k] !== "" && row[k] !== null) {
         isEmpty = false;
         break;
       }
@@ -70,7 +70,7 @@ function createJsonHandler(config) {
       var key = config.fieldMap[header] || header;
       var value = rawValue;
 
-      if (config.processors[header] && typeof config.processors[header] === 'function') {
+      if (config.processors[header] && typeof config.processors[header] === "function") {
         value = config.processors[header](rawValue);
       }
 
@@ -96,5 +96,14 @@ function responseJson(data, status) {
  * 入口函数
  */
 function doGet(e) {
-  return createJsonHandler(CONFIG);
+  var callback = e.parameter.callback;
+  var result = createJsonHandler(CONFIG);
+
+  if (callback) {
+    var output = ContentService.createTextOutput(callback + "(" + result.getContent() + ")");
+    output.setMimeType(ContentService.MimeType.JAVASCRIPT);
+    return output;
+  }
+
+  return result;
 }
