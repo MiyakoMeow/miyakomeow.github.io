@@ -166,16 +166,16 @@
 
       updateProgress("正在加载谱面数据...", 75);
 
-      const isAbsolute = (u: string) => /^(https?:)?\/\//i.test(u) || u.startsWith("/");
-      const isJsonp = (u: string) => u.includes("script.google.com");
-      const finalDataUrl = isAbsolute(String(dataUrl))
-        ? String(dataUrl)
-        : new URL(String(dataUrl), headerUrlBase).toString();
+      const resolvedDataUrl = new URL(String(dataUrl), headerUrlBase);
+      const finalDataUrl = resolvedDataUrl.toString();
+      const isJsonp =
+        resolvedDataUrl.hostname === "script.google.com" &&
+        resolvedDataUrl.pathname.startsWith("/macros/");
 
       updateProgress("正在加载谱面数据...", 75);
 
       let tableDataRaw: unknown;
-      if (isJsonp(finalDataUrl)) {
+      if (isJsonp) {
         tableDataRaw = await fetchJsonp(finalDataUrl);
       } else {
         const dataResponse = await fetch(finalDataUrl, {
