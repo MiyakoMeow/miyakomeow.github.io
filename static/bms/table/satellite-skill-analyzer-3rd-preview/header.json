@@ -274,6 +274,54 @@
           "e19b38273e6b5d2bb8f4bf1da01dcbaf"
         ]
       }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl1 HJY_lr2raja",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "6c1b6dde4eb9c6fabe5f1ba126e585cf",
+          "a7aed017352eea44490f97a66a83bd10",
+          "d6a7a48757ba862ac0edd2f376c133e0",
+          "f2e571f7a792563d73622f33c85f6498"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl2 *ふわうさ*",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "15b9da504bab6ee1cf7122fe8e36a08e",
+          "3a2759c3528c7ce0d9bf9539b2ddc479",
+          "393690659885f5d73e838b43a6345333",
+          "a664ac5ffe78777c1eae005a3c4bd66c"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Satellite Skill Analyzer 3rd sl3 *ふわうさ*",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "d4be913786b347383b6f2691dd9a3259",
+          "6ad63bdfce1072784d7903ca542e7608",
+          "bb51e06228e7279b47120b9a5c527421",
+          "9fcd8ed5738eeafee02f4261a29c2b58"
+        ]
+      }
     ]
   ]
 }
