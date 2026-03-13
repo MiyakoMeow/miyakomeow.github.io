@@ -254,6 +254,7 @@
     out:fade={{ duration: 120 }}
     on:pointerenter={cancelHide}
     on:pointerleave={scheduleHide}
+    role="tooltip"
   >
     <div class="flex items-center justify-between gap-3 border-b border-white/10 p-3">
       <div class="text-[0.9rem] font-semibold text-white/90">{label}</div>
