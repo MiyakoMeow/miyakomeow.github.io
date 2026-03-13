@@ -5,7 +5,7 @@ import { formatTitle } from "$lib/utils/title";
 
 const BLOG_DIR = "src/content/blog";
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = () => {
   const posts = scanBlogDirectory(BLOG_DIR);
 
   return {

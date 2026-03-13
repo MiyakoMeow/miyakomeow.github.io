@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
+  import type { PageData } from "./$types";
+
   import { resolve } from "$app/paths";
   import FloatingToc, {
     buildTocFromHeadings,
@@ -11,7 +13,7 @@
   import StarryBackground from "$lib/components/StarryBackground.svelte";
   import { GlassButton, GlassContainer } from "$lib/components/ui";
 
-  export let data;
+  export let data: PageData;
 
   let tocItems: TocItem[] = [];
 
