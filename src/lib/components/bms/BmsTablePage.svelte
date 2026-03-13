@@ -114,7 +114,9 @@
         cleanup();
         reject(new Error("JSONP request timed out"));
       }, timeoutMs);
-      script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + callbackName;
+      const requestUrl = new URL(url, window.location.href);
+      requestUrl.searchParams.set("callback", callbackName);
+      script.src = requestUrl.toString();
       win[callbackName] = (data: unknown) => {
         window.clearTimeout(timer);
         cleanup();
