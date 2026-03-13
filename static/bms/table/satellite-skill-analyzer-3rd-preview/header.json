@@ -1,0 +1,24 @@
+
+{
+  "name": "Satellite Skill Analyzer 3rd",
+  "symbol": "sl",
+  "data_url": "https://stellabms.xyz/sl/score.json",
+  "course": [
+    [
+      {
+        "name": "Satellite Skill Analyzer 2nd sl0",
+        "constraint": ["grade_mirror", "gauge_lr2", "ln"],
+        "trophy": [
+          { "name": "silvermedal", "missrate": 5.0, "scorerate": 70.0 },
+          { "name": "goldmedal", "missrate": 2.5, "scorerate": 85.0 }
+        ],
+        "md5": [
+          "9ee5524e4ed8a3e7033b4de1fedc35fd",
+          "9498378a847b94b949d11a566a86d3c0",
+          "4023045d9134dfc47e953bc430e5ef07",
+          "bb5d0716c18b37f9687bbcea17fc646c"
+        ]
+      }
+    ]
+  ]
+}
