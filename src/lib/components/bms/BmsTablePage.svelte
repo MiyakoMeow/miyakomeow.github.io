@@ -105,14 +105,15 @@
     return new Promise((resolve, reject) => {
       const callbackName = "jsonp_callback_" + Math.round(100000 * Math.random());
       const script = document.createElement("script");
+      const win = window as unknown as Record<string, unknown>;
       script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + callbackName;
-      (window as Record<string, unknown>)[callbackName] = (data: unknown) => {
-        delete (window as Record<string, unknown>)[callbackName];
+      win[callbackName] = (data: unknown) => {
+        delete win[callbackName];
         document.body.removeChild(script);
         resolve(data);
       };
       script.onerror = () => {
-        delete (window as Record<string, unknown>)[callbackName];
+        delete win[callbackName];
         if (script.parentNode) document.body.removeChild(script);
         reject(new Error("JSONP request failed"));
       };

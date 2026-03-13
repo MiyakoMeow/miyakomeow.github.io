@@ -17,7 +17,7 @@ export function entries() {
   return subdirs.map((table) => ({ table }));
 }
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = ({ params, locals }) => {
   locals.bmstableMeta = "./header.json";
 
   return {
