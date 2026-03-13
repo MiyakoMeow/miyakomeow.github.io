@@ -101,6 +101,25 @@
     loadingState = { ...loadingState, currentStep: step, progress };
   }
 
+  function fetchJsonp(url: string): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      const callbackName = "jsonp_callback_" + Math.round(100000 * Math.random());
+      const script = document.createElement("script");
+      script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + callbackName;
+      (window as Record<string, unknown>)[callbackName] = (data: unknown) => {
+        delete (window as Record<string, unknown>)[callbackName];
+        document.body.removeChild(script);
+        resolve(data);
+      };
+      script.onerror = () => {
+        delete (window as Record<string, unknown>)[callbackName];
+        if (script.parentNode) document.body.removeChild(script);
+        reject(new Error("JSONP request failed"));
+      };
+      document.body.appendChild(script);
+    });
+  }
+
   async function lazyLoadTableData(): Promise<void> {
     try {
       error = null;
@@ -139,17 +158,27 @@
       updateProgress("正在加载谱面数据...", 75);
 
       const isAbsolute = (u: string) => /^(https?:)?\/\//i.test(u) || u.startsWith("/");
-      dataFetchUrl = isAbsolute(String(dataUrl))
+      const isJsonp = (u: string) => u.includes("script.google.com");
+      const finalDataUrl = isAbsolute(String(dataUrl))
         ? String(dataUrl)
         : new URL(String(dataUrl), headerUrlBase).toString();
 
-      const dataResponse = await fetch(dataFetchUrl, {
-        redirect: "follow",
-      });
-      if (!dataResponse.ok) {
-        throw new Error(`无法加载谱面数据: ${dataResponse.status}`);
+      updateProgress("正在加载谱面数据...", 75);
+
+      let tableDataRaw: unknown;
+      if (isJsonp(finalDataUrl)) {
+        tableDataRaw = await fetchJsonp(finalDataUrl);
+      } else {
+        const dataResponse = await fetch(finalDataUrl, {
+          redirect: "follow",
+        });
+        if (!dataResponse.ok) {
+          throw new Error(`无法加载谱面数据: ${dataResponse.status}`);
+        }
+        tableDataRaw = await dataResponse.json();
       }
-      tableData = (await dataResponse.json()) as ChartData[];
+      tableData = tableDataRaw as ChartData[];
+      dataFetchUrl = finalDataUrl;
 
       updateProgress("数据加载完成", 100);
 
