@@ -116,30 +116,20 @@
     { label: pageTitle },
   ]);
 
-  async function copySelected(data: string): Promise<void> {
+  async function copySelected(data: string): Promise<boolean> {
     try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(data);
-      } else {
-        const textarea = document.createElement("textarea");
-        textarea.value = data;
-        textarea.style.position = "fixed";
-        textarea.style.opacity = "0";
-        document.body.appendChild(textarea);
-        textarea.focus();
-        textarea.select();
-        await navigator.clipboard.writeText(textarea.value);
-        document.body.removeChild(textarea);
-      }
+      if (!navigator.clipboard?.writeText) return false;
+      await navigator.clipboard.writeText(data);
+      return true;
     } catch {
-      // clipboard API failed
+      return false;
     }
   }
 
   async function copyTables(): Promise<void> {
     const tablesJsonUrl = new URL(tablesJsonPath, window.location.origin).toString();
-    await copySelected(tablesJsonUrl);
-    copied = true;
+    copied = await copySelected(tablesJsonUrl);
+    if (!copied) return;
     void setTimeout(() => {
       copied = false;
     }, 1500);
