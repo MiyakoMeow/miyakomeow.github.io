@@ -251,7 +251,7 @@
       }
 
       tables = (data as MirrorTableItem[]).map((item) => {
-        const dir = String(item.dir_name ?? "").replace(/^\/+|\/+/g, "");
+        const dir = String(item.dir_name ?? "").replace(/^\/+|\/+$/g, "");
         if (!dir) return item;
         return { ...item, url: `/${baseRoute}/${dir}/` };
       });
