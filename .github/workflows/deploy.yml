@@ -21,6 +21,7 @@ jobs:
           # Copy tables.json
           cp /tmp/bms-table-mirror-main/outputs/tables_miyakomeow.json static/bms/table/mirror/tables.json
           cp /tmp/bms-table-mirror-main/outputs/tables_miyakomeow_proxy.json static/bms/table/mirror-proxy/tables.json
+          cp /tmp/bms-table-mirror-main/outputs/tables_miyakomeow_proxy.json static/bms/table/mirror-proxy/tables_proxy.json
           cp /tmp/bms-table-mirror-main/outputs/tables_github_proxy_best.json static/bms/table/mirror-proxy/
           # Copy table directories
           cp -r /tmp/bms-table-mirror-main/tables/* static/bms/table/mirror/
