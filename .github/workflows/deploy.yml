@@ -12,11 +12,16 @@ jobs:
         uses: actions/checkout@v6
       - name: Download table mirror data
         run: |
-          mkdir -p static/bms/table/mirror-proxy
+          # Fetch
           curl --fail --show-error --location -o /tmp/bms-table-mirror.zip https://github.com/MiyakoMeow/bms-table-mirror/archive/refs/heads/main.zip
           unzip -o /tmp/bms-table-mirror.zip -d /tmp
-          cp /tmp/bms-table-mirror-main/outputs/tables_github_proxy_best.json static/bms/table/mirror-proxy/
+          # Mkdir
+          mkdir -p static/bms/table/mirror-proxy
+          mkdir -p static/bms/table/mirror
+          # Copy
+          cp /tmp/bms-table-mirror-main/outputs/tables_miyakomeow.json static/bms/table/mirror/
           cp /tmp/bms-table-mirror-main/outputs/tables_miyakomeow.json static/bms/table/mirror-proxy/
+          cp /tmp/bms-table-mirror-main/outputs/tables_github_proxy_best.json static/bms/table/mirror-proxy/
       - uses: pnpm/action-setup@v4
         with:
           version: 10

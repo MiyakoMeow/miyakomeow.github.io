@@ -1,0 +1,33 @@
+import { readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
+
+import { error } from "@sveltejs/kit";
+
+import type { PageServerLoad } from "./$types";
+
+import { formatTitle } from "$lib/utils/title";
+
+export const prerender = true;
+
+export function entries() {
+  const tablesDir = join("static", "bms", "table", "mirror");
+  if (!existsSync(tablesDir)) {
+    return [];
+  }
+  const subdirs = readdirSync(tablesDir, { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name)
+    .filter((name) => existsSync(join(tablesDir, name, "header.json")));
+
+  return subdirs.map((table) => ({ table }));
+}
+
+export const load: PageServerLoad = ({ params, locals }) => {
+  const { table } = params;
+
+  locals.bmstableMeta = `./${table}/header.json`;
+
+  return {
+    title: formatTitle(`BMS ${table}`),
+  };
+};
