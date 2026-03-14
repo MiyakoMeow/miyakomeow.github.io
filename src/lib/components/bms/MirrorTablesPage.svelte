@@ -110,11 +110,11 @@
     },
   ];
 
-  const breadcrumbs = [
+  const breadcrumbs = $derived([
     { label: "主页", href: "/" },
     { label: "BMS", href: "/bms" },
     { label: pageTitle },
-  ];
+  ]);
 
   async function copySelected(data: string): Promise<void> {
     try {

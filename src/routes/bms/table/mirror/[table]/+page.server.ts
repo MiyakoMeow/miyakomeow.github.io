@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { error } from "@sveltejs/kit";
@@ -15,11 +15,11 @@ export function entries() {
     return [];
   }
   const subdirs = readdirSync(tablesDir, { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name)
-    .filter((name) => existsSync(join(tablesDir, name, "header.json")));
+    .filter((dirent: { isDirectory: () => boolean }) => dirent.isDirectory())
+    .map((dirent: { name: string }) => dirent.name)
+    .filter((name: string) => existsSync(join(tablesDir, name, "header.json")));
 
-  return subdirs.map((table) => ({ table }));
+  return subdirs.map((table: string) => ({ table }));
 }
 
 export const load: PageServerLoad = ({ params, locals }) => {
