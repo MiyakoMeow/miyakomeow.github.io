@@ -19,8 +19,8 @@ jobs:
           mkdir -p static/bms/table/mirror-proxy
           mkdir -p static/bms/table/mirror
           # Copy
-          cp /tmp/bms-table-mirror-main/outputs/tables_miyakomeow.json static/bms/table/mirror/
-          cp /tmp/bms-table-mirror-main/outputs/tables_miyakomeow.json static/bms/table/mirror-proxy/
+          cp /tmp/bms-table-mirror-main/outputs/tables_miyakomeow.json static/bms/table/mirror/tables.json
+          cp /tmp/bms-table-mirror-main/outputs/tables_miyakomeow_proxy.json static/bms/table/mirror-proxy/tables.json
           cp /tmp/bms-table-mirror-main/outputs/tables_github_proxy_best.json static/bms/table/mirror-proxy/
       - uses: pnpm/action-setup@v4
         with:
