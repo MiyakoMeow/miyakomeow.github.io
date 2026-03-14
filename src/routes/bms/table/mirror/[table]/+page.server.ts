@@ -1,7 +1,5 @@
-import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-
-import { error } from "@sveltejs/kit";
 
 import type { PageServerLoad } from "./$types";
 
