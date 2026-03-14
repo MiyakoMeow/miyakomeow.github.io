@@ -194,22 +194,21 @@
   });
 
   function slugifyTag(tag: string): string {
-    return tag
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "-");
+    return encodeURIComponent(tag.normalize("NFKC").trim().toLowerCase())
+      .replace(/%/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
   }
 
   $effect(() => {
     const tagItems: TocItem[] = groupedByTags().map((g) => ({
-      id: `tag1-group-${slugifyTag(g.tag1)}`,
+      id: `tag1-group-${slugifyTag(g.tag1) || "untagged"}`,
       title: `分类 ${g.tag1}`,
-      href: `#tag1-group-${slugifyTag(g.tag1)}`,
+      href: `#tag1-group-${slugifyTag(g.tag1) || "untagged"}`,
       children: g.subgroups.map((sg) => ({
-        id: `tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`,
+        id: `tag2-group-${slugifyTag(g.tag1) || "untagged"}-${slugifyTag(sg.tag2) || "untagged"}`,
         title: `${sg.tag2} (${sg.items.length})`,
-        href: `#tag2-group-${slugifyTag(g.tag1)}-${slugifyTag(sg.tag2)}`,
+        href: `#tag2-group-${slugifyTag(g.tag1) || "untagged"}-${slugifyTag(sg.tag2) || "untagged"}`,
       })),
     }));
 
