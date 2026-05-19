@@ -24,7 +24,7 @@
   "exports": {},
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@inlang/paraglide-js": "2.18.0",
+    "@inlang/paraglide-js": "2.18.1",
     "@sveltejs/adapter-static": "3.0.10",
     "@sveltejs/kit": "2.60.1",
     "@sveltejs/vite-plugin-svelte": "7.1.2",
